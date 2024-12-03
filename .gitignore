@@ -9,11 +9,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-backend/.env
-frontend/.env
+sever/.env
+client/.env
 
-backend/node_modules
-frontend/node_modules
+node_modules
+sever/node_modules
+client/node_modules
 dist
 dist-ssr
 *.local
