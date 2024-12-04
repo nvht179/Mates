@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const routers = require("./routers");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 const app = express();
 
@@ -9,7 +11,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api", routers);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get("/", (req, res) =>
   res.send("<h1 style='text-align: center'>Mates API</h1>"),
 );
