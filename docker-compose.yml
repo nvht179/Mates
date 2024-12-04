@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  server:
+    image: mates-server
+    container_name: mates-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/.env
+    environment:
+      - POSTGRES_USER=postgres.xwmpmnahzdnzfzhzdqgz
+      - POSTGRES_HOST=aws-0-ap-southeast-1.pooler.supabase.com
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 8080:8080
+    networks:
+      - mates
+
+networks:
+  mates:
+    driver: bridge
+
+volumes:
+  db:
+    driver: local

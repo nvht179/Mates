@@ -1,4 +1,4 @@
-const pino = require("pino");
+const pino = require("pino/pino");
 const pinoPretty = require("pino-pretty");
 
 // Create a logging instance
