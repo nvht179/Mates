@@ -1,4 +1,18 @@
 ## Backend Coding Rules
+### 0. **Build Instructions**
+**Build Instructions for server**
+
+1. Go to `server` folder and run
+```bash
+   npm i
+```
+
+2. Then run:
+```bash
+   docker compose up --build
+```
+
+It will connect to the server throuh this http://localhost:8080/
 ### 1. **Naming Conventions**
 - **CamelCase for variables and function name**: `getAllStudents`.
 - **Use lower case with hyphens**: File names should be written in all lowercase letters with hyphens separating words (e.g., `student.controller.js`, `user.model.js`).
