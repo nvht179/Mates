@@ -1,6 +1,8 @@
-CREATE TABLE public.student (
-  id SERIAL NOT NULL,
-  name VARCHAR(100)
+CREATE TABLE public.person (
+    id SERIAL PRIMARY KEY,  
+    name VARCHAR(255),          
+    email VARCHAR(255),          
+    password VARCHAR(255),       
+    phone VARCHAR(50),           
+    avatar VARCHAR(255)          
 );
-
-INSERT INTO public.student (id, name) VALUES (1, 'Khoa');

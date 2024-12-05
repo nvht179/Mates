@@ -1,10 +1,10 @@
 const { ErrorHandler } = require("../helpers/error");
-const { getUserByEmailDB } = require("../db/user.db");
+const UserDB = require("../db/user.db");
 
 class UserService {
   getUserByEmail = async (email) => {
     try {
-      const user = await getUserByEmailDB(email);
+      const user = await UserDB.getUserByEmailDB(email);
       return user;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
