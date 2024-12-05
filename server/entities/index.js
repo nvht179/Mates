@@ -1,14 +1,15 @@
 const sequelize = require("../config/db");
 const Person = require("./person.model");
+const { logger } = require("../utils/logger");
 
 // Sync all models with the database
 sequelize
   .sync()
   .then(() => {
-    console.log("Database connected and models synced.");
+    logger.info("Database connected and models synced.");
   })
   .catch((err) => {
-    console.error("Error syncing models: ", err);
+    logger.error("Error syncing models: ", err);
   });
 
 module.exports = {
