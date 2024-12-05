@@ -9,88 +9,29 @@
   },
   "info": {
     "version": "1.0.0",
-    "title": "PERN-Store",
-    "description": "A REST E-commerce API made with Express and Postgres.",
+    "title": "Mates - CS300",
+    "description": "A REST API made with Express and Postgres for CS300 project.",
     "license": {
       "name": "Licensed under MIT",
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:9000",
+  "host": "localhost:8080",
   "basePath": "/api",
   "tags": [
     {
+      "name": "Auth",
+      "description": "API for authentication"
+    },
+    {
       "name": "Users",
       "description": "API for users"
-    },
-    {
-      "name": "Products",
-      "description": "API for products"
-    },
-    {
-      "name": "Orders",
-      "description": "API for orders"
-    },
-    {
-      "name": "Cart",
-      "description": "API for cart"
-    },
-    {
-      "name": "Reviews",
-      "description": "API for reviews"
     }
   ],
   "schemes": ["http"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "/users": {
-      "get": {
-        "tags": ["Users"],
-        "summary": "Get all users available",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/User"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["Users"],
-        "description": "Create new user in system",
-        "summary": "Create a new user",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "Details of user to be created",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "New user is created",
-            "schema": {
-              "user_id": {
-                "type": "integer",
-                "uniqueItems": true,
-                "readonly": true,
-                "example": 1
-              },
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      }
-    },
     "/users/{id}": {
       "parameters": [
         {
@@ -194,7 +135,7 @@
     },
     "/auth/login": {
       "post": {
-        "tags": ["Users"],
+        "tags": ["Auth"],
         "description": "Login into the system",
         "summary": "Login",
         "parameters": [
@@ -212,9 +153,9 @@
         }
       }
     },
-    "/auth/signup": {
+    "/auth/signUp": {
       "post": {
-        "tags": ["Users"],
+        "tags": ["Auth"],
         "description": "Create an account",
         "summary": "Sign up",
         "parameters": [
@@ -223,7 +164,7 @@
             "in": "body",
             "description": "Login details",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/SignUp"
             }
           }
         ],
@@ -236,23 +177,31 @@
     }
   },
   "definitions": {
-    "User": {
+    "SignUp": {
       "properties": {
         "password": {
           "type": "string",
-          "example": "^@wra@m+SrNs!lS"
+          "example": "123"
         },
         "email": {
           "type": "string",
-          "example": "johndoe@person.com"
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
         },
-        "fullname": {
+        "name": {
           "type": "string",
-          "example": "John Doe"
+          "example": "Luong Nguyen Khoa"
         },
         "username": {
           "type": "string",
-          "example": "johnny"
+          "example": "Koa"
+        },
+        "phone": {
+          "type": "string",
+          "example": "113"
+        },
+        "avatar": {
+          "type": "string",
+          "example": ""
         }
       }
     },
@@ -260,11 +209,11 @@
       "properties": {
         "email": {
           "type": "string",
-          "example": "johndoe@person.com"
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
         },
         "password": {
           "type": "string",
-          "example": "^@wra@m+SrNs!lS"
+          "example": "123"
         }
       }
     }
