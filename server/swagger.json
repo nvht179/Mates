@@ -216,6 +216,18 @@
           "example": "123"
         }
       }
+    },
+    "User": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        },
+        "password": {
+          "type": "string",
+          "example": "123"
+        }
+      }
     }
   }
 }

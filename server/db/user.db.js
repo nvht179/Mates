@@ -1,4 +1,4 @@
-const pool = require("../config");
+const pool = require("../config/db");
 
 class UserDB {
   getAllUsersDB = async () => {
