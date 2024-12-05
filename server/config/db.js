@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
+const { logger } = require("../utils/logger");
 
 const databaseUrl =
   process.env.NODE_ENV === "test"
@@ -18,9 +19,9 @@ const sequelize = new Sequelize({
 async function testConnection() {
   try {
     await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
+    logger.info("Connection to Supabase has been established successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    logger.error("Unable to connect to the database:", error);
   }
 }
 
