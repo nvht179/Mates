@@ -3,7 +3,6 @@ const { getUserByEmailDB } = require("../db/user.db");
 
 class UserService {
   getUserByEmail = async (email) => {
-    console.log("UserService:", email);
     try {
       const user = await getUserByEmailDB(email);
       return user;

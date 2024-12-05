@@ -1,13 +1,13 @@
-const authService = require("../services/auth.service");
+const AuthService = require("../services/auth.service");
 const { ErrorHandler } = require("../helpers/error");
 
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  const { user } = await authService.login(email, password);
+class AuthController {
+  loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    console.log("AuthController:", email, password);
+    const user = AuthService.loginUser(email, password);
+    res.status(200).json(user);
+  };
+}
 
-  res.status(200).json({ user });
-};
-
-module.exports = {
-  loginUser,
-};
+module.exports = new AuthController();

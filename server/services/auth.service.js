@@ -9,17 +9,19 @@ const {
 } = require("../db/user.db");
 
 class AuthService {
-  login = async (email, password) => {
+  loginUser = async (email, password) => {
     try {
       const user = await getUserByEmailDB(email);
+      console.log("AuthService:", user);
       if (!user) {
         throw new ErrorHandler(403, "Email is incorrect");
       }
-      const { id, email, password: dbPassword } = user;
+      const { id, emailDB, password: dbPassword } = user;
       const isCorrectPassword = await bcrypt.compare(password, dbPassword);
       if (!isCorrectPassword) {
         throw new ErrorHandler(403, "Password is incorrect");
       }
+      console.log("AuthService:", user);
       return { user: id, email };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
