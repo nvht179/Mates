@@ -1,45 +1,36 @@
-const pool = require("../config");
+const pool = require("../config/db");
+const { Person } = require("../entities");
 
 class UserDB {
   getAllUsersDB = async () => {
-    const { rows: users } = await pool.query("SELECT * FROM Person");
+    const users = Person.findAll({});
     return users;
   };
 
   createUserDB = async (name, email, password, phone, avatar) => {
-    const { rows: user } = await pool.query(
-      `
-      INSERT INTO Person(name, email, password, phone, avatar)
-      VALUES($1, $2, $3, $4, $5)
-      returning id, name, email, password, phone, avatar `[
-        (name, email, password, phone, avatar)
-      ],
-    );
-    return user[0];
+    const newUser = await Person.create({
+      name,
+      email,
+      password,
+      phone,
+      avatar,
+    });
+    return newUser;
   };
 
   getUserByEmailDB = async (email) => {
-    const { rows: user } = await pool.query(
-      `SELECT id, email, password FROM public.person WHERE email = ($1)`,
-      [email],
-    );
+    const user = await Person.findAll({
+      where: {
+        email: email,
+      },
+    });
     return user[0];
   };
 
   getUserByIdDB = async (id) => {
-    const { rows: user } = await pool.query(
-      `SELECT * FROM public.person WHERE id = ($1)`,
-      [id],
-    );
-    return user[0];
-  };
-
-  createUserDB = async (name, email, password, phone, avatar) => {
-    const { rows: user } = await pool.query(
-      `INSERT INTO public.person (name, email, password, phone, avatar) 
-      VALUES ($1, $2, $3, $4, $5)`,
-      [name, email, password, phone, avatar],
-    );
+    const user = await Person.findByPk(id, {
+      attributes: ["id", "name", "email", "phone", "avatar"],
+    });
     return user[0];
   };
 }
