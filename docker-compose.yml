@@ -24,6 +24,7 @@ services:
   client:
     image: mates-client
     container_name: mates-client
+    restart: unless-stopped
     build:
       context: ./client 
       dockerfile: Dockerfile 
