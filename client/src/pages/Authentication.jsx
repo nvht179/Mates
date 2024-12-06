@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import LoginDialog from "../components/LoginDialog";
+import SignupDialog from "../components/SignupDialog";
 
 export default function Authentication() {
   const [backgroundImage, setBackgroundImage] = useState("");
@@ -19,7 +20,8 @@ export default function Authentication() {
         backgroundPosition: "center",
       }}
     >
-      <LoginDialog />
+      {/* <LoginDialog /> */}
+      <SignupDialog/>
     </div>
   );
 }
