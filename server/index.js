@@ -8,5 +8,5 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 8080;
 
 server.listen(PORT, () =>
-  logger.info(`Magic is happening at http://localhost:${PORT}`),
+  logger.info(`Magic server is happening at http://localhost:${PORT}`),
 );
