@@ -4,7 +4,7 @@ import Button from "./Button";
 import { useLoginMutation } from "../store";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/slices/userSlice";
-import { AppDispatch, LoginResponse } from "../store";
+import { AppDispatch } from "../store";
 
 interface PasswordDialogProps {
   email: string | null;
@@ -23,13 +23,13 @@ export default function PasswordDialog({
     setPassword(e.target.value);
   };
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
+  ) => {
     e.preventDefault();
     try {
       const userData = await login({ email: email ?? "", password }).unwrap();
-      dispatch(
-        setCredentials({ userId: userData.user, email: userData.email }),
-      );
+      dispatch(setCredentials(userData));
     } catch (error) {
       console.error("Failed to login", error);
     }

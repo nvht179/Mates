@@ -14,9 +14,9 @@ export default function LoginDialog({ email, onSubmit }: LoginDialogProps) {
     setValue(e.target.value);
   };
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    onSubmit(email ?? "");
+    onSubmit(value ?? "");
   };
 
   return (
@@ -30,7 +30,7 @@ export default function LoginDialog({ email, onSubmit }: LoginDialogProps) {
       <h1 className="font-sans text-xl font-semibold">Sign in</h1>
 
       <form className="mb-auto mt-4" onSubmit={handleSubmit}>
-        <Input placeholder="Email" value={value} onChange={handleEmailChange} />
+        <Input placeholder="Email" value={value ?? ""} onChange={handleEmailChange} />
       </form>
       <div className="mb-2 flex">
         <p className="px-1 text-sm">No account?</p>

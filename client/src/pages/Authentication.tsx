@@ -12,7 +12,7 @@ export default function Authentication() {
   const dispatch = useDispatch();
 
   const handleSubmitEmail = (email: string) => {
-    dispatch(setCredentials({ userId: null, email }));
+    dispatch(setCredentials({ userId: null, email: email }));
     setChangeEmail(false);
   };
 
