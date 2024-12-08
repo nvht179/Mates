@@ -1,17 +1,22 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 
-export default function LoginDialog({ value, onSubmit }) {
-  const [email, setEmail] = useState(value);
+interface LoginDialogProps {
+  email: string | null;
+  onSubmit: (value: string) => void;
+}
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+export default function LoginDialog({ email, onSubmit }: LoginDialogProps) {
+  const [value, setValue] = useState<string | null>(email);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(email);
+    onSubmit(email ?? "");
   };
 
   return (
@@ -25,7 +30,7 @@ export default function LoginDialog({ value, onSubmit }) {
       <h1 className="font-sans text-xl font-semibold">Sign in</h1>
 
       <form className="mb-auto mt-4" onSubmit={handleSubmit}>
-        <Input placeholder="Email" value={email} onChange={handleEmailChange} />
+        <Input placeholder="Email" value={value} onChange={handleEmailChange} />
       </form>
       <div className="mb-2 flex">
         <p className="px-1 text-sm">No account?</p>

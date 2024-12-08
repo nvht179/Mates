@@ -1,17 +1,38 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
+import { useLoginMutation } from "../store";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/slices/userSlice";
+import { AppDispatch, LoginResponse } from "../store";
 
-export default function PasswordDialog({ email, onChangeAccount }) {
-  const [password, setPassword] = useState("");
+interface PasswordDialogProps {
+  email: string | null;
+  onChangeAccount: (value: boolean) => void;
+}
 
-  const handleEmailChange = (e) => {
+export default function PasswordDialog({
+  email,
+  onChangeAccount,
+}: PasswordDialogProps) {
+  const [password, setPassword] = useState<string>("");
+  const [login] = useLoginMutation();
+  const dispatch: AppDispatch = useDispatch();
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // onSubmit(email);
+    try {
+      const userData = await login({ email: email ?? "", password }).unwrap();
+      dispatch(
+        setCredentials({ userId: userData.user, email: userData.email }),
+      );
+    } catch (error) {
+      console.error("Failed to login", error);
+    }
   };
 
   const handleChangeAccount = () => {
@@ -22,7 +43,7 @@ export default function PasswordDialog({ email, onChangeAccount }) {
     <div className="flex min-h-64 w-1/4 min-w-96 flex-col rounded bg-white p-8">
       <div className="mb-2 flex items-center">
         <img src="../../public/vite.svg" alt="Vite logo" />
-        <h1 className="text-fg-soft ml-2 font-sans text-2xl font-bold">
+        <h1 className="ml-2 font-sans text-2xl font-bold text-fg-soft">
           Mates
         </h1>
       </div>
@@ -35,11 +56,11 @@ export default function PasswordDialog({ email, onChangeAccount }) {
           onChange={handleEmailChange}
         />
       </form>
-      <a className="active:text-fg-soft mb-3 px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline">
+      <a className="mb-3 px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">
         Forget your password?
       </a>
       <div className="mb-5 px-1" onClick={handleChangeAccount}>
-        <a className="active:text-fg-soft text-sm text-blue-700 hover:cursor-pointer hover:underline">
+        <a className="text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">
           Sign in with another account
         </a>
       </div>

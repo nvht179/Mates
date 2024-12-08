@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import LoginDialog from "../components/LoginDialog";
 import PasswordDialog from "../components/PasswordDialog";
+import { RootState } from "../store";
+import { setCredentials } from "../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Authentication() {
   const [backgroundImage, setBackgroundImage] = useState("");
-  const [email, setEmail] = useState("");
   const [changeEmail, setChangeEmail] = useState(true);
+  const { email } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (email) => {
-    setEmail(email);
+  const handleSubmitEmail = (email: string) => {
+    dispatch(setCredentials({ userId: null, email }));
     setChangeEmail(false);
   };
 
@@ -28,7 +32,7 @@ export default function Authentication() {
       }}
     >
       {changeEmail ? (
-        <LoginDialog value={email} onSubmit={handleSubmit} />
+        <LoginDialog email={email} onSubmit={handleSubmitEmail} />
       ) : (
         <PasswordDialog email={email} onChangeAccount={setChangeEmail} />
       )}
