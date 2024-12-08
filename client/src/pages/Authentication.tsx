@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import LoginDialog from "../components/LoginDialog";
-import SignupDialog from "../components/SignupDialog";
+import PasswordDialog from "../components/PasswordDialog";
 
 export default function Authentication() {
   const [backgroundImage, setBackgroundImage] = useState("");
+  const [email, setEmail] = useState("");
+  const [changeEmail, setChangeEmail] = useState(true);
+
+  const handleSubmit = (email) => {
+    setEmail(email);
+    setChangeEmail(false);
+  };
 
   useEffect(() => {
     // Fetch a random image URL from Picsum
@@ -20,8 +27,11 @@ export default function Authentication() {
         backgroundPosition: "center",
       }}
     >
-      {/* <LoginDialog /> */}
-      <SignupDialog/>
+      {changeEmail ? (
+        <LoginDialog value={email} onSubmit={handleSubmit} />
+      ) : (
+        <PasswordDialog email={email} onChangeAccount={setChangeEmail} />
+      )}
     </div>
   );
 }
