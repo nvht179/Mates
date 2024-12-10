@@ -44,6 +44,26 @@ class AuthService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  forgetPassword = async(email, newPassword) => {
+    try {
+      const user = await UserDB.getUserByEmailDB(email);
+      if (!user) {
+        throw new ErrorHandler(404, "Email does not exist");
+      }
+      const salt = await bcrypt.genSalt();
+      const hashPassword = await bcrypt.hash(newPassword, salt);
+      const updatedUser = await UserDB.updatedUserDB(
+        user.id,
+        email,
+        hashPassword
+      );
+      return {updatedUser};
+    }
+    catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new AuthService();

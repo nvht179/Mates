@@ -33,6 +33,13 @@ class UserDB {
     });
     return user[0];
   };
+
+  updatedUserDB = async (id, email, newPassword) => {
+    const user = await Person.findByPk(id);
+    user.password = newPassword;
+    await user.save();
+    return user
+  }
 }
 
 module.exports = new UserDB();

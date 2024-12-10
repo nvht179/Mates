@@ -32,104 +32,23 @@
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "/users/{id}": {
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "description": "ID of user to find",
-          "type": "integer",
-          "required": true,
-          "schema": {
-            "$ref": "#/definitions/User"
-          }
-        }
-      ],
-      "get": {
-        "tags": ["Users"],
-        "description": "Get a single user by id",
-        "summary": "Get a single user",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of user to find",
-            "type": "integer",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "user_id": {
-                "type": "integer",
-                "uniqueItems": true,
-                "readonly": true,
-                "example": 1
-              },
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Update user with give ID",
-        "tags": ["Users"],
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
+    "/users/checkUserByEmail": {
+      "post": {
+        "tags": ["User"],
+        "description": "Check email exist",
+        "summary": "Check email exist",
         "parameters": [
           {
             "name": "user",
             "in": "body",
-            "description": "User with new values of properties",
+            "description": "Email details",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/email"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "User is updated",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete user with given ID",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
-        "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of user to delete",
-            "type": "integer",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User is deleted",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
+          "200": {}
         }
       }
     },
@@ -171,6 +90,28 @@
         "responses": {
           "200": {
             "description": "Account created"
+          }
+        }
+      }
+    },
+    "/auth/forgetPassword": {
+      "put": {
+        "tags": ["Auth"],
+        "description": "Forget password",
+        "summary": "Change password",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Details",
+            "schema": {
+              "$ref": "#/definitions/forgetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Change password successfully"
           }
         }
       }
@@ -217,6 +158,14 @@
         }
       }
     },
+    "email": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        }
+      }
+    },
     "User": {
       "properties": {
         "email": {
@@ -226,6 +175,22 @@
         "password": {
           "type": "string",
           "example": "123"
+        }
+      }
+    },
+    "forgetPassword": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        },
+        "newPassword": {
+          "type": "string",
+          "example": "321"
+        },
+        "newPassword2": {
+          "type": "string",
+          "example": "321"
         }
       }
     }
