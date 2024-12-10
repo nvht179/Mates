@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const UserController = require("../controllers/user.controller");
 
-router.get("/getUserByEmail/:email", UserController.getUserByEmail);
+router.post("/checkUserByEmail", UserController.checkUserByEmail);
 
 module.exports = router;
