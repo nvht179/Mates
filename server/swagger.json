@@ -34,7 +34,7 @@
   "paths": {
     "/users/checkUserByEmail": {
       "post": {
-        "tags": ["User"],
+        "tags": ["Users"],
         "description": "Check email exist",
         "summary": "Check email exist",
         "parameters": [
