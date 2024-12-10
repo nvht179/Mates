@@ -32,10 +32,7 @@ class AuthController {
   forgetPassword = async (req, res) => {
     try {
       const {email, newPassword, newPassword2} = req.body; 
-      if (newPassword != newPassword2) {
-        throw new ErrorHandler(404, "Password does not match");
-      }
-      const updatedUser = await AuthService.forgetPassword(email, newPassword);
+      const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2);
       res.status(200).json(updatedUser);
     }
     catch (err) {

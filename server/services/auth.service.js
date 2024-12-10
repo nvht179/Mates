@@ -45,9 +45,14 @@ class AuthService {
     }
   };
 
-  forgetPassword = async(email, newPassword) => {
+  forgetPassword = async (email, newPassword, newPassword2) => {
     try {
       const user = await UserDB.getUserByEmailDB(email);
+      
+      if (newPassword != newPassword2) {
+        throw new ErrorHandler(404, "Password does not match");
+      }
+
       if (!user) {
         throw new ErrorHandler(404, "Email does not exist");
       }
@@ -58,7 +63,7 @@ class AuthService {
         email,
         hashPassword
       );
-      return {updatedUser};
+      return { updatedUser };
     }
     catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
