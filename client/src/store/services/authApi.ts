@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type {} from "@reduxjs/toolkit/query";
+import { setCredentials } from "../slices/userSlice";
 
 export interface LoginRequest {
   email: string;
@@ -23,6 +23,14 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data));
+        } catch (error) {
+          console.error("Failed to login", error);
+        }
+      },
     }),
   }),
 });

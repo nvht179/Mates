@@ -5,7 +5,7 @@ import { RootState } from "../store";
 import { setCredentials } from "../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function Authentication() {
+export default function Login() {
   const [backgroundImage, setBackgroundImage] = useState("");
   const [changeEmail, setChangeEmail] = useState(true);
   const { email } = useSelector((state: RootState) => state.user);

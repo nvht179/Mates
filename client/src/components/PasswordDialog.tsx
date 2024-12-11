@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { useLoginMutation } from "../store";
-import { useDispatch } from "react-redux";
-import { setCredentials } from "../store/slices/userSlice";
-import { AppDispatch } from "../store";
 
 interface PasswordDialogProps {
   email: string | null;
@@ -17,7 +14,6 @@ export default function PasswordDialog({
 }: PasswordDialogProps) {
   const [password, setPassword] = useState<string>("");
   const [login] = useLoginMutation();
-  const dispatch: AppDispatch = useDispatch();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -27,12 +23,9 @@ export default function PasswordDialog({
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault();
-    try {
-      const userData = await login({ email: email ?? "", password }).unwrap();
-      dispatch(setCredentials(userData));
-    } catch (error) {
-      console.error("Failed to login", error);
-    }
+    console.log("email", email);
+    console.log("password", password);
+    await login({ email: email ?? "", password }).unwrap();
   };
 
   const handleChangeAccount = () => {
@@ -65,7 +58,9 @@ export default function PasswordDialog({
         </a>
       </div>
 
-      <Button onClick={handleSubmit}>Sign in</Button>
+      <Button onClick={handleSubmit} className="mt-auto self-end">
+        Sign in
+      </Button>
     </div>
   );
 }

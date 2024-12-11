@@ -14,7 +14,9 @@ export default function LoginDialog({ email, onSubmit }: LoginDialogProps) {
     setValue(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>) => {
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
+  ) => {
     e.preventDefault();
     onSubmit(value ?? "");
   };
@@ -23,25 +25,31 @@ export default function LoginDialog({ email, onSubmit }: LoginDialogProps) {
     <div className="flex h-2/5 min-h-64 w-1/4 min-w-96 flex-col rounded bg-white p-8">
       <div className="mb-2 flex items-center">
         <img src="../../public/vite.svg" alt="Vite logo" />
-        <h1 className="text-fg-soft ml-2 font-sans text-2xl font-bold">
+        <h1 className="ml-2 font-sans text-2xl font-bold text-fg-soft">
           Mates
         </h1>
       </div>
       <h1 className="font-sans text-xl font-semibold">Sign in</h1>
 
       <form className="mb-auto mt-4" onSubmit={handleSubmit}>
-        <Input placeholder="Email" value={value ?? ""} onChange={handleEmailChange} />
+        <Input
+          placeholder="Email"
+          value={value ?? ""}
+          onChange={handleEmailChange}
+        />
       </form>
       <div className="mb-2 flex">
         <p className="px-1 text-sm">No account?</p>
-        <a className="active:text-fg-soft text-sm text-blue-700 hover:cursor-pointer hover:underline active:underline">
+        <a className="text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft active:underline">
           Sign up
         </a>
       </div>
-      <a className="active:text-fg-soft px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline">
+      <a className="px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">
         Forget your password?
       </a>
-      <Button onClick={handleSubmit}>Next</Button>
+      <Button onClick={handleSubmit} className="mt-auto self-end">
+        Next
+      </Button>
     </div>
   );
 }
