@@ -1,44 +1,27 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { ReactNode } from "react";
-import Layout from "./Layout";
-import AuthLayout from "./AuthLayout";
-import Login from "./pages/Login";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./layouts/Layout.tsx";
+import AuthLayout from "./layouts/AuthLayout.tsx";
+import Login from "./components/Login";
+import LoginLayout from "./layouts/LoginLayout.tsx";
 import SignUp from "./pages/SignUp";
-import { useSelector } from "react-redux";
 import Dashboard from "./pages/Dashboard";
-import { RootState } from "./store";
+import EnterPassword from "./components/EnterPassword";
 
 export default function App() {
-  const { isAuthenticated } = useSelector((state: RootState) => state.user);
-
-  // Protected Route component
-  const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-    if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
-    }
-    return children;
-  };
-
   return (
     <BrowserRouter>
       <Routes>
         {/* Auth routes */}
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
+          <Route element={<LoginLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/enter-password" element={<EnterPassword />} />
+          </Route>
           <Route path="/signup" element={<SignUp />} />
         </Route>
-
         {/* Protected routes with main layout */}
-        <Route
-          element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
+        <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
-          {/*<Route path="/profile" element={<Profile />} />*/}
-          {/* Add more protected routes here */}
         </Route>
       </Routes>
     </BrowserRouter>

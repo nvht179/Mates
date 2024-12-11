@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { authApi } from "../services/authApi.ts";
 
-interface AuthState {
+export interface AuthState {
   userId: number | null;
   email: string | null;
   isAuthenticated: boolean;
@@ -23,13 +24,22 @@ const userSlice = createSlice({
       const { userId, email } = action.payload;
       state.userId = userId;
       state.email = email;
-      state.isAuthenticated = true;
     },
     logout: (state) => {
       state.userId = null;
       state.email = null;
       state.isAuthenticated = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      authApi.endpoints.login.matchFulfilled,
+      (state, { payload }) => {
+        state.userId = payload.userId;
+        state.email = payload.email;
+        state.isAuthenticated = true;
+      }
+    );
   },
 });
 

@@ -17,4 +17,4 @@ setupListeners(store.dispatch);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export { useLoginMutation } from "./services/authApi";
-export * from "./services/authApi"
+export * from "./slices/userSlice"
