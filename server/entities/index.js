@@ -1,6 +1,11 @@
 const sequelize = require("../config/db");
 const Person = require("./person.model");
 const { logger } = require("../utils/logger");
+const Assignment = require("./assignment.model");
+const Attachment = require("./attachment.model");
+
+Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
+Attachment.belongsTo(Assignment, { foreignKey: "assignmentId", as: "assignment" });
 
 // Sync all models with the database
 sequelize
@@ -15,4 +20,6 @@ sequelize
 module.exports = {
   sequelize,
   Person,
+  Assignment, 
+  Attachment
 };
