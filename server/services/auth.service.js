@@ -44,6 +44,31 @@ class AuthService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  forgetPassword = async (email, newPassword, newPassword2) => {
+    try {
+      const user = await UserDB.getUserByEmailDB(email);
+      
+      if (newPassword != newPassword2) {
+        throw new ErrorHandler(404, "Password does not match");
+      }
+
+      if (!user) {
+        throw new ErrorHandler(404, "Email does not exist");
+      }
+      const salt = await bcrypt.genSalt();
+      const hashPassword = await bcrypt.hash(newPassword, salt);
+      const updatedUser = await UserDB.updatedUserDB(
+        user.id,
+        email,
+        hashPassword
+      );
+      return { updatedUser };
+    }
+    catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new AuthService();

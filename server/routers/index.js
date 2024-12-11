@@ -6,8 +6,8 @@ const swaggerUi = require("swagger-ui-express");
 const authRouter = require("./auth.router");
 const userRouter = require("./user.router");
 
-router.use("/users", userRouter);
 router.use("/auth", authRouter);
+router.use("/users", userRouter);
 router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = router;
