@@ -6,7 +6,7 @@ interface PanelProps extends React.HTMLAttributes<HTMLDivElement> {
 
 function Panel({ children, ...rest }: PanelProps) {
   const finalClassName = classnames(
-    "border rounded p-3 shadow bg-white",
+    "border rounded p-3 shadow",
     rest.className,
   );
   return (

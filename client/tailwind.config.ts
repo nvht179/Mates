@@ -24,7 +24,7 @@ export default {
           dark: "#444791",
           darker: "#3D3E78",
           border: "#9299F7",
-          bg: "#EBEBFA",
+          bg: "#E8EBFA",
         },
 
         // Status colors
