@@ -5,7 +5,7 @@ class AuthController {
   loginUser = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const {token, refreshToken, user} = await AuthService.loginUser(email, password);
+      const { token, refreshToken, user } = await AuthService.loginUser(email, password);
       res.header("auth-token", token);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -13,7 +13,7 @@ class AuthController {
       res.status(200).json({
         token,
         user,
-      }); 
+      });
     }
     catch (err) {
       res.status(err.statusCode).json(err.message);
@@ -23,14 +23,18 @@ class AuthController {
   signUp = async (req, res) => {
     try {
       const { name, email, password, phone, avatar } = req.body;
-      const newUser = await AuthService.signUp(
+      const { token, refreshToken, newUser } = await AuthService.signUp(
         name,
         email,
         password,
         phone,
         avatar,
       );
-      res.status(200).json(newUser);
+      res.header("auth-token", token);
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+      });
+      res.status(200).json({ token, newUser });
     } catch (err) {
       res.status(err.statusCode).json(err.message);
     }
@@ -38,7 +42,7 @@ class AuthController {
 
   forgetPassword = async (req, res) => {
     try {
-      const {email, newPassword, newPassword2} = req.body; 
+      const { email, newPassword, newPassword2 } = req.body;
       const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2);
       res.status(200).json(updatedUser);
     }
@@ -59,6 +63,23 @@ class AuthController {
       httpOnly: true,
     });
     res.json(tokens);
+  };
+
+  // verify password reset token
+  verifyResetToken = async (req, res) => {
+    const { token, email } = req.body;
+    const isTokenValid = await authService.verifyResetToken(token, email);
+
+    if (!isTokenValid) {
+      res.json({
+        message: "Token has expired. Please try password reset again.",
+        showForm: false,
+      });
+    } else {
+      res.json({
+        showForm: true,
+      });
+    }
   };
 }
 

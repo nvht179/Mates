@@ -44,7 +44,11 @@ class AuthService {
         phone,
         avatar,
       );
-      return { newUser };
+
+      const token = await this.signToken(newUser.id);
+      const refreshToken = await this.signRefreshToken(newUser.id);
+
+      return { token, refreshToken, newUser };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
