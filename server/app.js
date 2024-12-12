@@ -23,7 +23,7 @@ app.get("/", (req, res) =>
   res.send("<h1 style='text-align: center'>Mates API</h1>"),
 );
 
-app.use(unknownEndpoint);
 app.use(handleError);
+// app.use(unknownEndpoint);
 
 module.exports = app;

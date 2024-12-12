@@ -7,13 +7,14 @@ class UserDB {
     return users;
   };
 
-  createUserDB = async (name, email, password, phone, avatar) => {
+  createUserDB = async (name, email, password, phone, avatar, isVerified) => {
     const newUser = await Person.create({
       name,
       email,
       password,
       phone,
       avatar,
+      isVerified
     });
     return newUser;
   };
@@ -28,8 +29,10 @@ class UserDB {
   };
 
   getUserByIdDB = async (id) => {
-    const user = await Person.findByPk(id, {
-      attributes: ["id", "name", "email", "phone", "avatar"],
+    const user = await Person.findAll({
+      where: {
+        id: id,
+      },
     });
     return user[0];
   };
@@ -38,7 +41,14 @@ class UserDB {
     const user = await Person.findByPk(id);
     user.password = newPassword;
     await user.save();
-    return user
+    return user;
+  }
+
+  verifyUserDB = async (id) => {
+    const user = await Person.findByPk(id);
+    user.isVerified = true;
+    await user.save();
+    return user;
   }
 }
 
