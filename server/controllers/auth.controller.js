@@ -5,8 +5,15 @@ class AuthController {
   loginUser = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const user = await AuthService.loginUser(email, password);
-      res.status(200).json(user);
+      const {token, refreshToken, user} = await AuthService.loginUser(email, password);
+      res.header("auth-token", token);
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+      });
+      res.status(200).json({
+        token,
+        user,
+      }); 
     }
     catch (err) {
       res.status(err.statusCode).json(err.message);
@@ -38,6 +45,20 @@ class AuthController {
     catch (err) {
       res.status(err.statusCode).json(err.message);
     }
+  };
+
+  refreshToken = async (req, res) => {
+    if (!req.cookies.refreshToken) {
+      throw new ErrorHandler(401, "Token missing");
+    }
+    const tokens = await authService.generateRefreshToken(
+      req.cookies.refreshToken
+    );
+    res.header("auth-token", tokens.token);
+    res.cookie("refreshToken", tokens.refreshToken, {
+      httpOnly: true,
+    });
+    res.json(tokens);
   };
 }
 
