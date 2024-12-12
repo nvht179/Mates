@@ -40,6 +40,24 @@ class AuthController {
     }
   };
 
+  verifyEmailAndSignup = async (req, res) => {
+    try {
+      const { token } = req.query;
+
+      if (!token) {
+        return res.status(400).json({ message: "Verification token is missing" });
+      }
+
+      const message = await AuthService.verifyEmailAndSignup(token);
+
+      res.redirect('http://localhost:5173/');
+
+    } catch (err) {
+      console.error(err);
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
   forgetPassword = async (req, res) => {
     try {
       const { email, newPassword, newPassword2 } = req.body;

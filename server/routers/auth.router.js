@@ -5,11 +5,13 @@ router.post("/login", AuthController.loginUser);
 router.post("/signUp", AuthController.signUp);
 router.put("/forgetPassword", AuthController.forgetPassword);
 
+router.get('/verify-email', AuthController.verifyEmailAndSignup);
+
 // token for reset password
-router.post("/check-token", AuthController.verifyResetToken);
+// router.post("/check-token", AuthController.verifyResetToken);
 
-router.post("/reset-password", AuthController.resetPassword);
+// router.post("/reset-password", AuthController.resetPassword);
 
-router.post("/refresh-token", AuthController.refreshToken);
+// router.post("/refresh-token", AuthController.refreshToken);
 
 module.exports = router;

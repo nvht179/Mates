@@ -35,6 +35,10 @@ const Person = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    }
   },
   {
     tableName: "Person",
