@@ -10,10 +10,6 @@ router.get('/verify-email', AuthController.verifyEmailAndSignup);
 router.post('/check-email-otp', AuthController.forgetPasswordOTPEmail);
 
 // token for reset password
-// router.post("/check-token", AuthController.verifyResetToken);
-
-// router.post("/reset-password", AuthController.resetPassword);
-
-// router.post("/refresh-token", AuthController.refreshToken);
+router.post("/refresh-token", AuthController.refreshToken);
 
 module.exports = router;

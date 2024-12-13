@@ -84,7 +84,7 @@ class AuthController {
     if (!req.cookies.refreshToken) {
       throw new ErrorHandler(401, "Token missing");
     }
-    const tokens = await authService.generateRefreshToken(
+    const tokens = await AuthService.generateRefreshToken(
       req.cookies.refreshToken
     );
     res.header("auth-token", tokens.token);
@@ -92,23 +92,6 @@ class AuthController {
       httpOnly: true,
     });
     res.json(tokens);
-  };
-
-  // verify password reset token
-  verifyResetToken = async (req, res) => {
-    const { token, email } = req.body;
-    const isTokenValid = await authService.verifyResetToken(token, email);
-
-    if (!isTokenValid) {
-      res.json({
-        message: "Token has expired. Please try password reset again.",
-        showForm: false,
-      });
-    } else {
-      res.json({
-        showForm: true,
-      });
-    }
   };
 }
 
