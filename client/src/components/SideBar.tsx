@@ -1,7 +1,6 @@
 import { MdOutlineSchool } from "react-icons/md";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Panel from "./Panel";
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ export default function SideBar() {
   };
 
   return (
-    <Panel className="flex h-full flex-col items-center bg-primary-bg p-2">
+    <div className="flex h-full flex-col items-center border bg-primary-bg p-2 shadow-md sticky">
       <div
         onClick={handleClickClass}
         className="mt-2 flex cursor-pointer flex-col items-center active:opacity-30"
@@ -28,6 +27,6 @@ export default function SideBar() {
         <FaRegCalendarAlt className="text-xl" />
         <p className="mt-1 text-xs">Calendar</p>
       </div>
-    </Panel>
+    </div>
   );
 }

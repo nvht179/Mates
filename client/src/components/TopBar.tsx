@@ -1,10 +1,9 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import Input from "./Input";
-import Panel from "./Panel";
 
 export default function TopBar() {
   return (
-    <Panel className="flex items-center justify-between bg-primary-bg p-1 shadow-md">
+    <div className="flex items-center justify-between bg-primary-bg p-1 shadow-md border sticky top-0">
       {/* Logo */}
       <img src="../../public/vite.svg" alt="Logo" className="ml-4 h-6 w-6" />
 
@@ -28,6 +27,6 @@ export default function TopBar() {
           className="h-6 w-6 rounded-full"
         />
       </div>
-    </Panel>
+    </div>
   );
 }

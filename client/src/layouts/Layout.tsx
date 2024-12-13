@@ -12,7 +12,7 @@ function Layout() {
     return <Navigate to="/login" replace />;
   }
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen w-screen flex-col">
       <TopBar />
       <div className="flex flex-1 flex-row">
         <SideBar />
