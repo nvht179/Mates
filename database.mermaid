@@ -1,3 +1,5 @@
+```mermaid
+
 erDiagram
     Notification {
         integer notificationID PK
@@ -18,6 +20,8 @@ erDiagram
         varchar password
         varchar phone
         varchar avatar
+        boolean isVerified
+        varchar resetToken
     }
 
     Student {
@@ -83,9 +87,9 @@ erDiagram
 
     Attachment {
         integer attachmentID PK
-        link link
+        varchar link
         varchar linkTitle
-        file file
+        blob file
     }
 
     Event {

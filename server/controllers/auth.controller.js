@@ -1,5 +1,6 @@
 const AuthService = require("../services/auth.service");
 const { ErrorHandler } = require("../helpers/error");
+const UserService = require("../services/user.service");
 
 class AuthController {
   loginUser = async (req, res) => {
@@ -60,20 +61,30 @@ class AuthController {
 
   forgetPassword = async (req, res) => {
     try {
-      const { email, newPassword, newPassword2 } = req.body;
-      const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2);
+      const { email, newPassword, newPassword2, OTP } = req.body;
+      const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2, OTP);
       res.status(200).json(updatedUser);
-    }
-    catch (err) {
+    } catch (err) {
       res.status(err.statusCode).json(err.message);
     }
   };
+
+  forgetPasswordOTPEmail = async (req, res) => {
+    try {
+      const { email } = req.body;
+      const user = await UserService.checkUserByEmail(email);
+      const updatedUser = await AuthService.forgetPasswordOTPEmail(user.id, email);
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  }
 
   refreshToken = async (req, res) => {
     if (!req.cookies.refreshToken) {
       throw new ErrorHandler(401, "Token missing");
     }
-    const tokens = await authService.generateRefreshToken(
+    const tokens = await AuthService.generateRefreshToken(
       req.cookies.refreshToken
     );
     res.header("auth-token", tokens.token);
@@ -81,23 +92,6 @@ class AuthController {
       httpOnly: true,
     });
     res.json(tokens);
-  };
-
-  // verify password reset token
-  verifyResetToken = async (req, res) => {
-    const { token, email } = req.body;
-    const isTokenValid = await authService.verifyResetToken(token, email);
-
-    if (!isTokenValid) {
-      res.json({
-        message: "Token has expired. Please try password reset again.",
-        showForm: false,
-      });
-    } else {
-      res.json({
-        showForm: true,
-      });
-    }
   };
 }
 

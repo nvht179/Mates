@@ -102,7 +102,7 @@ class AuthService {
     }
   };
 
-  forgetPassword = async (email, newPassword, newPassword2) => {
+  forgetPassword = async (email, newPassword, newPassword2, OTP) => {
     try {
       const user = await UserDB.getUserByEmailDB(email);
 
@@ -113,6 +113,11 @@ class AuthService {
       if (!user) {
         throw new ErrorHandler(404, "Email does not exist");
       }
+
+      if (user.resetToken != OTP) {
+        throw new ErrorHandler(404, "OTP is not correct");
+      }
+
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(newPassword, salt);
       const updatedUser = await UserDB.updatedUserDB(
@@ -126,6 +131,22 @@ class AuthService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  forgetPasswordOTPEmail = async (id, email) => {
+    const OTP = Math.floor(100000 + Math.random() * 900000);
+    const user = UserDB.updatedResetTokenDB(id, OTP.toString());
+
+    // Send the verification email
+    try {
+      await MailService.sendResetPassword(email, OTP.toString());
+      logger.info("Verification OTP sent");
+    } catch (err) {
+      logger.error('Error sending OTP email:', err);
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+
+    return user;
+  }
 
   generateRefreshToken = async (data) => {
     const payload = await this.verifyRefreshToken(data);
