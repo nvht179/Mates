@@ -1,14 +1,15 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
+import logo from "../../public/vite.svg";
 import Input from "./Input";
 
 export default function TopBar() {
   return (
-    <div className="flex items-center justify-between bg-primary-bg p-1 shadow-md border sticky top-0">
+    <div className="sticky top-0 flex h-12 items-center justify-between border bg-primary-bg p-1 px-4 shadow-md">
       {/* Logo */}
-      <img src="../../public/vite.svg" alt="Logo" className="ml-4 h-6 w-6" />
+      <img src={logo} alt="Logo" className="h-6 w-6" />
 
       {/* Search Bar */}
-      <div className="w-2/5 items-center">
+      <div className="w-2/5 items-center p-2">
         <Input type="text" placeholder="Search" />
       </div>
 

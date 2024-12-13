@@ -19,14 +19,14 @@ function DiscussionPage() {
         {
           user: "Jane Doe",
           content: "Nice post!",
-          time: "15/11/2024 13:00"
+          time: "15/11/2024 13:00",
         },
         {
           user: "Tim",
           content: "I agree!",
-          time: "15/11/2024 13:00"
-        }
-      ]
+          time: "15/11/2024 13:00",
+        },
+      ],
     },
     {
       id: 2,
@@ -39,14 +39,14 @@ function DiscussionPage() {
         {
           user: "Jane Doe",
           content: "Nice post!",
-          time: "15/11/2024 13:00"
+          time: "15/11/2024 13:00",
         },
         {
           user: "Tim",
           content: "I agree!",
-          time: "15/11/2024 13:00"
-        }
-      ]
+          time: "15/11/2024 13:00",
+        },
+      ],
     },
     {
       id: 3,
@@ -59,19 +59,19 @@ function DiscussionPage() {
         {
           user: "Jane Doe",
           content: "Nice post!",
-          time: "15/11/2024 13:00"
+          time: "15/11/2024 13:00",
         },
         {
           user: "Tim",
           content: "I agree!",
-          time: "15/11/2024 13:00"
-        }
-      ]
+          time: "15/11/2024 13:00",
+        },
+      ],
     },
   ];
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="flex h-full w-full flex-col">
       <Panel className="flex h-16 flex-row items-center py-4">
         <img
           src={image}
@@ -80,10 +80,8 @@ function DiscussionPage() {
         />
         <h1 className="ml-4 text-lg font-bold">Discussion</h1>
       </Panel>
-      <PostList posts={posts}/>
-      <div className="px-44">
-        <Button className="my-8">Start a post</Button>
-      </div>
+      <PostList posts={posts} />
+      <Button className="my-4 ml-44 w-36">Start a post</Button>
     </div>
   );
 }

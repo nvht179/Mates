@@ -46,6 +46,7 @@ export default function EnterPassword() {
           placeholder="Enter your password"
           value={password}
           onChange={handlePasswordChange}
+          autoFocus
         />
       </form>
       <a className="mb-2 px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">

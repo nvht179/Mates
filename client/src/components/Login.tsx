@@ -38,6 +38,7 @@ export default function Login() {
           placeholder="Email"
           value={email ?? ""}
           onChange={handleEmailChange}
+          autoFocus
         />
       </form>
       <div className="mb-2 flex">

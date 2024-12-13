@@ -70,10 +70,11 @@ function PostList({ posts }: PostListProps) {
   });
 
   return (
-    <div className="overflow-y-scroll px-44 h-96">
+    <div className="overflow-y-scroll px-44">
       {renderedPostList}
     </div>
   );
 }
 
 export default PostList;
+export { PostListProps, Post, Comment };
