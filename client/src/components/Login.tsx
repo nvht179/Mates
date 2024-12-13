@@ -19,6 +19,10 @@ export default function Login() {
     navigate("/enter-password", { state: { email: email } });
   };
 
+  const handleSignup = () => {
+    navigate("/choose-role");
+  };
+
   return (
     <div className="flex h-2/5 min-h-64 w-1/4 min-w-96 flex-col rounded bg-white p-8">
       <div className="mb-3 flex items-center">
@@ -38,7 +42,7 @@ export default function Login() {
       </form>
       <div className="mb-2 flex">
         <p className="px-1 text-sm">No account?</p>
-        <a className="text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft active:underline">
+        <a onClick={handleSignup} className="text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft active:underline">
           Sign up
         </a>
       </div>
