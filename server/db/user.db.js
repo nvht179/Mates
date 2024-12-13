@@ -50,6 +50,13 @@ class UserDB {
     await user.save();
     return user;
   }
+
+  updatedResetTokenDB = async (id, OTP = null) => {
+    const user = await Person.findByPk(id);
+    user.resetToken = OTP;
+    await user.save();
+    return user;
+  }
 }
 
 module.exports = new UserDB();

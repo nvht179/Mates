@@ -7,6 +7,8 @@ router.put("/forgetPassword", AuthController.forgetPassword);
 
 router.get('/verify-email', AuthController.verifyEmailAndSignup);
 
+router.post('/check-email-otp', AuthController.forgetPasswordOTPEmail);
+
 // token for reset password
 // router.post("/check-token", AuthController.verifyResetToken);
 

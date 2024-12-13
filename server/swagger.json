@@ -115,6 +115,46 @@
           }
         }
       }
+    },
+    "/auth/verify-email": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Verify the sign up account",
+        "summary": "Verify the sign up account",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Get the token",
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/auth/check-email-otp": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Check the email and send OTP",
+        "summary": "Check the email and send OTP",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Get the token",
+            "schema": {
+              "$ref": "#/definitions/email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
     }
   },
   "definitions": {
@@ -191,6 +231,10 @@
         "newPassword2": {
           "type": "string",
           "example": "321"
+        },
+        "OTP": {
+          "type": "string",
+          "example": "123456"
         }
       }
     }
