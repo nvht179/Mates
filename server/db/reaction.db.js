@@ -19,7 +19,7 @@ class ReactionDB {
   }
 
   // Phương thức lấy tất cả reactions của một bài viết
-  async getReactionsByPostId({ postId }) {
+  async getReactionsByPostId(postId) {
     try {
       // Get all reactions for a specific post from the database
       const reactions = await Reaction.findAll({
@@ -33,7 +33,7 @@ class ReactionDB {
   }
 
   // Phương thức xóa reaction theo ID
-  async deleteReaction({ id }) {
+  async deleteReaction(id) {
     try {
       // Delete the reaction entry by ID
       const result = await Reaction.destroy({
@@ -53,11 +53,11 @@ class ReactionDB {
   }
 
   // Phương thức cập nhật reaction (ví dụ thay đổi loại reaction)
-  async updateReaction({ id, newType }) {
+  async updateReaction({id,newType}) {
     try {
+
       // Find the reaction by its ID
       const reaction = await Reaction.findByPk(id);
-
       if (!reaction) {
         // If no reaction is found, throw a "not found" error
         throw new ErrorHandler(404, "Reaction not found");

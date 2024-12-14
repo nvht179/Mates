@@ -8,9 +8,9 @@ router.post("/create", ReactionController.createReaction);
 router.get("/:postId", ReactionController.getReactionsByPostId);
 
 // Route to delete a reaction by its ID
-router.delete("/:id", ReactionController.deleteReaction);
+router.delete("/delete", ReactionController.deleteReaction);
 
 // Route to update a reaction by its ID
-router.put("/:id", ReactionController.updateReaction);
+router.put("/update", ReactionController.updateReaction);
 
 module.exports = router;

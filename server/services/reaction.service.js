@@ -13,7 +13,7 @@ class ReactionService {
   }
 
   // Phương thức lấy tất cả reactions của một bài viết
-  async getReactionsByPostId({postId}) {
+  async getReactionsByPostId(postId) {
     try {
       const reactions = await ReactionDB.getReactionsByPostId(postId);
       return reactions;
@@ -23,7 +23,7 @@ class ReactionService {
   }
 
   // Phương thức xóa reaction theo ID
-  async deleteReaction({id}) {
+  async deleteReaction(id) {
     try {
       const response = await ReactionDB.deleteReaction(id);
       return response;
@@ -35,9 +35,11 @@ class ReactionService {
   // Phương thức cập nhật reaction
   async updateReaction({id, newType}) {
     try {
-      const updatedReaction = await ReactionDB.updateReaction(id, newType);
+      const updatedReaction = await ReactionDB.updateReaction({id, newType});
       return updatedReaction;
     } catch (error) {
+        console.log(error)
+
       throw new ErrorHandler(500, "Error in service layer while updating reaction", error);
     }
   }
