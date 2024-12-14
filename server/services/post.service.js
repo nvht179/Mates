@@ -6,15 +6,12 @@ class PostService {
         classId,
         title,
         content,
-        attachmentId,
     }) => {
     try {
-        const newPost = await postDB.addNewPost({
-            classId,
-            title,
-            content,
-            attachmentId,
-        });
+      const newPost = await Post.create(
+        { classId, title, content },
+        { transaction }
+      );
       if (!newPost) {
         throw new ErrorHandler(403, "Not exist assignment");
       }

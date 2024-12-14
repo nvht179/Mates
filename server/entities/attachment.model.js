@@ -1,7 +1,8 @@
 "use strict";
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
-const Assignment = require("./assignment.model")
+const Assignment = require("./assignment.model");
+const Post = require("./post.model");
 const Attachment = sequelize.define(
   "Attachment",
   {
@@ -16,13 +17,20 @@ const Attachment = sequelize.define(
     },
     linkTitle: {
       type: DataTypes.STRING,
-      unique: true,
     },
     assignmentId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: Assignment,
+          key: "id",
+        },
+    },
+    postId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: Post,
           key: "id",
         },
     },

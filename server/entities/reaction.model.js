@@ -15,7 +15,7 @@ const Reaction = sequelize.define(
         },
     },
     type: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     postId: {
         type: DataTypes.INTEGER,

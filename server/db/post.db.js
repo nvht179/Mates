@@ -7,7 +7,6 @@ class PostDB {
     classId,
     title,
     content,
-    attachmentId,
   }) => {
     try{
         const newPost = await Post.create(
@@ -15,7 +14,6 @@ class PostDB {
                 classId,
                 title,
                 content,
-                attachmentId,
             },
         );
         return newPost;

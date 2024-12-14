@@ -2,7 +2,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const Class = require("./class.model");
-const Attachment = require("./attachment.model");
 
 const Post = sequelize.define(
   "Post",
@@ -20,13 +19,6 @@ const Post = sequelize.define(
     content: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    attachmentId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: Attachment,
-          key: "id",
-        },
     },
     classId: {
         type: DataTypes.INTEGER,

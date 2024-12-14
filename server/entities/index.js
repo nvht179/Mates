@@ -24,6 +24,10 @@ Comment.belongsTo(Post, { foreignKey: "postId", as: "post" });
 Post.hasMany(Reaction, { foreignKey: "postId", as: "reactions" });
 Reaction.belongsTo(Post, { foreignKey: "postId", as: "post" });
 
+// Post and attachment
+Post.hasMany(Attachment, { foreignKey: "postId", as: "attachments" });
+Attachment.belongsTo(Post, { foreignKey: "postId", as: "post" });
+
 // Class and Post
 Class.hasMany(Post, { foreignKey: "classId", as: "posts" });
 Post.belongsTo(Class, { foreignKey: "classId", as: "class" });
@@ -31,6 +35,7 @@ Post.belongsTo(Class, { foreignKey: "classId", as: "class" });
 // Person and Comment
 Person.hasMany(Comment, { foreignKey: "personId", as: "comments" });
 Comment.belongsTo(Person, { foreignKey: "personId", as: "person" });
+
 
 // Sync all models with the database
 sequelize
@@ -46,5 +51,9 @@ module.exports = {
   sequelize,
   Person,
   Assignment, 
-  Attachment
+  Attachment,
+  Post, 
+  Reaction,
+  Comment,
+  Class,
 };
