@@ -26,18 +26,6 @@
     {
       "name": "Users",
       "description": "API for users"
-    },
-    {
-      "name": "Classes",
-      "description": "API for classes"
-    },
-    {
-      "name": "Posts",
-      "description": "API for posts"
-    },
-    {
-      "name": "Attachments",
-      "description": "API for attachments"
     }
   ],
   "schemes": ["http"],
@@ -128,74 +116,67 @@
         }
       }
     },
-    "/classes/create": {
-      "post": {
-        "tags": ["Classes"],
-        "description": "Create a new class",
-        "summary": "Create a new class",
+    "/auth/verify-email": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Verify the sign up account",
+        "summary": "Verify the sign up account",
         "parameters": [
           {
-            "name": "class",
+            "name": "user",
             "in": "body",
-            "description": "Details",
+            "description": "Get the token",
             "schema": {
-              "$ref": "#/definitions/createClass"
+              "$ref": "#/definitions/login"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Create a class successfully"
-          }
+          "200": {}
         }
       }
     },
-    "/posts/create": {
+    "/auth/check-email-otp": {
       "post": {
-        "tags": ["Posts"],
-        "description": "Create a new post",
-        "summary": "Create a new post",
+        "tags": ["Auth"],
+        "description": "Check the email and send OTP",
+        "summary": "Check the email and send OTP",
         "parameters": [
           {
-            "name": "post",
+            "name": "user",
             "in": "body",
-            "description": "Details",
+            "description": "Get the token",
             "schema": {
-              "$ref": "#/definitions/createPost"
+              "$ref": "#/definitions/email"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Create a post successfully"
-          }
+          "200": {}
         }
       }
     },
-    "/attachments/create": {
+    "/auth/refresh-token": {
       "post": {
-        "tags": ["Attachments"],
-        "description": "Add a new attachment to a post",
-        "summary": "Add a new attachment to a post",
+        "tags": ["Auth"],
+        "description": "Refresh the token jwt",
+        "summary": "Refresh the token jwt",
         "parameters": [
           {
-            "name": "attachment",
+            "name": "auth",
             "in": "body",
-            "description": "Details",
+            "description": "Refresh the token",
             "schema": {
-              "$ref": "#/definitions/addAttachmentToPost"
+              "$ref": ""
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Add a attachment successfully"
-          }
+          "200": {}
         }
       }
     }
   },
-  
   "definitions": {
     "SignUp": {
       "properties": {
@@ -270,58 +251,10 @@
         "newPassword2": {
           "type": "string",
           "example": "321"
-        }
-      }
-    },
-    "createClass":{
-      "properties": {
-        "name": {
-          "type": "string",
-          "example": "Introduction to Programming"
         },
-        "code": {
+        "OTP": {
           "type": "string",
-          "example": "CS161"
-        },
-        "description": {
-          "type": "string",
-          "example": "Learn c++ basic syntax"
-        }
-      }
-    },
-    "createPost":{
-      "properties": {
-        "classId": {
-          "type": "string",
-          "example": "2"
-        },
-        "title": {
-          "type": "string",
-          "example": "CS161"
-        },
-        "content": {
-          "type": "string",
-          "example": "First post"
-        }
-      }
-    },
-    "addAttachmentToPost":{
-      "properties": {
-        "link": {
-          "type": "string",
-          "example": "http://example.com/file"
-        },
-        "linkTitle": {
-          "type": "string",
-          "example": "Example File"
-        },
-        "assignmentId": {
-          "type": "integer",
-          "example": null
-        },
-        "postId": {
-          "type": "integer",
-          "example": 1
+          "example": "123456"
         }
       }
     }
