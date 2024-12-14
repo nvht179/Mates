@@ -6,6 +6,12 @@ const Post = require("./post.model");
 const Reaction = sequelize.define(
   "Reaction",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     personId: {
         type: DataTypes.INTEGER,
         allowNull: false,

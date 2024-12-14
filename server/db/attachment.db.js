@@ -8,14 +8,24 @@ class AttachmentDB {
     return attachment;
   };
 
-  addAttachment = async ({ link, linkTitle, assignmentId, postId }) => {
+  addAttachment = async ({ link, linkTitle, assignmentId, postId }, options) => {
     try {
-      const newAttachment = await Attachment.create({
-        link,
-        linkTitle,
-        assignmentId,
-        postId,
-      });
+      if (options?.transaction) {
+        console.log("Transaction passed to addAttachment:", options.transaction.id); // Log transaction
+      } else {
+        console.warn("No transaction passed to addAttachment");
+      }
+
+      const newAttachment = await Attachment.create(
+        {
+          link,
+          linkTitle,
+          assignmentId,
+          postId,
+        },
+        options 
+      );
+
       return newAttachment;
     } catch (err) {
       throw new Error("Error adding new attachment: " + err.message);

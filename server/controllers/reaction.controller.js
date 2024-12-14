@@ -8,7 +8,7 @@ class ReactionController {
       const newReaction = await ReactionService.createReaction({ personId, postId, type });
       res.status(200).json(newReaction);
     } catch (err) {
-      res.status(404).json(err.message);
+      res.status(404).json(err);
     }
   }
 
@@ -31,7 +31,7 @@ class ReactionController {
   // Phương thức xóa reaction theo ID
   async deleteReaction(req, res) {
     try {
-      const { id } = req.params;
+      const { id } = req.body;
       const response = await ReactionService.deleteReaction(id);
 
       res.status(200).json(response);
@@ -43,9 +43,8 @@ class ReactionController {
   // Phương thức cập nhật reaction
   async updateReaction(req, res) {
     try {
-      const { id } = req.params;
-      const { newType } = req.body;
-      const updatedReaction = await ReactionService.updateReaction(id, newType);
+      const { id, newType } = req.body;
+      const updatedReaction = await ReactionService.updateReaction({id, newType});
 
       res.status(200).json(updatedReaction);
     } catch (err) {
