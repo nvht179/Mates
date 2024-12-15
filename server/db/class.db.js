@@ -12,6 +12,10 @@ class ClassDB {
     });
     return newClass;
   };
+  viewAllClasses = async () => {
+    const allClasses = await Class.findAll();
+    return allClasses;
+  };
 }
 
 module.exports = new ClassDB();

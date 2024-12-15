@@ -1,4 +1,5 @@
 const ClassService = require("../services/class.service");
+
 class ClassController {
   createNewClass = async (req, res) => {
     try {
@@ -9,6 +10,15 @@ class ClassController {
         description,
       });
       res.status(200).json(newClass);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
+  viewAllClasses = async (req, res) => {
+    try {
+      const allClasses = await ClassService.viewAllClasses();
+      res.status(200).json(allClasses);
     } catch (err) {
       res.status(err.statusCode).json(err.message);
     }
