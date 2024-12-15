@@ -41,16 +41,32 @@ class ClassService {
         if (!student) {
           throw new ErrorHandler(403, "There is not exist student");
         }
-        // console.log("ClassService:", student.studentID, classID);
         const studentClass = await ClassDB.addStudentsToClass(student.id, classID);
-        console.log(studentClass);
         studentsClass.push(studentClass);
       }
       return studentsClass;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
-  }
+  };
+
+  addTeachersToClass = async (classID, newTeachers) => {
+    try {
+      const teachersClass = []
+      for (const newTeacher of newTeachers) {
+        const { teacherEmail, role } = newTeacher;
+        const teacher = await UserDB.getUserByEmailDB(teacherEmail)
+        if (!teacher) {
+          throw new ErrorHandler(403, "There is not exist teacher");
+        }
+        const teacherClass = await ClassDB.addTeachersToClass(teacher.id, classID, role);
+        teachersClass.push(teacherClass);
+      }
+      return teachersClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new ClassService();

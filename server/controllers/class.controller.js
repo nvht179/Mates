@@ -27,8 +27,18 @@ class ClassController {
   addStudentsToClass = async (req, res) => {
     try {
       const {classID, emailStudents} = req.body;
-      const studentClass = await ClassService.addStudentsToClass(classID, emailStudents);
-      res.status(200).json(studentClass);
+      const studentsClass = await ClassService.addStudentsToClass(classID, emailStudents);
+      res.status(200).json(studentsClass);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
+  addTeachersToClass = async (req, res) => {
+    try {
+      const {classID, newTeachers} = req.body;
+      const teachersClass = await ClassService.addTeachersToClass(classID, newTeachers);
+      res.status(200).json(teachersClass);
     } catch (err) {
       res.status(err.statusCode).json(err.message);
     }

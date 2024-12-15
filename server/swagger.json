@@ -277,7 +277,7 @@
           {
             "name": "class",
             "in": "body",
-            "description": "Create a class",
+            "description": "Add students to class",
             "schema": {
               "$ref": "#/definitions/addStudentToClass"
             }
@@ -286,6 +286,30 @@
         "responses": {
           "200": {
             "description": "Add students to class successfully"
+          }
+        }
+      }
+    },
+    "/classes/add-teachers-to-class": {
+      "post": {
+        "tags": [
+          "Classes"
+        ],
+        "description": "Add teachers to class",
+        "summary": "Add teachers to class",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "body",
+            "description": "Add teachers to class",
+            "schema": {
+              "$ref": "#/definitions/addTeacherToClass"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Add teachers to class successfully"
           }
         }
       }
@@ -410,6 +434,30 @@
           "example": [
             "lnkhoa22@apcs.fitus.edu.vn",
             "cucdaunho@gmail.com"
+          ]
+        }
+      }
+    },
+    "addTeacherToClass": {
+      "properties": {
+        "classID": {
+          "type": "string",
+          "example": "1"
+        },
+        "newTeachers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            {
+              "teacherEmail": "meow@gmail.com",
+              "role": "Teacher"
+            },
+            {
+              "teacherEmail": "ddien01@gmail.com",
+              "role": "TA"
+            }
           ]
         }
       }
