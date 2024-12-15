@@ -36,8 +36,6 @@ const TeacherClass = sequelize.define(
   {
     classID: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
       allowNull: false,
       references: {
         model: Class,
@@ -60,6 +58,11 @@ const TeacherClass = sequelize.define(
   {
     tableName: "Teacher_Class",
     timestamps: false,
+    uniqueKeys: {
+      teacherClassUnique: {
+        fields: ['classID', 'teacherID'], // Composite candidate key
+      },
+    },
   },
 );
 
@@ -68,8 +71,6 @@ const StudentClass = sequelize.define(
   {
     classID: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
       allowNull: false,
       references: {
         model: Class,
@@ -88,6 +89,11 @@ const StudentClass = sequelize.define(
   {
     tableName: "Student_Class",
     timestamps: false,
+    uniqueKeys: {
+      studentClassUnique: {
+        fields: ['classID', 'studentID'], // Composite candidate key
+      },
+    },
   },
 );
 

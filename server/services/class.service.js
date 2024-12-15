@@ -35,16 +35,18 @@ class ClassService {
 
   addStudentsToClass = async (classID, emailStudents) => {
     try {
-      const students = [];
+      const studentsClass = []
       for (const email of emailStudents) {
         const student = await UserDB.getUserByEmailDB(email)
         if (!student) {
           throw new ErrorHandler(403, "There is not exist student");
         }
-        console.log(student)
-        students.push(student);
+        // console.log("ClassService:", student.studentID, classID);
+        const studentClass = await ClassDB.addStudentsToClass(student.id, classID);
+        console.log(studentClass);
+        studentsClass.push(studentClass);
       }
-      return students;
+      return studentsClass;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
