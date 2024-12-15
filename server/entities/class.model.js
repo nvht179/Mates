@@ -5,13 +5,13 @@ const sequelize = require("../config/db");
 const Class = sequelize.define(
   "Class",
   {
-    id: {
+    classID: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    name: {
+    className: {
       type: DataTypes.STRING,
       unique: true,
     },

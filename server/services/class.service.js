@@ -1,17 +1,13 @@
 const ClassDB = require("../db/class.db");
 
 class ClassService {
-    addNewClass = async ({
-        name,
+  createNewClass = async ({ className, code, description }) => {
+    try {
+      const newClass = await ClassDB.createNewClass({
+        className,
         code,
         description,
-    }) => {
-    try {
-        const newClass = await ClassDB.addNewClass({
-            name,
-            code,
-            description,
-        });
+      });
       if (!newClass) {
         throw new ErrorHandler(403, "Not exist assignment");
       }
