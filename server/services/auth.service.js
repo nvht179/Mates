@@ -6,6 +6,7 @@ const { ErrorHandler } = require("../helpers/error");
 const UserDB = require("../db/user.db");
 const { logger } = require("../utils/logger");
 const MailService = require("./mail.service");
+const { P } = require("pino");
 // const { P } = require("pino");
 
 class AuthService {
@@ -33,7 +34,7 @@ class AuthService {
     }
   };
 
-  signUp = async (name, email, password, phone, avatar) => {
+  signUp = async (role, name, email, password, phone, avatar, childEmail) => {
     try {
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
@@ -52,11 +53,35 @@ class AuthService {
         false
       );
 
+      let classUser;
+      // Create the following id user
+      if (role == "Student") {
+        const studentID = newUser.id;
+        classUser = await UserDB.createStudentDB(studentID);
+      }
+      else if (role == "Teacher") {
+        const teacherID = newUser.id;
+        classUser = await UserDB.createTeacherDB(teacherID);
+      }
+      else if (role == "Parent") {
+        const child = await UserDB.getUserByEmailDB(childEmail);
+
+        if (!child) {
+          throw new ErrorHandler(404, "Your child email is not correct");
+        }
+
+        const parentID = newUser.id;
+        classUser = await UserDB.createParentDB(parentID, child.id);
+      }
+      else {
+        throw new ErrorHandler(404, "Wrong role");
+      }
+
       // Generate verification token and link
       const verificationToken = jwt.sign(
         { id: newUser.id },
-        process.env.SECRET, 
-        { expiresIn: '1h' } 
+        process.env.SECRET,
+        { expiresIn: '1h' }
       );
       const verificationLink = `http://localhost:8080/api/auth/verify-email?token=${verificationToken}`;
 
@@ -72,7 +97,7 @@ class AuthService {
       const token = await this.signToken(newUser.id);
       const refreshToken = await this.signRefreshToken(newUser.id);
 
-      return { token, refreshToken, newUser };
+      return { token, refreshToken, newUser, classUser };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }

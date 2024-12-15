@@ -23,19 +23,21 @@ class AuthController {
 
   signUp = async (req, res) => {
     try {
-      const { name, email, password, phone, avatar } = req.body;
-      const { token, refreshToken, newUser } = await AuthService.signUp(
+      const { role, name, email, password, phone, avatar, childEmail } = req.body;
+      const { token, refreshToken, newUser, classUser } = await AuthService.signUp(
+        role,
         name,
         email,
         password,
         phone,
         avatar,
+        childEmail
       );
       res.header("auth-token", token);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
       });
-      res.status(200).json({ token, newUser });
+      res.status(200).json({ token, newUser, classUser });
     } catch (err) {
       res.status(err.statusCode).json(err.message);
     }
