@@ -12,6 +12,7 @@ import LecturePage from "./pages/LecturePage";
 import AssignmentPage from "./pages/AssignmentPage";
 import DiscussionPage from "./pages/DiscussionPage";
 import Calendar from "./pages/Calendar";
+import ForgetPassword from "./components/ForgetPassword";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signup-parent" element={<SignupParent />} />
           <Route path="/choose-role" element={<ChooseRole />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Route>
         {/* Protected routes with main layout */}
         <Route element={<Layout />}>
