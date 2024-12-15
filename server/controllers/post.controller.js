@@ -20,6 +20,20 @@ class PostController {
       res.status(400).json({ error: err.message });
     }
   };
+  async getPostsByClassId(req, res) {
+    try {
+      const { classId } = req.body;
+      const posts = await PostService.getPostsByClassId(classId);
+
+      if (posts.length === 0) {
+        throw new ErrorHandler(404, "No reactions found for this post");
+      }
+
+      res.status(200).json(posts);
+    } catch (err) {
+      res.status(404).json(err.message);
+    }
+  }
 }
 
 module.exports = new PostController();

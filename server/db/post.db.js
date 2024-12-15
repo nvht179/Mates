@@ -44,6 +44,16 @@ class PostDB {
       throw new ErrorHandler("Error creating post with attachments", error);
     }
   };
+  async getPostsByClassId(classId) {
+    try {
+      const posts = await Post.findAll({
+        where: { classId }
+      });
+      return posts;
+    } catch (error) {
+      throw new ErrorHandler(500, "Error retrieving reactions", error);
+    }
+  }
 }
 
 module.exports = new PostDB();

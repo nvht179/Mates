@@ -18,6 +18,14 @@ class PostService {
       throw new ErrorHandler(500, `Error in creating post with attachments in service: ${err.message}`);
     }
   };
+  async getPostsByClassId(classId) {
+    try {
+      const posts = await PostDB.getPostsByClassId(classId);
+      return posts;
+    } catch (error) {
+      throw new ErrorHandler(500, "Error in service layer while retrieving reactions", error);
+    }
+  }
 }
 
 module.exports = new PostService();

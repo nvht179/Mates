@@ -205,8 +205,151 @@
           }
         }
       }
+    },
+    "/reactions/create": {
+      "post": {
+        "tags": ["Reactions"],
+        "description": "Add a new reactions to a Post",
+        "summary": "Add a new reactions to a Post",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Add a reaction",
+            "schema": {
+              "$ref": "#/definitions/createReactionToPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create a post successfully"
+          }
+        }
+      }
+    },
+    "/reactions/postId={postId}": {
+      "get": {
+        "tags": ["Reactions"],
+        "description": "Get all reactions for a post",
+        "summary": "Get reactions by class ID",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the post to retrieve reactions for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of reactions for posts in the specified class",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reaction"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid class ID supplied"
+          },
+          "404": {
+            "description": "No reactions found for the specified class ID"
+          }
+        }
+      }
+    },
+    "/reactions/update": {
+      "put": {
+        "tags": ["Reactions"],
+        "description": "Update a reaction by its ID",
+        "summary": "Update reaction",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Reaction update details",
+            "schema": {
+              "$ref": "#/definitions/updateReaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reaction updated successfully"
+          },
+          "400": {
+            "description": "Invalid input or missing required parameters"
+          },
+          "404": {
+            "description": "Reaction not found"
+          }
+        }
+      }
+    },
+    "/reactions/delete": {
+      "delete": {
+        "tags": ["Reactions"],
+        "description": "Delete a reaction by its ID",
+        "summary": "Delete a reaction",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Reaction delete details",
+            "schema": {
+              "$ref": "#/definitions/deleteReaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reaction deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Reaction deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reaction not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Reaction not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error deleting reaction",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error deleting reaction"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error details here"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
+
   "definitions": {
     "SignUp": {
       "properties": {
@@ -329,6 +472,51 @@
     },
     "required": ["classId", "title", "content"],
     "description": "Schema for creating a post with optional attachments"
+    },
+    "createReactionToPost": {
+      "properties": {
+        "personId": {
+          "type": "integer",
+          "example": 1
+        },
+        "type": {
+          "type": "string",
+          "example": "love"
+        },
+        "postId": {
+          "type": "integer",
+          "example": "6"
+        }
+      }
+    },
+    "updateReaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 5,
+          "description": "ID of the reaction to update"
+        },
+        "newType": {
+          "type": "string",
+          "example": "like",
+          "description": "The new type of reaction (e.g., 'like', 'love', 'haha')"
+        }
+      },
+      "required": ["id", "newType"],
+      "description": "Schema for updating a reaction"
+    },
+    "deleteReaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 4,
+          "description": "The ID of the reaction to delete"
+        }
+      },
+      "required": ["id"],
+      "description": "Schema for deleting a reaction"
     }
   }
 }

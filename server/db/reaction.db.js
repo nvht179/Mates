@@ -18,16 +18,13 @@ class ReactionDB {
     }
   }
 
-  // Phương thức lấy tất cả reactions của một bài viết
   async getReactionsByPostId(postId) {
     try {
-      // Get all reactions for a specific post from the database
       const reactions = await Reaction.findAll({
         where: { postId }
       });
       return reactions;
     } catch (error) {
-      // Throw a custom error if something goes wrong
       throw new ErrorHandler(500, "Error retrieving reactions", error);
     }
   }
@@ -73,6 +70,7 @@ class ReactionDB {
       throw new ErrorHandler(500, "Error updating reaction", error);
     }
   }
+  
 }
 
 module.exports = new ReactionDB();
