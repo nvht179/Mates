@@ -53,6 +53,18 @@ class AttachmentDB {
     }
   };
   
+  async findAttachmentsByPostId(postId) {
+    try {
+      const attachments = await Attachment.findAll({
+        where: { postId }, // Điều kiện lọc theo postId
+      });
+
+      return attachments;
+    } catch (error) {
+      console.error("Error in AttachmentDB:", error);
+      throw new Error(`Error fetching attachments by postId: ${error.message}`);
+    }
+  };
   
 }
 

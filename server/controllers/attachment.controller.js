@@ -74,7 +74,60 @@ class AttachmentController {
     }
   };
   
+  async getAttachmentsByPostId(req, res) {
+    try {
+      const { postId } = req.body;
 
+      // Kiểm tra nếu không có postId
+      if (!postId) {
+        return res.status(400).json({
+          message: "postId is required.",
+        });
+      }
+
+      // Gọi service để lấy attachments
+      const attachments = await AttachmentService.getAttachmentsByPostId(postId);
+
+      // Trả về dữ liệu
+      return res.status(200).json({
+        message: "Attachments fetched successfully.",
+        data: attachments,
+      });
+    } catch (error) {
+      console.error("Error fetching attachments:", error);
+      return res.status(500).json({
+        message: "Error fetching attachments.",
+        details: error.message,
+      });
+    }
+  };
+
+  async editAttachments(req, res) {
+    try {
+      const { postId, attachments } = req.body;
+
+      // Kiểm tra đầu vào
+      if (!postId || !Array.isArray(attachments)) {
+        return res.status(400).json({
+          message: "postId and attachments (array) are required.",
+        });
+      }
+
+      // Gọi service để chỉnh sửa
+      const updatedAttachments = await AttachmentService.editAttachmentsByPostId({ postId, attachments });
+
+      return res.status(200).json({
+        message: "Attachments updated successfully.",
+        data: updatedAttachments,
+      });
+    } catch (error) {
+      console.error("Error editing attachments:", error);
+      return res.status(500).json({
+        message: "Error editing attachments.",
+        details: error.message,
+      });
+    }
+  };
 }
 
 module.exports = new AttachmentController();
