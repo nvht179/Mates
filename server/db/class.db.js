@@ -52,6 +52,26 @@ class ClassDB {
     });
     return teachersInClass;
   };
+
+  removeStudentInClass = async (classID, studentID) => {
+    const result = await StudentClass.destroy({
+      where: {
+        classID: classID,
+        studentID: studentID,
+      },
+    });
+    return result;
+  };
+
+  removeTeacherInClass = async (classID, teacherID) => {
+    const result = await TeacherClass.destroy({
+      where: {
+        classID: classID,
+        teacherID: teacherID,
+      },
+    });
+    return result;
+  };
 }
 
 module.exports = new ClassDB();
