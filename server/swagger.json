@@ -938,6 +938,51 @@
       },
       "required": ["title", "content"],
       "description": "Schema for editing a post with optional attachments"
-    }
+    },
+  "Reaction": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "description": "Unique identifier for the reaction"
+      },
+      "personId": {
+        "type": "integer",
+        "description": "ID of the person who reacted"
+      },
+      "type": {
+        "type": "string",
+        "description": "Type of the reaction (e.g., 'like', 'dislike')"
+      },
+      "postId": {
+        "type": "integer",
+        "description": "ID of the post the reaction belongs to"
+      }
+    },
+    "required": ["id", "personId", "postId"]
+  },
+  "Post": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "description": "Unique identifier for the post"
+      },
+      "title": {
+        "type": "string",
+        "description": "Title of the post"
+      },
+      "content": {
+        "type": "string",
+        "description": "Content of the post"
+      },
+      "classID": {
+        "type": "integer",
+        "description": "ID of the class the post belongs to"
+      }
+    },
+    "required": ["id", "title", "content", "classID"]
+  }
+
   }
 }
