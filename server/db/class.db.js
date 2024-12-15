@@ -34,6 +34,24 @@ class ClassDB {
     });
     return teacherClass;
   };
+
+  viewAllStudentsInClass = async (classID) => {
+    const studentsInClass = await StudentClass.findAll({
+      where: {
+        classID: classID
+      },
+    });
+    return studentsInClass;
+  };
+
+  viewAllTeachersInClass = async (classID) => {
+    const teachersInClass = await TeacherClass.findAll({
+      where: {
+        classID: classID
+      },
+    });
+    return teachersInClass;
+  };
 }
 
 module.exports = new ClassDB();

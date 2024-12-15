@@ -43,6 +43,26 @@ class ClassController {
       res.status(err.statusCode).json(err.message);
     }
   };
+
+  viewAllStudentsInClass = async (req, res) => {
+    try {
+      const {classID} = req.body;
+      const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
+      res.status(200).json(studentsInClass);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
+  viewAllTeachersInClass = async (req, res) => {
+    try {
+      const {classID} = req.body;
+      const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
+      res.status(200).json(teachersInClass);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
 }
 
 module.exports = new ClassController();

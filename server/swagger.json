@@ -313,6 +313,54 @@
           }
         }
       }
+    },
+    "/classes/view-all-students-in-class": {
+      "post": {
+        "tags": [
+          "Classes"
+        ],
+        "description": "View all students in class",
+        "summary": "View all students in class",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "body",
+            "description": "Add teachers to class",
+            "schema": {
+              "$ref": "#/definitions/viewMemberInClass"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "View all students in class successfully"
+          }
+        }
+      }
+    },
+    "/classes/view-all-teachers-in-class": {
+      "post": {
+        "tags": [
+          "Classes"
+        ],
+        "description": "View all teachers in class",
+        "summary": "View all teachers in class",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "body",
+            "description": "Add teachers to class",
+            "schema": {
+              "$ref": "#/definitions/viewMemberInClass"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "View all teachers in class successfully"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -459,6 +507,14 @@
               "role": "TA"
             }
           ]
+        }
+      }
+    },
+    "viewMemberInClass": {
+      "properties": {
+        "classID": {
+          "type": "string",
+          "example": "1"
         }
       }
     },

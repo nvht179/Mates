@@ -67,6 +67,30 @@ class ClassService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  viewAllStudentsInClass = async (classID) => {
+    try {
+      const studentsInClass = await ClassDB.viewAllStudentsInClass(classID);
+      if (!studentsInClass) {
+        throw new ErrorHandler(403, "There is not students in class");
+      }
+      return studentsInClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  viewAllTeachersInClass = async (classID) => {
+    try {
+      const teachersInClass = await ClassDB.viewAllTeachersInClass(classID);
+      if (!teachersInClass) {
+        throw new ErrorHandler(403, "There is not teachers in class");
+      }
+      return teachersInClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new ClassService();
