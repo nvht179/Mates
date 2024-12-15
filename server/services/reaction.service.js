@@ -43,6 +43,7 @@ class ReactionService {
       throw new ErrorHandler(500, "Error in service layer while updating reaction", error);
     }
   }
+  
 }
 
 module.exports = new ReactionService();

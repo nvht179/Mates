@@ -372,8 +372,296 @@
           }
         }
       }
+    },
+    "/reactions/create": {
+      "post": {
+        "tags": ["Reactions"],
+        "description": "Add a new reactions to a Post",
+        "summary": "Add a new reactions to a Post",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Add a reaction",
+            "schema": {
+              "$ref": "#/definitions/createReactionToPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create a post successfully"
+          }
+        }
+      }
+    },
+    "/reactions/postId={postId}": {
+      "get": {
+        "tags": ["Reactions"],
+        "description": "Get all reactions for a post",
+        "summary": "Get reactions by class ID",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the post to retrieve reactions for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of reactions for posts in the specified class",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reaction"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid class ID supplied"
+          },
+          "404": {
+            "description": "No reactions found for the specified class ID"
+          }
+        }
+      }
+    },
+    "/reactions/update": {
+      "put": {
+        "tags": ["Reactions"],
+        "description": "Update a reaction by its ID",
+        "summary": "Update reaction",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Reaction update details",
+            "schema": {
+              "$ref": "#/definitions/updateReaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reaction updated successfully"
+          },
+          "400": {
+            "description": "Invalid input or missing required parameters"
+          },
+          "404": {
+            "description": "Reaction not found"
+          }
+        }
+      }
+    },
+    "/reactions/delete": {
+      "delete": {
+        "tags": ["Reactions"],
+        "description": "Delete a reaction by its ID",
+        "summary": "Delete a reaction",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Reaction delete details",
+            "schema": {
+              "$ref": "#/definitions/deleteReaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reaction deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Reaction deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reaction not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Reaction not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error deleting reaction",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error deleting reaction"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error details here"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/classId={classId}": {
+      "get": {
+        "tags": ["Posts"],
+        "description": "Get all posts for a specific class by its ID",
+        "summary": "Get posts by class ID",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the class to retrieve posts for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of posts for the specified class",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Post"
+              }
+            }
+          },
+          "404": {
+            "description": "No posts found for the specified class ID"
+          },
+          "500": {
+            "description": "Error retrieving posts",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error retrieving posts"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Database connection failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/edit/{postId}": {
+      "put": {
+        "tags": ["Posts"],
+        "description": "Edit an existing post",
+        "summary": "Edit post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to edit"
+          },
+          {
+            "name": "post",
+            "in": "body",
+            "description": "Updated post details",
+            "schema": {
+              "$ref": "#/definitions/editPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "Invalid input or missing parameters"
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/posts/remove/{postId}": {
+      "delete": {
+        "tags": ["Posts"],
+        "description": "Delete a post by its ID",
+        "summary": "Remove a post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to remove"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post removed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Post deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Post not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error deleting post",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error deleting post"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error details here"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
+
   "definitions": {
     "SignUp": {
       "properties": {
@@ -569,6 +857,87 @@
         "content"
       ],
       "description": "Schema for creating a post with optional attachments"
+    },
+    "createReactionToPost": {
+      "properties": {
+        "personId": {
+          "type": "integer",
+          "example": 1
+        },
+        "type": {
+          "type": "string",
+          "example": "love"
+        },
+        "postId": {
+          "type": "integer",
+          "example": "6"
+        }
+      }
+    },
+    "updateReaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 5,
+          "description": "ID of the reaction to update"
+        },
+        "newType": {
+          "type": "string",
+          "example": "like",
+          "description": "The new type of reaction (e.g., 'like', 'love', 'haha')"
+        }
+      },
+      "required": ["id", "newType"],
+      "description": "Schema for updating a reaction"
+    },
+    "deleteReaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 4,
+          "description": "The ID of the reaction to delete"
+        }
+      },
+      "required": ["id"],
+      "description": "Schema for deleting a reaction"
+    },
+    "editPost": {
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "Updated Post Title",
+          "description": "New title of the post"
+        },
+        "content": {
+          "type": "string",
+          "example": "Updated content for the post.",
+          "description": "Updated content of the post"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "Updated list of attachments for the post",
+          "items": {
+            "type": "object",
+            "properties": {
+              "link": {
+                "type": "string",
+                "example": "http://new-link.com",
+                "description": "URL of the attachment"
+              },
+              "linkTitle": {
+                "type": "string",
+                "example": "New Attachment Title",
+                "description": "Title of the attachment"
+              }
+            },
+            "required": ["link", "linkTitle"]
+          }
+        }
+      },
+      "required": ["title", "content"],
+      "description": "Schema for editing a post with optional attachments"
     }
   }
 }
