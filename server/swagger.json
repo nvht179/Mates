@@ -314,8 +314,8 @@
         }
       }
     },
-    "/classes/view-all-students-in-class": {
-      "post": {
+    "/classes/view-all-students-in-class/{classID}": {
+      "get": {
         "tags": [
           "Classes"
         ],
@@ -326,9 +326,18 @@
             "name": "class",
             "in": "body",
             "description": "Add teachers to class",
-            "schema": {
-              "$ref": "#/definitions/viewMemberInClass"
-            }
+            "parameters": [
+              {
+                "name": "classID",
+                "in": "path",
+                "description": "The ID of the class to retrieve teachers from",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            ]
           }
         ],
         "responses": {
@@ -338,20 +347,22 @@
         }
       }
     },
-    "/classes/view-all-teachers-in-class": {
-      "post": {
+    "/classes/view-all-teachers-in-class/{classID}": {
+      "get": {
         "tags": [
           "Classes"
         ],
-        "description": "View all teachers in class",
+        "description": "View all teachers in a class by class ID",
         "summary": "View all teachers in class",
         "parameters": [
           {
-            "name": "class",
-            "in": "body",
-            "description": "Add teachers to class",
+            "name": "classID",
+            "in": "path",
+            "description": "The ID of the class to retrieve teachers from",
+            "required": true,
             "schema": {
-              "$ref": "#/definitions/viewMemberInClass"
+              "type": "string",
+              "example": "1"
             }
           }
         ],
@@ -507,14 +518,6 @@
               "role": "TA"
             }
           ]
-        }
-      }
-    },
-    "viewMemberInClass": {
-      "properties": {
-        "classID": {
-          "type": "string",
-          "example": "1"
         }
       }
     },
