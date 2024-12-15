@@ -1,3 +1,4 @@
+const { P } = require("pino");
 const ClassService = require("../services/class.service");
 
 class ClassController {
@@ -26,7 +27,7 @@ class ClassController {
 
   addStudentsToClass = async (req, res) => {
     try {
-      const {classID, emailStudents} = req.body;
+      const { classID, emailStudents } = req.body;
       const studentsClass = await ClassService.addStudentsToClass(classID, emailStudents);
       res.status(200).json(studentsClass);
     } catch (err) {
@@ -36,7 +37,7 @@ class ClassController {
 
   addTeachersToClass = async (req, res) => {
     try {
-      const {classID, newTeachers} = req.body;
+      const { classID, newTeachers } = req.body;
       const teachersClass = await ClassService.addTeachersToClass(classID, newTeachers);
       res.status(200).json(teachersClass);
     } catch (err) {
@@ -46,7 +47,7 @@ class ClassController {
 
   viewAllStudentsInClass = async (req, res) => {
     try {
-      const {classID} = req.params;
+      const { classID } = req.params;
       const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
       res.status(200).json(studentsInClass);
     } catch (err) {
@@ -56,9 +57,31 @@ class ClassController {
 
   viewAllTeachersInClass = async (req, res) => {
     try {
-      const {classID} = req.params;
+      const { classID } = req.params;
       const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
       res.status(200).json(teachersInClass);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
+  removeStudentsInClass = async (req, res) => {
+    try {
+      const { classID, studentsEmail } = req.params;
+      const removedStudents = await ClassService.removeStudentsInClass(classID, studentsEmail);
+      const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
+      res.status(200).json({ studentsInClass });
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
+  removeTeachersInClass = async (req, res) => {
+    try {
+      const { classID, teachersEmail } = req.params;
+      const removedTeachers = await ClassService.removeTeachersInClass(classID, teachersEmail);
+      const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
+      res.status(200).json({ teachersInClass });
     } catch (err) {
       res.status(err.statusCode).json(err.message);
     }
