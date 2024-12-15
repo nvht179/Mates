@@ -7,6 +7,7 @@ const Reaction = require("./reaction.model");
 const Post = require("./post.model");
 const Class = require("./class.model");
 const Comment = require("./comment.model");
+const { Teacher, Student, Parent } = require("./user.model");
 
 // Assignment and Attachment
 Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
@@ -50,10 +51,13 @@ sequelize
 module.exports = {
   sequelize,
   Person,
-  Assignment, 
+  Assignment,
   Attachment,
-  Post, 
+  Post,
   Reaction,
   Comment,
   Class,
+  Teacher,
+  Student,
+  Parent
 };

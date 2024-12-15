@@ -1,5 +1,6 @@
 const pool = require("../config/db");
 const { Person } = require("../entities");
+const { Teacher, Student, Parent } = require("../entities/user.model");
 
 class UserDB {
   getAllUsersDB = async () => {
@@ -17,6 +18,28 @@ class UserDB {
       isVerified
     });
     return newUser;
+  };
+
+  createStudentDB = async(studentID) => {
+    const student = await Student.create({
+      studentID 
+    });
+    return student;
+  };
+
+  createTeacherDB = async(teacherID) => {
+    const teacher = await Teacher.create({
+      teacherID 
+    });
+    return teacher;
+  };
+
+  createParentDB = async(parentID, studentID) => {
+    const parent = await Parent.create({
+      parentID,
+      studentID
+    });
+    return parent;
   };
 
   getUserByEmailDB = async (email) => {
