@@ -23,6 +23,16 @@ class ClassController {
       res.status(err.statusCode).json(err.message);
     }
   };
+
+  addStudentsToClass = async (req, res) => {
+    try {
+      const {classID, emailStudents} = req.body;
+      const studentClass = await ClassService.addStudentsToClass(classID, emailStudents);
+      res.status(200).json(studentClass);
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
 }
 
 module.exports = new ClassController();

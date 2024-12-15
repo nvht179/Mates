@@ -36,13 +36,21 @@
       "description": "API for posts"
     }
   ],
-  "schemes": ["http"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/users/checkUserByEmail": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "description": "Check email exist",
         "summary": "Check email exist",
         "parameters": [
@@ -62,7 +70,9 @@
     },
     "/auth/login": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Login into the system",
         "summary": "Login",
         "parameters": [
@@ -82,7 +92,9 @@
     },
     "/auth/signUp": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Create an account",
         "summary": "Sign up",
         "parameters": [
@@ -104,7 +116,9 @@
     },
     "/auth/forgetPassword": {
       "put": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Forget password",
         "summary": "Change password",
         "parameters": [
@@ -126,7 +140,9 @@
     },
     "/auth/verify-email": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Verify the sign up account",
         "summary": "Verify the sign up account",
         "parameters": [
@@ -146,7 +162,9 @@
     },
     "/auth/check-email-otp": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Check the email and send OTP",
         "summary": "Check the email and send OTP",
         "parameters": [
@@ -166,7 +184,9 @@
     },
     "/auth/refresh-token": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Refresh the token jwt",
         "summary": "Refresh the token jwt",
         "parameters": [
@@ -186,7 +206,9 @@
     },
     "/posts/create": {
       "post": {
-        "tags": ["Posts"],
+        "tags": [
+          "Posts"
+        ],
         "description": "Create a post",
         "summary": "Create a post",
         "parameters": [
@@ -208,7 +230,9 @@
     },
     "/classes/create-class": {
       "post": {
-        "tags": ["Classes"],
+        "tags": [
+          "Classes"
+        ],
         "description": "Create a class",
         "summary": "Create a class",
         "parameters": [
@@ -230,12 +254,38 @@
     },
     "/classes/view-all-classes": {
       "get": {
-        "tags": ["Classes"],
+        "tags": [
+          "Classes"
+        ],
         "description": "View all classes",
         "summary": "View all classes",
         "responses": {
           "200": {
             "description": "View all classes successfully"
+          }
+        }
+      }
+    },
+    "/classes/add-students-to-class": {
+      "post": {
+        "tags": [
+          "Classes"
+        ],
+        "description": "Add students to class",
+        "summary": "Add students to class",
+        "parameters": [
+          {
+            "name": "class",
+            "in": "body",
+            "description": "Create a class",
+            "schema": {
+              "$ref": "#/definitions/addStudentToClass"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Add students to class successfully"
           }
         }
       }
@@ -271,7 +321,7 @@
         "avatar": {
           "type": "string",
           "example": ""
-        }, 
+        },
         "childEmail": {
           "type": "string",
           "example": ""
@@ -346,47 +396,72 @@
         }
       }
     },
-    "createPostWithAttachments": {
-    "type": "object",
-    "properties": {
-      "classId": {
-        "type": "integer",
-        "example": 1,
-        "description": "ID of the class the post belongs to"
-      },
-      "title": {
-        "type": "string",
-        "example": "Post Title",
-        "description": "Title of the post"
-      },
-      "content": {
-        "type": "string",
-        "example": "Post Content",
-        "description": "Content of the post"
-      },
-      "attachments": {
-        "type": "array",
-        "description": "List of attachments for the post",
-        "items": {
-          "type": "object",
-          "properties": {
-            "link": {
-              "type": "string",
-              "example": "url1",
-              "description": "URL of the attachment"
-            },
-            "linkTitle": {
-              "type": "string",
-              "example": "Title 1",
-              "description": "Title of the attachment"
-            }
+    "addStudentToClass": {
+      "properties": {
+        "classID": {
+          "type": "string",
+          "example": "1"
+        },
+        "emailStudents": {
+          "type": "array",
+          "items": {
+            "type": "string"
           },
-          "required": ["link", "linkTitle"]
+          "example": [
+            "lnkhoa22@apcs.fitus.edu.vn",
+            "cucdaunho@gmail.com"
+          ]
         }
       }
     },
-    "required": ["classId", "title", "content"],
-    "description": "Schema for creating a post with optional attachments"
+    "createPostWithAttachments": {
+      "type": "object",
+      "properties": {
+        "classId": {
+          "type": "integer",
+          "example": 1,
+          "description": "ID of the class the post belongs to"
+        },
+        "title": {
+          "type": "string",
+          "example": "Post Title",
+          "description": "Title of the post"
+        },
+        "content": {
+          "type": "string",
+          "example": "Post Content",
+          "description": "Content of the post"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "List of attachments for the post",
+          "items": {
+            "type": "object",
+            "properties": {
+              "link": {
+                "type": "string",
+                "example": "url1",
+                "description": "URL of the attachment"
+              },
+              "linkTitle": {
+                "type": "string",
+                "example": "Title 1",
+                "description": "Title of the attachment"
+              }
+            },
+            "required": [
+              "link",
+              "linkTitle"
+            ]
+          }
+        }
+      },
+      "required": [
+        "classId",
+        "title",
+        "content"
+      ],
+      "description": "Schema for creating a post with optional attachments"
     }
   }
 }
