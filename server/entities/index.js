@@ -29,8 +29,8 @@ Post.hasMany(Attachment, { foreignKey: "postId", as: "attachments" });
 Attachment.belongsTo(Post, { foreignKey: "postId", as: "post" });
 
 // Class and Post
-Class.hasMany(Post, { foreignKey: "classId", as: "posts" });
-Post.belongsTo(Class, { foreignKey: "classId", as: "class" });
+Class.hasMany(Post, { foreignKey: "classID", as: "posts" });
+Post.belongsTo(Class, { foreignKey: "classID", as: "class" });
 
 // Person and Comment
 Person.hasMany(Comment, { foreignKey: "personId", as: "comments" });

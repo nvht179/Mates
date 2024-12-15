@@ -2,10 +2,10 @@ const PostService = require("../services/post.service");
 class PostController {
   addNewPost = async (req, res) => {
     try {
-      const { classId, title, content, attachments } = req.body;
+      const { classID, title, content, attachments } = req.body;
       // Gọi PostService để tạo post mới với các attachment
       const newPost = await PostService.addNewPostWithAttachments({ 
-        classId, 
+        classID, 
         title, 
         content, 
         attachments 

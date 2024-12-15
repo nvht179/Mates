@@ -2,11 +2,11 @@ const PostDB = require("../db/post.db");
 const { ErrorHandler } = require("../helpers/error");
 
 class PostService {
-  addNewPostWithAttachments = async ({ classId, title, content, attachments }) => {
+  addNewPostWithAttachments = async ({ classID, title, content, attachments }) => {
     try {
       // Gọi DB để tạo post mới và các attachment
       const newPost = await PostDB.addNewPostWithAttachments({
-        classId,
+        classID,
         title,
         content,
         attachments,
@@ -14,18 +14,27 @@ class PostService {
 
       return newPost;
     } catch (err) {
-      console.log(err)
-      throw new ErrorHandler(500, `Error in creating post with attachments in service: ${err.message}`);
+      console.log(err);
+      throw new ErrorHandler(
+        500,
+        `Error in creating post with attachments in service: ${err.message}`
+      );
     }
   };
-  async getPostsByClassId(classId) {
+
+  async getPostsByClassId(classID) {
     try {
-      const posts = await PostDB.getPostsByClassId(classId);
+      const posts = await PostDB.getPostsByClassId(classID);
       return posts;
     } catch (error) {
-      throw new ErrorHandler(500, "Error in service layer while retrieving reactions", error);
+      throw new ErrorHandler(
+        500,
+        "Error in service layer while retrieving reactions",
+        error
+      );
     }
   }
+
   // Edit a post
   async editPost({ postId, title, content, attachments }) {
     try {
@@ -37,7 +46,10 @@ class PostService {
       });
       return updatedPost;
     } catch (error) {
-      throw new ErrorHandler(500, `Error editing post in service: ${error.message}`);
+      throw new ErrorHandler(
+        500,
+        `Error editing post in service: ${error.message}`
+      );
     }
   }
 
@@ -47,9 +59,13 @@ class PostService {
       const result = await PostDB.removePost(postId);
       return result;
     } catch (error) {
-      throw new ErrorHandler(500, `Error removing post in service: ${error.message}`);
+      throw new ErrorHandler(
+        500,
+        `Error removing post in service: ${error.message}`
+      );
     }
   }
+
   getPostById = async (postId) => {
     try {
       const post = await PostDB.getPostById(postId);
