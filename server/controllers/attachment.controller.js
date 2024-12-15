@@ -50,6 +50,31 @@ class AttachmentController {
     }
   };
 
+  /**
+   * Remove attachments by postId
+   * @param {Request} req - Express request object
+   * @param {Response} res - Express response object
+   */
+  removeAttachmentsByPostId = async (req, res) => {
+    try {
+      const { postId } = req.params;
+
+      // Gọi service để xóa tất cả các attachment theo postId
+      const deletedAttachments = await AttachmentService.removeAttachmentsByPostId(postId);
+
+      if (!deletedAttachments) {
+        return res.status(404).json({ message: "No attachments found for this postId" });
+      }
+
+      res.status(200).json({
+        message: `${deletedAttachments} attachment(s) removed successfully`,
+      });
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  };
+  
+
 }
 
 module.exports = new AttachmentController();

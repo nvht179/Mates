@@ -16,8 +16,7 @@ router.use("/reactions", reactionRouter);
 router.use("/auth", authRouter);
 router.use("/users", userRouter);
 router.use("/assignments",assignmentRouter);
-router.use("/attachments",attachmentRouter);
-
+router.use("/attachments", attachmentRouter);
 router.use("/classes",classRouter);
 router.use("/posts",postRouter);
 router.use("/reactions", reactionRouter);  // Adding the reactions route

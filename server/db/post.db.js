@@ -54,6 +54,85 @@ class PostDB {
       throw new ErrorHandler(500, "Error retrieving reactions", error);
     }
   }
+  /**
+   * Edit a post
+   * @param {number} postId - ID of the post to edit
+   * @param {object} updatedData - Updated post data (title, content, attachments)
+   */
+  async editPost({ postId, title, content, attachments }) {
+    let transaction;
+    try {
+      transaction = await sequelize.transaction();
+
+      // Find the post to edit
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        throw new ErrorHandler(404, "Post not found");
+      }
+
+      // Update the post's title and content
+      await post.update({ title, content }, { transaction });
+
+      // Handle updating attachments
+      if (attachments && attachments.length > 0) {
+        // First, remove existing attachments for the post
+        await AttachmentDB.removeAttachmentsByPostId(postId, { transaction });
+
+        // Then, add the new attachments
+        for (let attachment of attachments) {
+          await AttachmentDB.addAttachment(
+            {
+              link: attachment.link,
+              linkTitle: attachment.linkTitle,
+              assignmentId: attachment.assignmentId,
+              postId: postId,
+            },
+            { transaction }
+          );
+        }
+      }
+
+      await transaction.commit();
+      return post;
+    } catch (error) {
+      if (transaction) await transaction.rollback(); // Rollback transaction on error
+      throw new ErrorHandler("Error editing post", error);
+    }
+  }
+
+  /**
+   * Remove a post by its ID
+   * @param {number} postId - ID of the post to remove
+   */
+  async removePost(postId) {
+    let transaction;
+    try {
+      transaction = await sequelize.transaction();
+
+      // Find the post to remove
+      const post = await Post.findByPk(postId);
+      if (!post) {
+        throw new ErrorHandler(404, "Post not found");
+      }
+
+      // Remove associated attachments
+      await AttachmentDB.removeAttachmentsByPostId(postId, { transaction });
+
+      // Remove the post itself
+      await post.destroy({ transaction });
+
+      await transaction.commit();
+      return { message: "Post deleted successfully" };
+    } catch (error) {
+      if (transaction) await transaction.rollback(); // Rollback transaction on error
+      throw new ErrorHandler("Error removing post", error);
+    }
+  }
+  getPostById = async (postId) => {
+    const post = await Post.findByPk(postId);
+    if (!post) return null;
+    return post;
+  };
 }
 
 module.exports = new PostDB();

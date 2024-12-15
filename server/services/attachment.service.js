@@ -20,6 +20,24 @@ class AttachmentService {
       throw new Error("Error in AttachmentService: " + err.message);
     }
   };
+  /**
+   * Remove all attachments associated with a specific postId
+   * @param {string} postId - ID of the post whose attachments need to be removed
+   */
+  removeAttachmentsByPostId = async (postId) => {
+    try {
+      // Remove attachments from the database by postId
+      const deletedAttachments = await AttachmentDB.removeAttachmentsByPostId(postId);
+
+      if (deletedAttachments === 0) {
+        throw new Error("No attachments found for the provided postId");
+      }
+
+      return deletedAttachments;
+    } catch (err) {
+      throw new Error("Error in AttachmentService: " + err.message);
+    }
+  };
   
 }
 
