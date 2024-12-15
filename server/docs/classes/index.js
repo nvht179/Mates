@@ -11,14 +11,14 @@ module.exports = {
   "/classes/create-class": {
     ...createClass
   },
-  "/classes/view-all-classes": {
-    ...viewAllClasses
-  },
   "/classes/add-students-to-class": {
     ...addStudentToClass
   },
   "/classes/add-teachers-to-class": {
     ...addTeacherToClass
+  },
+  "/classes/view-all-classes": {
+    ...viewAllClasses
   },
   "/classes/view-all-students-in-class/{classID}": {
     ...viewAllStudentsInClass

@@ -12,16 +12,16 @@ module.exports = {
   "/auth/signUp": {
     ...signup
   },
-  "/auth/forgetPassword": {
-    ...forgetPassword
-  },
-  "/auth/verify-email": {
-    ...verifyEmail
-  },
   "/auth/check-email-otp": {
     ...checkEmailOTP
   },
   "/auth/refresh-token": {
     ...refreshToken
+  },
+  "/auth/forgetPassword": {
+    ...forgetPassword
+  },
+  "/auth/verify-email": {
+    ...verifyEmail
   },
 };
