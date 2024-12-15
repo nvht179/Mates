@@ -1,18 +1,46 @@
 import React, { ReactNode } from "react";
-import className from "classnames";
+import classNames from "classnames";
 
-interface ButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
+  primary?: boolean;
+  secondary?: boolean;
+  disabled?: boolean;
 }
 
-export default function Button({ children, ...rest }: ButtonProps) {
-  const style = className(
-    "select-none font-semibold flex cursor-pointer rounded border bg-primary-default px-5 py-2 text-bg-default active:bg-primary-dark justify-center items-center",
-    rest.className,
+export default function Button({
+  children,
+  primary = true, // Default to primary
+  secondary,
+  disabled,
+  className: additionalClassName,
+  ...rest
+}: ButtonProps) {
+  // If disabled, nothing else matters
+  // If not disabled, use the last specified prop between primary and secondary
+  const isPrimary = !disabled && primary && !secondary;
+  const isSecondary = !disabled && secondary;
+
+  const buttonClassName = classNames(
+    "select-none font-semibold flex rounded px-5 py-2 justify-center items-center",
+    {
+      "cursor-not-allowed bg-bg-alt text-fg-disabled": disabled,
+      "cursor-pointer bg-primary-default text-bg-default active:bg-primary-dark":
+        isPrimary,
+      "cursor-pointer bg-bg-disabled text-fg-softer border border-fg-softer":
+        isSecondary,
+    },
+    additionalClassName,
   );
+
   return (
-    <div {...rest} className={style}>
+    <button
+      {...rest}
+      type="button"
+      className={buttonClassName}
+      disabled={disabled}
+    >
       {children}
-    </div>
+    </button>
   );
 }

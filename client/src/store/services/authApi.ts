@@ -10,6 +10,15 @@ export interface LoginResponse {
   email: string;
 }
 
+interface CheckUserByEmailRequest {
+  email: string;
+}
+
+interface CheckUserByEmailResponse {
+  exists: boolean;
+  message?: string; // Optional message for the `403` case
+}
+
 export const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
@@ -23,7 +32,18 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
+
+    checkUserByEmail: builder.query<
+      CheckUserByEmailResponse,
+      CheckUserByEmailRequest
+    >({
+      query: (emailRequest: CheckUserByEmailRequest) => ({
+        url: "/users/checkUserByEmail",
+        method: "POST",
+        body: emailRequest,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useLazyCheckUserByEmailQuery } = authApi;
