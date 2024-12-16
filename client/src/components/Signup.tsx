@@ -17,7 +17,7 @@ export default function SignupParent() {
     const [userName, setUserName] = useState("");
     const [errorMessageUN, setErrorMessageUN] = useState<string | undefined>();
     const [fullName, setFullName] = useState("");
-    const [errorMessageFN, setErrorMessagePhoneFN] = useState<string | undefined>();
+    const [errorMessageFN, setErrorMessageFN] = useState<string | undefined>();
     const [phoneNumber, setPhone] = useState("");
     const [errorMessagePhone, setErrorMessagePhone] = useState<string | undefined>();
     const [email, setEmail] = useState("");
@@ -55,7 +55,7 @@ export default function SignupParent() {
 
     const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFullName(e.target.value);
-        setErrorMessagePhoneFN("");
+        setErrorMessageFN("");
     };
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +83,7 @@ export default function SignupParent() {
     const checkValidInput = () => {
         var pass = true;
         if (fullName === "") {
-            setErrorMessagePhoneFN("Please enter your full name.");
+            setErrorMessageFN("Please enter your full name.");
             pass = false;
         }
 
