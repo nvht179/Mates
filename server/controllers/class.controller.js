@@ -10,18 +10,22 @@ class ClassController {
         code,
         description,
       });
-      res.status(200).json(newClass);
+      const message = "Successful";
+      res.status(200).json({ message, newClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
   viewAllClasses = async (req, res) => {
     try {
       const allClasses = await ClassService.viewAllClasses();
-      res.status(200).json(allClasses);
+      const message = "Successful";
+      res.status(200).json({ message, allClasses });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -29,9 +33,11 @@ class ClassController {
     try {
       const { classID, emailStudents } = req.body;
       const studentsClass = await ClassService.addStudentsToClass(classID, emailStudents);
-      res.status(200).json(studentsClass);
+      const message = "Successful";
+      res.status(200).json({ message, studentsClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -39,9 +45,11 @@ class ClassController {
     try {
       const { classID, newTeachers } = req.body;
       const teachersClass = await ClassService.addTeachersToClass(classID, newTeachers);
-      res.status(200).json(teachersClass);
+      const message = "Successful";
+      res.status(200).json({ message, teachersClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -49,9 +57,11 @@ class ClassController {
     try {
       const { classID } = req.params;
       const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
-      res.status(200).json(studentsInClass);
+      const message = "Successful";
+      res.status(200).json({ message, studentsInClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -59,9 +69,11 @@ class ClassController {
     try {
       const { classID } = req.params;
       const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
-      res.status(200).json(teachersInClass);
+      const message = "Successful";
+      res.status(200).json({ message, teachersInClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -70,9 +82,11 @@ class ClassController {
       const { classID, studentsEmail } = req.params;
       const removedStudents = await ClassService.removeStudentsInClass(classID, studentsEmail);
       const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
-      res.status(200).json({ studentsInClass });
+      const message = "Successful";
+      res.status(200).json({ message, studentsInClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -81,9 +95,11 @@ class ClassController {
       const { classID, teachersEmail } = req.params;
       const removedTeachers = await ClassService.removeTeachersInClass(classID, teachersEmail);
       const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
-      res.status(200).json({ teachersInClass });
+      const message = "Successful";
+      res.status(200).json({ message, teachersInClass });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 }
