@@ -34,6 +34,10 @@
     {
       "name": "Posts",
       "description": "API for posts"
+    },
+    {
+      "name": "Comments",
+      "description": "API for comments"
     }
   ],
   "schemes": ["http"],
@@ -492,6 +496,53 @@
           }
         }
       }
+    },
+    "/comments/add": {
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Add a comment to a post",
+        "description": "Creates a new comment and associates it with a specific post",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Comment data",
+            "schema": {
+              "$ref": "#/definitions/AddComment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment added successfully",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        }
+      }
+    },
+    "/comments/delete/{commentId}": {
+      "delete": {
+        "tags": ["Comments"],
+        "summary": "Delete a comment by ID",
+        "description": "Deletes an existing comment using its ID",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the comment to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successfully"
+          }
+        }
+      }
     }
   },
 
@@ -698,6 +749,45 @@
       },
       "required": ["title", "content"],
       "description": "Schema for editing a post with optional attachments"
+    },
+    "AddComment": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "This is a new comment"
+        },
+        "postId": {
+          "type": "integer",
+          "example": 1
+        },
+        "personId": {
+          "type": "integer",
+          "example": 1
+        }
+      },
+      "required": ["content", "postId", "personId"]
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "content": {
+          "type": "string",
+          "example": "This is a new comment"
+        },
+        "postId": {
+          "type": "integer",
+          "example": 1
+        },
+        "personId": {
+          "type": "integer",
+          "example": 2
+        }
+      }
     }
   }
 }
