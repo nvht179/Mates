@@ -57,7 +57,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-2/5 min-h-64 w-1/4 min-w-96 flex-col rounded bg-white p-8">
+    <div className="flex h-3/2 min-h-100 w-1/4 min-w-96 flex-col rounded bg-white p-8">
       <div className="mb-3 flex items-center">
         <img src="../../public/vite.svg" alt="Vite logo" />
         <h1 className="ml-2 font-sans text-2xl font-bold text-fg-soft">

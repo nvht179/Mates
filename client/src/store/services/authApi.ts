@@ -10,6 +10,22 @@ export interface LoginResponse {
   email: string;
 }
 
+export interface SignupRequest {
+  role: string;
+  password: string;
+  email: string;
+  name: string;
+  username: string;
+  phone: string;
+  avatar: string
+  childEmail: string;
+}
+
+export interface SignupResponse {
+  userId: number;
+  email: string;
+}
+
 interface CheckUserByEmailRequest {
   email: string;
 }
@@ -33,6 +49,14 @@ export const authApi = createApi({
       }),
     }),
 
+    signup: builder.mutation<SignupResponse, SignupRequest>({
+      query: (credentials: SignupRequest) => ({
+        url: "/auth/signUp",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
     checkUserByEmail: builder.query<
       CheckUserByEmailResponse,
       CheckUserByEmailRequest
@@ -46,4 +70,8 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginMutation, useLazyCheckUserByEmailQuery } = authApi;
+export const  {  
+  useLoginMutation, 
+  useSignupMutation,
+  useLazyCheckUserByEmailQuery
+} = authApi;

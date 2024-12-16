@@ -13,6 +13,7 @@ import AssignmentPage from "./pages/AssignmentPage";
 import DiscussionPage from "./pages/DiscussionPage";
 import Calendar from "./pages/Calendar";
 import ForgetPassword from "./components/ForgetPassword";
+import VerificationSent from "./components/verificationSent";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signup-parent" element={<SignupParent />} />
           <Route path="/choose-role" element={<ChooseRole />} />
+          <Route path="/verification-sent" element={<VerificationSent />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
         </Route>
         {/* Protected routes with main layout */}
