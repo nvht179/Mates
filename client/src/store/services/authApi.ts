@@ -1,30 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  userId: number;
-  email: string;
-}
-
-export interface SignupRequest {
-  role: string;
-  password: string;
-  email: string;
-  name: string;
-  username: string;
-  phone: string;
-  avatar: string
-  childEmail: string;
-}
-
-export interface SignupResponse {
-  userId: number;
-  email: string;
-}
+import { LoginRequest, LoginResponse } from "../../interfaces/Login";
+import { SignupRequest, SignupResponse } from "../../interfaces/Signup";
 
 interface CheckUserByEmailRequest {
   email: string;
@@ -33,6 +9,11 @@ interface CheckUserByEmailRequest {
 interface CheckUserByEmailResponse {
   exists: boolean;
   message?: string; // Optional message for the `403` case
+}
+
+interface CheckOTPRequest {
+  email: string;
+  otp: string;
 }
 
 export const authApi = createApi({

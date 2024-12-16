@@ -1,29 +1,19 @@
 import React, { useState } from "react";
-import Input from "./Input";
-import Button from "./Button";
-import { useNavigate } from "react-router-dom";
-import { useLazyCheckUserByEmailQuery } from "../store";
-
-interface CheckEmailError {
-  status: number;
-  data?: string;
-  error?: string;
-}
+import Input from "../components/Input.tsx";
+import Button from "../components/Button.tsx";
+import { Link, useNavigate } from "react-router-dom";
+import MatesLogo from "../assets/mates.svg";
+import useEmailCheck from "../utils/useEmailCheck";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [checkEmail, { isLoading }] = useLazyCheckUserByEmailQuery();
   const navigate = useNavigate();
+  const { validateAndCheckEmail, isLoading } = useEmailCheck();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setErrorMessage("");
-  };
-
-  const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   };
 
   const handleSubmit = async (
@@ -31,40 +21,24 @@ export default function Login() {
   ) => {
     e.preventDefault();
 
-    if (!isValidEmail(email)) {
-      setErrorMessage("Please enter a valid email address.");
+    const { isValid, error } = await validateAndCheckEmail(email);
+    if (!isValid) {
+      setErrorMessage(error);
       return;
     }
 
-    // Trigger the lazy query to check if the email exists
-    const result = await checkEmail({ email });
-
-    if (result.isError) {
-      const { status, error, data } = result.error as CheckEmailError;
-      if (status === 403) {
-        setErrorMessage(data);
-      } else {
-        setErrorMessage(error);
-      }
-      return;
-    } else {
-      navigate("/enter-password", { state: { email } });
-    }
-  };
-
-  const handleSignup = () => {
-    navigate("/choose-role");
+    navigate("/enter-password", { state: { email } });
   };
 
   return (
-    <div className="flex h-3/2 min-h-100 w-1/4 min-w-96 flex-col rounded bg-white p-8">
+    <div className="h-3/2 min-h-100 flex w-1/4 min-w-96 flex-col rounded bg-white p-8">
       <div className="mb-3 flex items-center">
-        <img src="../../public/vite.svg" alt="Vite logo" />
+        <img src={MatesLogo} alt="Vite logo" className="h-8 w-8"/>
         <h1 className="ml-2 font-sans text-2xl font-bold text-fg-soft">
           Mates
         </h1>
       </div>
-      <h1 className="mx-1 text-2xl font-bold">Sign in</h1>
+      <h1 className="mx-1 text-2xl font-bold">Login</h1>
 
       <form className="mb-4 mt-4" onSubmit={handleSubmit}>
         <Input
@@ -79,16 +53,19 @@ export default function Login() {
       </form>
       <div className="mb-2 flex">
         <p className="px-1 text-sm">No account?</p>
-        <a
-          onClick={handleSignup}
+        <Link
+          to="/choose-role"
           className="text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft active:underline"
         >
           Sign up
-        </a>
+        </Link>
       </div>
-      <a className="px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">
+      <Link
+        className="px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft"
+        to="/forget-password"
+      >
         Forget your password?
-      </a>
+      </Link>
       <Button
         onClick={handleSubmit}
         className="mt-4 self-end"

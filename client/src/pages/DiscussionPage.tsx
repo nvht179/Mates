@@ -11,7 +11,7 @@ function DiscussionPage() {
     {
       id: 1,
       user: "John Doe",
-      image: "../../public/vite.svg",
+      image: "../../public/mates.svg",
       title: "First Post",
       content: "Hello World!",
       time: "15/11/2024 13:00",
@@ -31,7 +31,7 @@ function DiscussionPage() {
     {
       id: 2,
       user: "Jane Doe",
-      image: "../../public/vite.svg",
+      image: "../../public/mates.svg",
       title: "Second Post",
       content: "This is the second post.",
       time: "15/11/2024 13:00",
@@ -51,7 +51,7 @@ function DiscussionPage() {
     {
       id: 3,
       user: "Tim",
-      image: "../../public/vite.svg",
+      image: "../../public/mates.svg",
       title: "Third Post",
       content: "This is the third post.",
       time: "15/11/2024 13:00",

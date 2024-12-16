@@ -25,9 +25,9 @@ export default function Button({
     "select-none font-semibold flex rounded px-5 py-2 justify-center items-center",
     {
       "cursor-not-allowed bg-bg-alt text-fg-disabled": disabled,
-      "cursor-pointer bg-primary-default text-bg-default active:bg-primary-dark":
+      "cursor-pointer bg-primary-default text-bg-default active:bg-primary-dark active: text-bg-alt":
         isPrimary,
-      "cursor-pointer bg-bg-disabled text-fg-softer border border-fg-softer":
+      "cursor-pointer bg-bg-disabled text-fg-softer border border-fg-softer active:bg-fg-disabled":
         isSecondary,
     },
     additionalClassName,

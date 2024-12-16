@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import AuthLayout from "./layouts/AuthLayout";
-import Login from "./components/Login";
+import Login from "./pages/Login";
 import SignUp from "./components/Signup";
 import SignupParent from "./components/SignupParent";
 import ChooseRole from "./components/ChooseRole";
@@ -12,8 +12,8 @@ import LecturePage from "./pages/LecturePage";
 import AssignmentPage from "./pages/AssignmentPage";
 import DiscussionPage from "./pages/DiscussionPage";
 import Calendar from "./pages/Calendar";
-import ForgetPassword from "./components/ForgetPassword";
-import VerificationSent from "./components/verificationSent";
+import ForgetPassword from "./pages/ForgetPassword";
+import VerificationSent from "./components/VerificationSent";
 import EmailInput from "./components/EmailInput";
 
 export default function App() {
