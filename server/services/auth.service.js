@@ -44,6 +44,13 @@ class AuthService {
         throw new ErrorHandler(401, "Email is taken already !");
       }
 
+      if (role == "Parent") {
+        const child = await UserDB.getUserByEmailDB(childEmail);
+        if (!child) {
+          throw new ErrorHandler(404, "Your child email is not correct");
+        }
+      }
+
       const newUser = await UserDB.createUserDB(
         name,
         email,
@@ -65,13 +72,8 @@ class AuthService {
         classUser = await UserDB.createTeacherDB(teacherID);
       }
       else if (role == "Parent") {
-        const child = await UserDB.getUserByEmailDB(childEmail);
-
-        if (!child) {
-          throw new ErrorHandler(404, "Your child email is not correct");
-        }
-
         const parentID = newUser.id;
+        const child = await UserDB.getUserByEmailDB(childEmail);
         classUser = await UserDB.createParentDB(parentID, child.id);
       }
       else {

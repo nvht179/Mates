@@ -1,5 +1,7 @@
+const { P } = require("pino");
 const pool = require("../config/db");
 const { Class, TeacherClass, StudentClass } = require("../entities/class.model");
+const { Teacher, Student, Parent } = require("../entities/user.model");
 
 const { ErrorHandler } = require("../helpers/error");
 
@@ -16,6 +18,42 @@ class ClassDB {
   viewAllClasses = async () => {
     const allClasses = await Class.findAll();
     return allClasses;
+  };
+
+  viewAllClassesStudent = async (studentID) => {
+    const allClasses = await StudentClass.findAll({
+      where: {
+        studentID: studentID
+      }
+    });
+    return allClasses;
+  };
+
+  viewAllClassesTeacher = async (teacherID) => {
+    const allClasses = await TeacherClass.findAll({
+      where: {
+        teacherID: teacherID
+      }
+    });
+    return allClasses;
+  };
+
+  viewAllClassesParent = async (parentID) => {
+    const studentID = await this.findChildID(parentID);
+    console.log("ClassDB:", studentID)
+    const allClasses = await this.viewAllClassesStudent(studentID);
+    console.log("ClassDB:", allClasses)
+    return allClasses;
+  };
+
+  findChildID = async (parentID) => {
+    const child = await Parent.findAll({
+      where: {
+        parentID: parentID
+      }
+    });
+    const studentID = child[0].studentID;
+    return studentID;
   };
 
   addStudentsToClass = async (studentID, classID) => {

@@ -22,9 +22,26 @@ class ClassService {
     }
   };
 
-  viewAllClasses = async () => {
+  viewAllClasses = async (email) => {
     try {
-      const allClasses = await ClassDB.viewAllClasses();
+      const user = await UserDB.getUserByEmailDB(email);
+
+      if (!user) {
+        throw new ErrorHandler(403, "User not found");
+      }
+
+      const role = user.role;
+      let allClasses;
+      if (role == "Student") {
+        allClasses = await ClassDB.viewAllClassesStudent(user.id);
+      }
+      else if (role == "Teacher") {
+        allClasses = await ClassDB.viewAllClassesTeacher(user.id);
+      }
+      else if (role == "Parent") {
+        allClasses = await ClassDB.viewAllClassesParent(user.id);
+      }
+
       if (!allClasses) {
         throw new ErrorHandler(403, "There are not exist classes");
       }

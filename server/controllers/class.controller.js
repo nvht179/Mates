@@ -20,7 +20,8 @@ class ClassController {
 
   viewAllClasses = async (req, res) => {
     try {
-      const allClasses = await ClassService.viewAllClasses();
+      const { email } = req.params;
+      const allClasses = await ClassService.viewAllClasses(email);
       const message = "Successful";
       res.status(200).json({ message, allClasses });
     } catch (err) {
