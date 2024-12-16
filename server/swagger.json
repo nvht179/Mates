@@ -1,0 +1,793 @@
+{
+  "swagger": "2.0",
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "auth-token"
+    }
+  },
+  "info": {
+    "version": "1.0.0",
+    "title": "Mates - CS300",
+    "description": "A REST API made with Express and Postgres for CS300 project.",
+    "license": {
+      "name": "Licensed under MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "API for authentication"
+    },
+    {
+      "name": "Users",
+      "description": "API for users"
+    },
+    {
+      "name": "Reactions",
+      "description": "API for reactions"
+    },
+    {
+      "name": "Posts",
+      "description": "API for posts"
+    },
+    {
+      "name": "Comments",
+      "description": "API for comments"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users/checkUserByEmail": {
+      "post": {
+        "tags": ["Users"],
+        "description": "Check email exist",
+        "summary": "Check email exist",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Email details",
+            "schema": {
+              "$ref": "#/definitions/email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Login into the system",
+        "summary": "Login",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Login details",
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/auth/signUp": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Create an account",
+        "summary": "Sign up",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Login details",
+            "schema": {
+              "$ref": "#/definitions/SignUp"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account created"
+          }
+        }
+      }
+    },
+    "/auth/forgetPassword": {
+      "put": {
+        "tags": ["Auth"],
+        "description": "Forget password",
+        "summary": "Change password",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Details",
+            "schema": {
+              "$ref": "#/definitions/forgetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Change password successfully"
+          }
+        }
+      }
+    },
+    "/auth/verify-email": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Verify the sign up account",
+        "summary": "Verify the sign up account",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Get the token",
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/auth/check-email-otp": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Check the email and send OTP",
+        "summary": "Check the email and send OTP",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Get the token",
+            "schema": {
+              "$ref": "#/definitions/email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Refresh the token jwt",
+        "summary": "Refresh the token jwt",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "body",
+            "description": "Refresh the token",
+            "schema": {
+              "$ref": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    },
+    "/posts/create": {
+      "post": {
+        "tags": ["Posts"],
+        "description": "Create a post",
+        "summary": "Create a post",
+        "parameters": [
+          {
+            "name": "post",
+            "in": "body",
+            "description": "Create a post",
+            "schema": {
+              "$ref": "#/definitions/createPostWithAttachments"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create a post successfully"
+          }
+        }
+      }
+    },
+    "/reactions/create": {
+      "post": {
+        "tags": ["Reactions"],
+        "description": "Add a new reactions to a Post",
+        "summary": "Add a new reactions to a Post",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Add a reaction",
+            "schema": {
+              "$ref": "#/definitions/createReactionToPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create a post successfully"
+          }
+        }
+      }
+    },
+    "/reactions/postId={postId}": {
+      "get": {
+        "tags": ["Reactions"],
+        "description": "Get all reactions for a post",
+        "summary": "Get reactions by class ID",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the post to retrieve reactions for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of reactions for posts in the specified class",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reaction"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid class ID supplied"
+          },
+          "404": {
+            "description": "No reactions found for the specified class ID"
+          }
+        }
+      }
+    },
+    "/reactions/update": {
+      "put": {
+        "tags": ["Reactions"],
+        "description": "Update a reaction by its ID",
+        "summary": "Update reaction",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Reaction update details",
+            "schema": {
+              "$ref": "#/definitions/updateReaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reaction updated successfully"
+          },
+          "400": {
+            "description": "Invalid input or missing required parameters"
+          },
+          "404": {
+            "description": "Reaction not found"
+          }
+        }
+      }
+    },
+    "/reactions/delete": {
+      "delete": {
+        "tags": ["Reactions"],
+        "description": "Delete a reaction by its ID",
+        "summary": "Delete a reaction",
+        "parameters": [
+          {
+            "name": "reaction",
+            "in": "body",
+            "description": "Reaction delete details",
+            "schema": {
+              "$ref": "#/definitions/deleteReaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reaction deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Reaction deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reaction not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Reaction not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error deleting reaction",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error deleting reaction"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error details here"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/classId={classId}": {
+      "get": {
+        "tags": ["Posts"],
+        "description": "Get all posts for a specific class by its ID",
+        "summary": "Get posts by class ID",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the class to retrieve posts for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of posts for the specified class",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Post"
+              }
+            }
+          },
+          "404": {
+            "description": "No posts found for the specified class ID"
+          },
+          "500": {
+            "description": "Error retrieving posts",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error retrieving posts"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Database connection failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/edit/{postId}": {
+      "put": {
+        "tags": ["Posts"],
+        "description": "Edit an existing post",
+        "summary": "Edit post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to edit"
+          },
+          {
+            "name": "post",
+            "in": "body",
+            "description": "Updated post details",
+            "schema": {
+              "$ref": "#/definitions/editPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "Invalid input or missing parameters"
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/posts/remove/{postId}": {
+      "delete": {
+        "tags": ["Posts"],
+        "description": "Delete a post by its ID",
+        "summary": "Remove a post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to remove"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post removed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Post deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Post not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error deleting post",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error deleting post"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error details here"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/add": {
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Add a comment to a post",
+        "description": "Creates a new comment and associates it with a specific post",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Comment data",
+            "schema": {
+              "$ref": "#/definitions/AddComment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment added successfully",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        }
+      }
+    },
+    "/comments/delete/{commentId}": {
+      "delete": {
+        "tags": ["Comments"],
+        "summary": "Delete a comment by ID",
+        "description": "Deletes an existing comment using its ID",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "The ID of the comment to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successfully"
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "SignUp": {
+      "properties": {
+        "password": {
+          "type": "string",
+          "example": "123"
+        },
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        },
+        "name": {
+          "type": "string",
+          "example": "Luong Nguyen Khoa"
+        },
+        "username": {
+          "type": "string",
+          "example": "Koa"
+        },
+        "phone": {
+          "type": "string",
+          "example": "113"
+        },
+        "avatar": {
+          "type": "string",
+          "example": ""
+        }
+      }
+    },
+    "login": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        },
+        "password": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "email": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        }
+      }
+    },
+    "User": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        },
+        "password": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "forgetPassword": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
+        },
+        "newPassword": {
+          "type": "string",
+          "example": "321"
+        },
+        "newPassword2": {
+          "type": "string",
+          "example": "321"
+        },
+        "OTP": {
+          "type": "string",
+          "example": "123456"
+        }
+      }
+    },
+    "createPostWithAttachments": {
+    "type": "object",
+    "properties": {
+      "classId": {
+        "type": "integer",
+        "example": 1,
+        "description": "ID of the class the post belongs to"
+      },
+      "title": {
+        "type": "string",
+        "example": "Post Title",
+        "description": "Title of the post"
+      },
+      "content": {
+        "type": "string",
+        "example": "Post Content",
+        "description": "Content of the post"
+      },
+      "attachments": {
+        "type": "array",
+        "description": "List of attachments for the post",
+        "items": {
+          "type": "object",
+          "properties": {
+            "link": {
+              "type": "string",
+              "example": "url1",
+              "description": "URL of the attachment"
+            },
+            "linkTitle": {
+              "type": "string",
+              "example": "Title 1",
+              "description": "Title of the attachment"
+            }
+          },
+          "required": ["link", "linkTitle"]
+        }
+      }
+    },
+    "required": ["classId", "title", "content"],
+    "description": "Schema for creating a post with optional attachments"
+    },
+    "createReactionToPost": {
+      "properties": {
+        "personId": {
+          "type": "integer",
+          "example": 1
+        },
+        "type": {
+          "type": "string",
+          "example": "love"
+        },
+        "postId": {
+          "type": "integer",
+          "example": "6"
+        }
+      }
+    },
+    "updateReaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 5,
+          "description": "ID of the reaction to update"
+        },
+        "newType": {
+          "type": "string",
+          "example": "like",
+          "description": "The new type of reaction (e.g., 'like', 'love', 'haha')"
+        }
+      },
+      "required": ["id", "newType"],
+      "description": "Schema for updating a reaction"
+    },
+    "deleteReaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 4,
+          "description": "The ID of the reaction to delete"
+        }
+      },
+      "required": ["id"],
+      "description": "Schema for deleting a reaction"
+    },
+    "editPost": {
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "Updated Post Title",
+          "description": "New title of the post"
+        },
+        "content": {
+          "type": "string",
+          "example": "Updated content for the post.",
+          "description": "Updated content of the post"
+        },
+        "attachments": {
+          "type": "array",
+          "description": "Updated list of attachments for the post",
+          "items": {
+            "type": "object",
+            "properties": {
+              "link": {
+                "type": "string",
+                "example": "http://new-link.com",
+                "description": "URL of the attachment"
+              },
+              "linkTitle": {
+                "type": "string",
+                "example": "New Attachment Title",
+                "description": "Title of the attachment"
+              }
+            },
+            "required": ["link", "linkTitle"]
+          }
+        }
+      },
+      "required": ["title", "content"],
+      "description": "Schema for editing a post with optional attachments"
+    },
+    "AddComment": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "This is a new comment"
+        },
+        "postId": {
+          "type": "integer",
+          "example": 1
+        },
+        "personId": {
+          "type": "integer",
+          "example": 1
+        }
+      },
+      "required": ["content", "postId", "personId"]
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "content": {
+          "type": "string",
+          "example": "This is a new comment"
+        },
+        "postId": {
+          "type": "integer",
+          "example": 1
+        },
+        "personId": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    }
+  }
+}

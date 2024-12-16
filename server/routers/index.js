@@ -9,7 +9,8 @@ const assignmentRouter = require("./assignment.router");
 const classRouter = require('./class.router')
 const postRouter = require('./post.router')
 const attachmentRouter = require('./attachment.router')
-const reactionRouter = require('./reaction.router'); 
+const reactionRouter = require('./reaction.router');  
+const commentRouter = require('./comment.router');
 
 router.use("/reactions", reactionRouter);
 router.use("/auth", authRouter);
@@ -18,6 +19,7 @@ router.use("/assignments",assignmentRouter);
 router.use("/attachments", attachmentRouter);
 router.use("/classes",classRouter);
 router.use("/posts",postRouter);
+router.use("/reactions", reactionRouter);  // Adding the reactions route
 
 
 router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
