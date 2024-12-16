@@ -20,12 +20,12 @@ const Post = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    classId: {
+    classID: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: Class,
-          key: "id",
+          key: "classID",
         },
     },
   },

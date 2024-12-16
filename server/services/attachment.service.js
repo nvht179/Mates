@@ -39,6 +39,41 @@ class AttachmentService {
     }
   };
   
+  async getAttachmentsByPostId(postId) {
+    try {
+      const attachments = await AttachmentDB.findAttachmentsByPostId(postId);
+
+      // Nếu không tìm thấy, trả về mảng rỗng
+      if (!attachments) {
+        return [];
+      }
+
+      return attachments;
+    } catch (error) {
+      console.error("Error in AttachmentService:", error);
+      throw new Error(`Error retrieving attachments: ${error.message}`);
+    }
+  }
+
+  async editAttachmentsByPostId({ postId, attachments }) {
+    try {
+      // Xóa tất cả attachment cũ theo postId
+      await AttachmentDB.removeAttachmentsByPostId(postId);
+
+      // Thêm từng attachment mới vào
+      const newAttachments = [];
+      for (const attachment of attachments) {
+        const { link, linkTitle } = attachment;
+        const newAttachment = await AttachmentDB.addAttachment({ link, linkTitle, postId });
+        newAttachments.push(newAttachment);
+      }
+
+      return newAttachments;
+    } catch (error) {
+      console.error("Error in AttachmentService:", error);
+      throw new Error(`Error editing attachments: ${error.message}`);
+    }
+  };
 }
 
 module.exports = new AttachmentService();
