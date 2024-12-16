@@ -50,6 +50,7 @@ class AuthService {
         hashPassword,
         phone,
         avatar,
+        role,
         false
       );
 

@@ -8,13 +8,14 @@ class UserDB {
     return users;
   };
 
-  createUserDB = async (name, email, password, phone, avatar, isVerified) => {
+  createUserDB = async (name, email, password, phone, avatar, role, isVerified) => {
     const newUser = await Person.create({
       name,
       email,
       password,
       phone,
       avatar,
+      role,
       isVerified
     });
     return newUser;
