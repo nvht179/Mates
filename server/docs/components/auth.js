@@ -26,6 +26,14 @@ module.exports =
         "newPassword2": {
           "type": "string",
           "example": "321"
+        }
+      }
+    },
+    "checkOTP": {
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "lnkhoa22@apcs.fitus.edu.vn"
         },
         "OTP": {
           "type": "string",

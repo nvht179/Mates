@@ -127,7 +127,25 @@ class AuthService {
     }
   };
 
-  forgetPassword = async (email, newPassword, newPassword2, OTP) => {
+  checkOTP = async (email, OTP) => {
+    try {
+      const user = await UserDB.getUserByEmailDB(email);
+
+      if (!user) {
+        throw new ErrorHandler(404, "Email does not exist");
+      }
+
+      if (user.resetToken != OTP) {
+        throw new ErrorHandler(404, "OTP is not correct");
+      }
+
+      return user;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  forgetPassword = async (email, newPassword, newPassword2) => {
     try {
       const user = await UserDB.getUserByEmailDB(email);
 
@@ -137,10 +155,6 @@ class AuthService {
 
       if (!user) {
         throw new ErrorHandler(404, "Email does not exist");
-      }
-
-      if (user.resetToken != OTP) {
-        throw new ErrorHandler(404, "OTP is not correct");
       }
 
       const salt = await bcrypt.genSalt();

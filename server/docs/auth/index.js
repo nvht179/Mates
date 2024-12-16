@@ -4,6 +4,7 @@ const signup = require("./signup");
 const refreshToken = require("./refreshToken");
 const forgetPassword = require("./forgetPassword");
 const verifyEmail = require("./verifyEmail");
+const checkOTP = require("./checkOTP");
 
 module.exports = {
   "/auth/login": {
@@ -20,6 +21,9 @@ module.exports = {
   },
   "/auth/forgetPassword": {
     ...forgetPassword
+  },
+  "/auth/checkOTP": {
+    ...checkOTP
   },
   "/auth/verify-email": {
     ...verifyEmail

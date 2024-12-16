@@ -61,10 +61,20 @@ class AuthController {
     }
   };
 
+  checkOTP = async (req, res) => {
+    try {
+      const { email, OTP } = req.body;
+      const result = await AuthService.checkOTP(email, OTP);
+      res.status(200).json({email, OTP});
+    } catch (err) {
+      res.status(err.statusCode).json(err.message);
+    }
+  };
+
   forgetPassword = async (req, res) => {
     try {
-      const { email, newPassword, newPassword2, OTP } = req.body;
-      const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2, OTP);
+      const { email, newPassword, newPassword2 } = req.body;
+      const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2);
       res.status(200).json(updatedUser);
     } catch (err) {
       res.status(err.statusCode).json(err.message);
