@@ -86,6 +86,11 @@ class AuthController {
     if (!req.cookies.refreshToken) {
       throw new ErrorHandler(401, "Token missing");
     }
+    // console.log("AuthController:", req.cookies.refreshToken)
+    console.log("Request Cookies:", req.cookies);
+    console.log("Request Body:", req.body);
+    console.log("Refresh Token:", req.cookies.refreshToken);
+
     const tokens = await AuthService.generateRefreshToken(
       req.cookies.refreshToken
     );
@@ -93,7 +98,7 @@ class AuthController {
     res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
     });
-    res.json(tokens);
+    res.json(tokens.token);
   };
 }
 
