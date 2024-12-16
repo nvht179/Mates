@@ -1,4 +1,7 @@
 import Panel from "./Panel";
+import CommentList from "./CommentList";
+import ReactionList from "./ReactionList";
+import Input from "./Input";
 
 interface PostListProps {
   posts: Post[];
@@ -12,6 +15,7 @@ interface Post {
   content: string;
   time: string;
   comment: Comment[];
+  reaction: Reaction[];
 }
 
 interface Comment {
@@ -21,27 +25,31 @@ interface Comment {
   time: string;
 }
 
+interface Reaction {
+  user: string;
+  reaction: number;
+}
+
 function PostList({ posts }: PostListProps) {
-  const renderedCommentList = (post: Post) => {
-    return post.comment.map((comment) => {
-      return (
-        <div key={comment.user} className="p-4">
-          <div className="flex flex-row items-center">
-            <img
-              className="h-8 w-8 rounded-full object-cover"
-              src={comment.image}
-              alt={comment.user}
-            />
-            <p className="ml-4">{comment.user}</p>
-            <p className="ml-4 text-xs">{comment.time}</p>
-          </div>
-          <div className="mt-4">
-            <p className="mt-2 text-sm">{comment.content}</p>
-          </div>
+  const renderedAddComment = () => {
+    return (
+      <div className="px-4 pb-4">
+        <div className="flex flex-row items-center">
+          <img
+            className="h-8 w-8 rounded-full object-cover"
+            src="../../public/vite.svg"
+            alt="user"
+          />
+          <Input
+            className="ml-4 w-full"
+            type="text"
+            placeholder="Add comment"
+          />
         </div>
-      );
-    });
-  };
+      </div>
+    );
+  }
+
 
   const renderedPostList = posts.map((post) => {
     return (
@@ -50,31 +58,34 @@ function PostList({ posts }: PostListProps) {
           <div className="p-4">
             <div className="flex flex-row items-center">
               <img
-                className="h-8 w-8 rounded-full object-cover"
+                className="h-12 w-12 rounded-full object-cover"
                 src={post.image}
                 alt={post.user}
               />
               <p className="ml-4">{post.user}</p>
-              <p className="ml-4 text-xs">{post.time}</p>
+              <p className="ml-4 font-light">{post.time}</p>
             </div>
             <div className="mt-4">
               <p className="text-xl font-bold">{post.title}</p>
-              <p className="mt-2 text-sm">{post.content}</p>
+              <p className="mt-2">{post.content}</p>
+            </div>
+            {/* display reaction */}
+            <div className="mt-4">
+              <ReactionList post={post} />
             </div>
           </div>
           <div className="border-b-2" />
-          <div>{renderedCommentList(post)}</div>
+          {/* display Comment */}
+          <CommentList post={post} />
+          {/* display Add comment */}
+          {renderedAddComment()}
         </Panel>
       </div>
     );
   });
 
-  return (
-    <div className="overflow-y-scroll px-44">
-      {renderedPostList}
-    </div>
-  );
+  return <div className="px-44">{renderedPostList}</div>;
 }
 
 export default PostList;
-export { PostListProps, Post, Comment };
+export type { Post };

@@ -16,6 +16,31 @@ interface CheckOTPRequest {
   otp: string;
 }
 
+export interface SignupRequest {
+  role: string;
+  password: string;
+  email: string;
+  name: string;
+  username: string;
+  phone: string;
+  avatar: string
+  childEmail: string;
+}
+
+export interface SignupResponse {
+  userId: number;
+  email: string;
+}
+
+interface CheckUserByEmailRequest {
+  email: string;
+}
+
+interface CheckUserByEmailResponse {
+  exists: boolean;
+  message?: string; // Optional message for the `403` case
+}
+
 export const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({

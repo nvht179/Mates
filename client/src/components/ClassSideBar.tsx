@@ -1,29 +1,38 @@
+import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
-import Panel from "./Panel";
 import { useNavigate, useLocation } from "react-router-dom";
+import Panel from "./Panel";
+import ClassSideBarTab from "./ClassSideBarTab";
+
+type buttonClicked = "lecture" | "assignment" | "discussion";
 
 function ClassSideBar() {
   const { state } = useLocation();
-  const { name, image, classCode } = state;
+  const { cla } = state;
+  const { name, image, classCode } = cla;
+  const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
 
   const navigate = useNavigate();
   const handleClickAllClasses = () => {
     navigate("/");
   };
   const handleClickLecture = () => {
-    navigate(`/class/${classCode}/lecture`, { state });
+    navigate(`/class/${classCode}/lecture`, { state: { ...state, title: "Lecture" } });
+    setButtonClicked("lecture");
   };
   const handleClickAssignment = () => {
-    navigate(`/class/${classCode}/assignment`, { state });
+    navigate(`/class/${classCode}/assignment`, { state: { ...state, title: "Assignment" } });
+    setButtonClicked("assignment");
   };
   const handleClickDiscussion = () => {
-    navigate(`/class/${classCode}/discussion`, { state });
+    navigate(`/class/${classCode}/discussion`, { state: { ...state, title: "Discussion" } });
+    setButtonClicked("discussion");
   };
 
   return (
-    <Panel className="flex h-full w-72 flex-col">
+    <Panel className="flex h-full w-80 flex-col bg-bg-alt">
       <div className="h-16">
-        <p className="pl-5 pt-5 h-full text-xl font-bold">Class</p>
+        <p className="h-full pl-5 pt-5 text-xl font-bold">Class</p>
         <div className="border-b-2" />
       </div>
       <div
@@ -33,8 +42,8 @@ function ClassSideBar() {
         <IoIosArrowBack />
         <p className="ml-2 text-sm">All classes</p>
       </div>
-      <div className="ml-4 mt-4">
-        <div className="flex flex-row">
+      <div className="mt-4">
+        <div className="ml-4 flex flex-row">
           <img
             className="h-12 w-12 rounded object-cover"
             src={image}
@@ -46,24 +55,15 @@ function ClassSideBar() {
           </div>
         </div>
         <div className="mt-4 flex flex-col">
-          <p
-            onClick={handleClickLecture}
-            className="cursor-pointer py-2 text-fg-softer active:opacity-30"
-          >
+          <ClassSideBarTab onClick={handleClickLecture} active={buttonClicked === "lecture"}>
             Lecture
-          </p>
-          <p
-            onClick={handleClickAssignment}
-            className="cursor-pointer py-2 text-fg-softer active:opacity-30"
-          >
+          </ClassSideBarTab>
+          <ClassSideBarTab onClick={handleClickAssignment} active={buttonClicked === "assignment"}>
             Assignment
-          </p>
-          <p
-            onClick={handleClickDiscussion}
-            className="cursor-pointer py-2 text-fg-softer active:opacity-30"
-          >
+          </ClassSideBarTab>
+          <ClassSideBarTab onClick={handleClickDiscussion} active={buttonClicked === "discussion"}>
             Discussion
-          </p>
+          </ClassSideBarTab>
         </div>
       </div>
     </Panel>

@@ -1,12 +1,7 @@
-import { useLocation } from "react-router-dom";
-import Panel from "../components/Panel";
 import PostList from "../components/PostList";
-import Button from "../components/Button";
+import AddPost from "../components/AddPost";
 
 function DiscussionPage() {
-  const { state } = useLocation();
-  const { name, image, classCode } = state;
-
   const posts = [
     {
       id: 1,
@@ -18,13 +13,25 @@ function DiscussionPage() {
       comment: [
         {
           user: "Jane Doe",
+          image: "../../public/vite.svg",
           content: "Nice post!",
           time: "15/11/2024 13:00",
         },
         {
           user: "Tim",
+          image: "../../public/vite.svg",
           content: "I agree!",
           time: "15/11/2024 13:00",
+        },
+      ],
+      reaction: [
+        {
+          user: "Jane Doe",
+          reaction: 1,
+        },
+        {
+          user: "Tim",
+          reaction: 2,
         },
       ],
     },
@@ -38,13 +45,25 @@ function DiscussionPage() {
       comment: [
         {
           user: "Jane Doe",
+          image: "../../public/vite.svg",
           content: "Nice post!",
           time: "15/11/2024 13:00",
         },
         {
           user: "Tim",
+          image: "../../public/vite.svg",
           content: "I agree!",
           time: "15/11/2024 13:00",
+        },
+      ],
+      reaction: [
+        {
+          user: "Jane Doe",
+          reaction: 1,
+        },
+        {
+          user: "Tim",
+          reaction: 2,
         },
       ],
     },
@@ -58,30 +77,34 @@ function DiscussionPage() {
       comment: [
         {
           user: "Jane Doe",
+          image: "../../public/vite.svg",
           content: "Nice post!",
           time: "15/11/2024 13:00",
         },
         {
           user: "Tim",
+          image: "../../public/vite.svg",
           content: "I agree!",
           time: "15/11/2024 13:00",
+        },
+      ],
+      reaction: [
+        {
+          user: "Jane Doe",
+          reaction: 1,
+        },
+        {
+          user: "Tim",
+          reaction: 2,
         },
       ],
     },
   ];
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <Panel className="flex h-16 flex-row items-center py-4">
-        <img
-          src={image}
-          alt={name}
-          className="ml-4 h-8 w-8 rounded object-cover"
-        />
-        <h1 className="ml-4 text-lg font-bold">Discussion</h1>
-      </Panel>
+    <div>
       <PostList posts={posts} />
-      <Button className="my-4 ml-44 w-36">Start a post</Button>
+      <AddPost />
     </div>
   );
 }
