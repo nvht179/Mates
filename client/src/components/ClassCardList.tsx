@@ -16,7 +16,7 @@ interface ClassType {
 function ClassCardList({ classes }: ClassCardListProps) {
   const navigate = useNavigate();
   const handleClick = (cla: ClassType) => {
-    navigate("/class/" + cla.classCode + "/lecture", { state: cla });
+    navigate("/class/" + cla.classCode + "/lecture", { state: {cla, title: "Lecture"} });
   };
 
   const renderedClassCard = classes.map((cla: ClassType) => {
