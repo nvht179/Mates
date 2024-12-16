@@ -1,5 +1,8 @@
 const router = require("express").Router();
 const ClassController = require('../controllers/class.controller')
+const verifyToken = require("../middleware/verifyToken.middleware");
+
+router.use(verifyToken);
 
 router.post("/create-class", ClassController.createNewClass);
 router.get("/view-all-classes", ClassController.viewAllClasses);

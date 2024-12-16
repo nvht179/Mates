@@ -4,6 +4,11 @@ module.exports =
     "tags": [
       "Classes"
     ],
+    security: [
+      {
+        JWT: [],
+      },
+    ],
     "description": "View all classes",
     "summary": "View all classes",
     "responses": {
