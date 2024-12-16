@@ -5,6 +5,7 @@ router.post("/login", AuthController.loginUser);
 router.post("/signUp", AuthController.signUp);
 router.put("/forgetPassword", AuthController.forgetPassword);
 router.post("/checkOTP", AuthController.checkOTP);
+router.post("/resend-verification-link", AuthController.resendVerificationLink);
 
 router.get('/verify-email', AuthController.verifyEmailAndSignup);
 

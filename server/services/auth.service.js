@@ -106,6 +106,32 @@ class AuthService {
     }
   };
 
+  resendVerificationLink = async (email) => {
+    const newUser = await UserDB.getUserByEmailDB(email);
+
+    if (!newUser) {
+      throw new ErrorHandler(404, "The email is not correct");
+    }
+
+    // Generate verification token and link
+    const verificationToken = jwt.sign(
+      { id: newUser.id },
+      process.env.SECRET,
+      { expiresIn: '1h' }
+    );
+    const verificationLink = `http://localhost:8080/api/auth/verify-email?token=${verificationToken}`;
+
+    // Send the verification email
+    try {
+      await MailService.sendVerificationEmail(email, verificationLink);
+      logger.info("Verification email sent");
+    } catch (err) {
+      logger.error('Error sending verification email:', err);
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+    return newUser;
+  };
+
   verifyEmailAndSignup = async (token) => {
     try {
       const decoded = jwt.verify(token, process.env.SECRET);
