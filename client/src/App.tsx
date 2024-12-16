@@ -14,6 +14,7 @@ import DiscussionPage from "./pages/DiscussionPage";
 import Calendar from "./pages/Calendar";
 import ForgetPassword from "./components/ForgetPassword";
 import VerificationSent from "./components/verificationSent";
+import EmailInput from "./components/EmailInput";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/choose-role" element={<ChooseRole />} />
           <Route path="/verification-sent" element={<VerificationSent />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/email-input" element={<EmailInput />} />
         </Route>
         {/* Protected routes with main layout */}
         <Route element={<Layout />}>
