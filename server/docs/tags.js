@@ -15,6 +15,10 @@ module.exports = {
     {
       "name": "Posts",
       "description": "API for posts"
+    },
+    {
+      "name": "Comments",
+      "description": "API for comments"
     }
   ],
 }

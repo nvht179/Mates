@@ -3,6 +3,7 @@ const users = require("./users");
 const posts = require("./posts");
 const reactions = require("./reactions");
 const classes = require("./classes");
+const comments = require("./comments");
 
 module.exports = {
   paths: {
@@ -11,5 +12,6 @@ module.exports = {
     ...posts,
     ...reactions,
     ...classes,
+    ...comments,
   },
 };
