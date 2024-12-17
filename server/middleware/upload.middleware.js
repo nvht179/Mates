@@ -5,7 +5,7 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // Giới hạn file 10MB
+  limits: { fileSize: 100 * 1024 * 1024 }, // Giới hạn file 100MB
 });
 
-module.exports = upload.single("file"); // Nhận một file với field name là "file"
+module.exports = upload.array("files"); // Nhận một file với field name là "file"

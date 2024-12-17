@@ -2,6 +2,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const Class = require("./class.model");
+const Person = require("./person.model");
 
 const Post = sequelize.define(
   "Post",
@@ -27,6 +28,19 @@ const Post = sequelize.define(
           model: Class,
           key: "classID",
         },
+    },
+    personID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Person, // Tham chiếu đến Person model
+        key: "id", // Khóa chính của Person
+      },
+    },
+    time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW, // Tự động gán giá trị thời gian hiện tại
     },
   },
   {

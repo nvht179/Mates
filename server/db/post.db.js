@@ -3,18 +3,20 @@ const { ErrorHandler } = require("../helpers/error");
 const AttachmentDB = require("../db/attachment.db"); // Import AttachmentDB để xử lý việc thêm attachment
 const sequelize = require("../config/db");
 class PostDB {
-  addNewPostWithAttachments = async ({ classID, title, content, attachments }) => {
+  addNewPostWithAttachments = async ({ classID, title, content, attachments, personID }) => {
     let transaction;
     try {
       transaction = await sequelize.transaction();
 
+      // Tạo bài viết mới, thêm personID vào
       const newPost = await Post.create(
         {
           classID,
           title,
           content,
+          personID, // Thêm personID vào đây
         },
-        { transaction } 
+        { transaction }
       );
 
       // Nếu có attachment, thêm từng cái một với postId mới tạo
@@ -44,6 +46,7 @@ class PostDB {
       throw new ErrorHandler("Error creating post with attachments", error);
     }
   };
+
   async getPostsByClassId(classID) {
     try {
       const posts = await Post.findAll({
