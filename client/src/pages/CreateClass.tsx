@@ -8,6 +8,7 @@ import { FaRegClock } from "react-icons/fa6";
 import { MdAddCircleOutline } from "react-icons/md";
 import { RxLoop } from "react-icons/rx";
 import { GrTextAlignFull } from "react-icons/gr";
+import { HiArrowLongRight } from "react-icons/hi2";
 
 export default function CreateClass() {
     const [className, setClassName] = useState("");
@@ -29,11 +30,11 @@ export default function CreateClass() {
     };
 
     return (
-        <div className="py-10 px-40 max-w mx-auto ">
-            <div className="flex justify-between items-center mb-10">
-                <h1 className="text-3xl font-bold mb-6">New Class</h1>
+        <div className="max-w mx-auto ">
+            <div className="px-10 pb-5 pt-6 border-b-2 border-b-fg-border flex justify-between items-center mb-10">
+                <h1 className="text-3xl font-bold">New Class</h1>
                 {/* Buttons */}
-                <div className="flex justify-end space-x-4">
+                <div className="flex justify-end space-x-7">
                     <Button secondary>
                         Close
                     </Button>
@@ -42,9 +43,9 @@ export default function CreateClass() {
                     </Button>
                 </div>
             </div>
-            <div className="py-10 mx-auto ">
+            <div className="pl-10 pb-5 mr-20 pr-20 py-10 mx-auto">
                 {/* Class Name */}
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-4 pr-20">
                     {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
                     <LuPencilLine className="mx-3 text-2xl" />
                     <Input
@@ -70,7 +71,7 @@ export default function CreateClass() {
                 </div>
 
                 {/* Schedule */}
-                <div className="mb-2 flex-col items-center">
+                <div className="mb-2 flex-col items-center pr-20">
                     {/* <label className="block text-gray-700 mb-2">Schedule</label> */}
                     {schedule.map((slot, index) => (
                         <div key={index} className="flex items-center space-x-4 mb-2">
@@ -95,6 +96,7 @@ export default function CreateClass() {
                                 onChange={(e) => handleScheduleChange(index, "startTime", e.target.value)}
                                 className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
+                            <HiArrowLongRight className="text-8xl h-auto" />
 
                             {/* End Time */}
                             <Input
@@ -115,8 +117,8 @@ export default function CreateClass() {
                     ))}
 
                     {/* Add Time Slot */}
-                    <div onClick={addTimeSlot} className="ml-12 flex items-center hover:cursor-pointer">
-                        <MdAddCircleOutline className="text-fg-softer" />
+                    <div onClick={addTimeSlot} className="pl-4 ml-12 flex items-center hover:cursor-pointer">
+                        <MdAddCircleOutline className="text-fg-softer text-2xl" />
                         <Button onClick={addTimeSlot} secondary className="border-none">
                             Add Time Slot
                         </Button>
@@ -124,7 +126,7 @@ export default function CreateClass() {
                 </div>
 
                 {/* Frequency */}
-                <div className="flex items-center mb-4 w-full">
+                <div className="flex items-center mb-4 w-full pr-20">
                     {/* <label className="block text-gray-700 mb-1">Frequency</label> */}
                     <RxLoop className="ml-3 mr-4 text-2xl" />
                     <select
@@ -139,7 +141,7 @@ export default function CreateClass() {
                 </div>
 
                 {/* Description */}
-                <div className="flex items-center mb-6 w-full">
+                <div className="flex items-center mb-6 w-full pr-20">
                     {/* <label className="block text-gray-700 mb-1">Description</label> */}
                     <GrTextAlignFull className="ml-3 mr-4 text-2xl" />
                     <textarea
