@@ -1,15 +1,23 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import userReducer from "./slices/userSlice";
+import userReducer, { AuthState } from "./slices/userSlice";
 import { authApi } from "./services/authApi";
+import { classApi } from "./services/classApi";
+
+export interface SelectorState {
+  user: AuthState;
+}
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     [authApi.reducerPath]: authApi.reducer,
+    [classApi.reducerPath]: classApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware()
+      .concat(authApi.middleware)
+      .concat(classApi.middleware),
 });
 
 setupListeners(store.dispatch);
@@ -23,3 +31,5 @@ export {
   useResendVerificationEmailMutation, 
 } from "./services/authApi";
 export * from "./slices/userSlice"
+
+export { useViewAllClassesQuery } from "./services/classApi";
