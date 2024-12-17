@@ -2,6 +2,7 @@ import PostList from "../components/PostList";
 import AddPost from "../components/AddPost";
 
 function DiscussionPage() {
+
   const posts = [
     {
       id: 1,
