@@ -93,6 +93,7 @@ export type {
   SignupResponseSuccess,
   SignupResponseFail,
   CheckUserByEmailRequest,
+  CheckUserByEmailResponse,
   ResendVerificationEmailRequest,
   ResendVerificationEmailResponseFail,
   ResendVerificationEmailResponseSuccess

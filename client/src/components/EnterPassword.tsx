@@ -61,9 +61,9 @@ export default function EnterPassword() {
           {errorMessage}
         </div>
       </form>
-      <a className="mb-2 px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">
+      <Link to="/forget-password" className="mb-2 px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft">
         Forget your password?
-      </a>
+      </Link>
       <Link
         to="/login"
         className="mb-4 px-1 text-sm text-blue-700 hover:cursor-pointer hover:underline active:text-fg-soft"
