@@ -1,27 +1,23 @@
 import { UserRole } from "./Misc";
 
-interface ResponseFail {
-  status: number | string;
-  data?: LoginResponseFail | CheckUserByEmailResponseFail;
-  error?: string;
-}
+// interface ResponseFail {
+//   status: number | string;
+//   data?: LoginResponseFail | CheckUserByEmailResponseFail;
+//   error?: string;
+// }
 
 interface LoginRequest {
   email: string;
   password: string;
 }
 
-interface LoginResponseSuccess {
+interface LoginResponse {
   message: string;
   token: string;
   user: {
     id: number;
     email: string;
   };
-}
-
-interface LoginResponseFail {
-  message: string;
 }
 
 interface SignupRequest {
@@ -40,11 +36,7 @@ interface SignupResponse {
   email: string;
 }
 
-interface CheckUserByEmailResponseFail {
-  message: string;
-}
-
-interface CheckUserByEmailResponseSuccess {
+interface CheckUserByEmailResponse {
   message: string;
   user: {
     id: number;
@@ -64,14 +56,11 @@ interface CheckUserByEmailRequest {
 }
 
 export type {
-  ResponseFail,
   LoginRequest,
-  LoginResponseSuccess,
-  LoginResponseFail,
+  LoginResponse,
   SignupResponse,
   SignupRequest,
-  CheckUserByEmailResponseSuccess,
-  CheckUserByEmailResponseFail,
+  CheckUserByEmailResponse,
   CheckUserByEmailRequest
 };
 

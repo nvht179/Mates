@@ -2,8 +2,10 @@ import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
 import Input from "../components/Input";
 import ConfirmButtons from "../components/ConfirmButtons";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useEmailCheck from "../utils/useEmailCheck";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
 
 const STEPS = [
   {
@@ -51,12 +53,29 @@ export default function ForgetPassword() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [inputs, setInputs] = useState<string[]>([]);
-  const { validateAndCheckEmail, isLoading } = useEmailCheck();
+  const {
+    isValidEmail,
+    checkEmail,
+    isLoading,
+    isError,
+    isSuccess,
+    error,
+    data,
+  } = useEmailCheck();
+
+  useEffect(() => {
+    responseErrorHandler(isError, error as FetchBaseQueryError, setErrorMessage);
+    if (isSuccess && data) {
+      setCurrentStep((prevIndex) => (prevIndex + 1) as Step);
+    }
+  }, [isError, isSuccess, error, data]);
 
   const dialogs = STEPS.map((item) => {
     let handleSubmit: (
       e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
-    ) => void = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>) => {
+    ) => void = (
+      e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
+    ) => {
       e.preventDefault();
     };
 
@@ -66,15 +85,12 @@ export default function ForgetPassword() {
           e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
         ) => {
           e.preventDefault();
-          const { isValid, error } = await validateAndCheckEmail(inputs[0]);
-          if (!isValid) {
-            setErrorMessage(error);
+          if (!isValidEmail(inputs[0])) {
+            setErrorMessage(
+              "Invalid email format, please enter a valid email address.",
+            );
           } else {
-            if (item.id === 2) {
-              navigate("/login");
-            } else {
-              setCurrentStep((prevIndex) => (prevIndex + 1) as Step);
-            }
+            await checkEmail({ email: inputs[0] }); // Use checkEmail
           }
         };
         break;

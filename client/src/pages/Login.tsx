@@ -4,7 +4,8 @@ import Button from "../components/Button.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import MatesLogo from "../assets/mates.svg";
 import useEmailCheck from "../utils/useEmailCheck";
-import { ResponseFail } from "../interfaces/Auth";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,12 +22,14 @@ export default function Login() {
   } = useEmailCheck();
 
   useEffect(() => {
-    if (isError) {
-      const err = error as ResponseFail;
-      setErrorMessage(err.data ? err.data.message : err.error);
-    }
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+
     if (isSuccess && data && "user" in data) {
-      navigate("/enter-password", {state: data.user.email});
+      navigate("/enter-password", { state: data.user.email });
     }
   }, [isError, isSuccess, error, navigate, data]);
 
@@ -90,7 +93,7 @@ export default function Login() {
         className="mt-4 self-end"
         disabled={isLoading}
       >
-        {isLoading ? "Checking..." : "Next"}
+        {isLoading ? "Checking" : "Next"}
       </Button>
     </div>
   );

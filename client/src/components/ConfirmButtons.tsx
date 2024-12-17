@@ -23,7 +23,7 @@ export default function ConfirmButtons({ confirmText, cancelText, confirmOnClick
       {cancelText && <Button secondary className="mr-2 w-20 px-0" onClick={cancelOnClick}>
         {cancelText}
       </Button>}
-      <Button primary className="w-20 px-0" onClick={confirmOnClick}>
+      <Button primary className="w-20 px-0" onClick={confirmOnClick} disabled={isConfirmLoading}>
         {isConfirmLoading ? confirmLoadingText :  confirmText}
       </Button>
     </div>

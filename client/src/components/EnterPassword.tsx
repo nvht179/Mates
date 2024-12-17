@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { useLoginMutation } from "../store";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MatesLogo from "../assets/mates.svg";
-import { ResponseFail } from "../interfaces/Auth";
-
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
 
 export default function EnterPassword() {
   const [password, setPassword] = useState<string>("");
-  const [login, { isLoading, data, isError, error, isSuccess }] = useLoginMutation();
+  const [login, { isLoading, data, isError, error, isSuccess }] =
+    useLoginMutation();
   const location = useLocation();
   const email = (location.state as string | null) || null;
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -22,11 +23,11 @@ export default function EnterPassword() {
   }, [email, navigate]);
 
   useEffect(() => {
-    if (isError) {
-      const err = error as ResponseFail;
-      setErrorMessage(err.data ? err.data.message : err.error);
-    }
-
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
   }, [isError, error, isSuccess, data]);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
