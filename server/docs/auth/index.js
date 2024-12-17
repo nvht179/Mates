@@ -5,6 +5,7 @@ const refreshToken = require("./refreshToken");
 const forgetPassword = require("./forgetPassword");
 const verifyEmail = require("./verifyEmail");
 const checkOTP = require("./checkOTP");
+const resendVerificationLink = require("./resendVerificatonLink");
 
 module.exports = {
   "/auth/login": {
@@ -13,11 +14,11 @@ module.exports = {
   "/auth/signUp": {
     ...signup
   },
+  "/auth/resend-verification-link": {
+    ...resendVerificationLink
+  },
   "/auth/check-email-otp": {
     ...checkEmailOTP
-  },
-  "/auth/refresh-token": {
-    ...refreshToken
   },
   "/auth/forgetPassword": {
     ...forgetPassword
@@ -27,5 +28,8 @@ module.exports = {
   },
   "/auth/verify-email": {
     ...verifyEmail
+  },
+  "/auth/refresh-token": {
+    ...refreshToken
   },
 };

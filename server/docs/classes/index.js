@@ -17,7 +17,7 @@ module.exports = {
   "/classes/add-teachers-to-class": {
     ...addTeacherToClass
   },
-  "/classes/view-all-classes": {
+  "/classes/view-all-classes/{email}": {
     ...viewAllClasses
   },
   "/classes/view-all-students-in-class/{classID}": {

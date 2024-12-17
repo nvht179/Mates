@@ -44,12 +44,20 @@ class AuthService {
         throw new ErrorHandler(401, "Email is taken already !");
       }
 
+      if (role == "Parent") {
+        const child = await UserDB.getUserByEmailDB(childEmail);
+        if (!child) {
+          throw new ErrorHandler(404, "Your child email is not correct");
+        }
+      }
+
       const newUser = await UserDB.createUserDB(
         name,
         email,
         hashPassword,
         phone,
         avatar,
+        role,
         false
       );
 
@@ -64,13 +72,8 @@ class AuthService {
         classUser = await UserDB.createTeacherDB(teacherID);
       }
       else if (role == "Parent") {
-        const child = await UserDB.getUserByEmailDB(childEmail);
-
-        if (!child) {
-          throw new ErrorHandler(404, "Your child email is not correct");
-        }
-
         const parentID = newUser.id;
+        const child = await UserDB.getUserByEmailDB(childEmail);
         classUser = await UserDB.createParentDB(parentID, child.id);
       }
       else {
@@ -101,6 +104,32 @@ class AuthService {
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
+  };
+
+  resendVerificationLink = async (email) => {
+    const newUser = await UserDB.getUserByEmailDB(email);
+
+    if (!newUser) {
+      throw new ErrorHandler(404, "The email is not correct");
+    }
+
+    // Generate verification token and link
+    const verificationToken = jwt.sign(
+      { id: newUser.id },
+      process.env.SECRET,
+      { expiresIn: '1h' }
+    );
+    const verificationLink = `http://localhost:8080/api/auth/verify-email?token=${verificationToken}`;
+
+    // Send the verification email
+    try {
+      await MailService.sendVerificationEmail(email, verificationLink);
+      logger.info("Verification email sent");
+    } catch (err) {
+      logger.error('Error sending verification email:', err);
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+    return newUser;
   };
 
   verifyEmailAndSignup = async (token) => {

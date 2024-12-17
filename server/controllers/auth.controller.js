@@ -11,13 +11,12 @@ class AuthController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
       });
-      res.status(200).json({
-        token,
-        user,
-      });
+      const message = "Successful";
+      res.status(200).json({ message, token, user, });
     }
     catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -37,11 +36,25 @@ class AuthController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
       });
-      res.status(200).json({ token, newUser, classUser });
+      const message = "Successful";
+      res.status(200).json({ message, token, newUser, classUser });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
+
+  resendVerificationLink = async (req, res) => {
+    try {
+      const { email } = req.body;
+      const user = await AuthService.resendVerificationLink(email);
+      const message = "Successful";
+      res.status(200).json({ message, user });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
+    }
+  }
 
   verifyEmailAndSignup = async (req, res) => {
     try {
@@ -56,8 +69,8 @@ class AuthController {
       res.redirect('http://localhost:5173/');
 
     } catch (err) {
-      console.error(err);
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -65,9 +78,11 @@ class AuthController {
     try {
       const { email, OTP } = req.body;
       const result = await AuthService.checkOTP(email, OTP);
-      res.status(200).json({email, OTP});
+      const message = "Successful";
+      res.status(200).json({ message, email, OTP });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -75,9 +90,11 @@ class AuthController {
     try {
       const { email, newPassword, newPassword2 } = req.body;
       const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2);
-      res.status(200).json(updatedUser);
+      const message = "Successful";
+      res.status(200).json({ message, updatedUser });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   };
 
@@ -86,25 +103,32 @@ class AuthController {
       const { email } = req.body;
       const user = await UserService.checkUserByEmail(email);
       const updatedUser = await AuthService.forgetPasswordOTPEmail(user.id, email);
-      res.status(200).json(updatedUser);
+      const message = "Successful";
+      res.status(200).json({ message, updatedUser });
     } catch (err) {
-      res.status(err.statusCode).json(err.message);
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
     }
   }
 
   refreshToken = async (req, res) => {
-    if (!req.cookies.refreshToken) {
-      throw new ErrorHandler(401, "Token missing");
-    }
+    try {
+      if (!req.cookies.refreshToken) {
+        throw new ErrorHandler(401, "Token missing");
+      }
 
-    const tokens = await AuthService.generateRefreshToken(
-      req.cookies.refreshToken
-    );
-    res.header("auth-token", tokens.token);
-    res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-    });
-    res.json(tokens);
+      const tokens = await AuthService.generateRefreshToken(
+        req.cookies.refreshToken
+      );
+      res.header("auth-token", tokens.token);
+      res.cookie("refreshToken", tokens.refreshToken, {
+        httpOnly: true,
+      });
+      res.json(tokens);
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(err.statusCode).json({ message });
+    }
   };
 }
 

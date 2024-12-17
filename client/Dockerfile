@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "build"]
+ENV CHOKIDAR_USEPOLLING=true
 
 CMD ["npm", "run", "dev"]
 
