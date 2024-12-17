@@ -42,13 +42,13 @@ export default function CreateClass() {
                     </Button>
                 </div>
             </div>
-            <div className="py-10 px-40  max-w mx-auto ">
+            <div className="py-10 mx-auto ">
                 {/* Class Name */}
                 <div className="flex items-center mb-4">
                     {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
                     <LuPencilLine className="mx-3 text-2xl" />
                     <Input
-                        className="bg-bg-alt border-bg-alt"
+                        className="bg-bg-alt border-fg-alt"
                         type="text"
                         value={className}
                         placeholder="Enter class name"
@@ -61,7 +61,7 @@ export default function CreateClass() {
                     {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
                     <IoMdCode className="mx-3 text-3xl" />
                     <Input
-                        className="bg-bg-alt border-bg-alt"
+                        className="bg-bg-alt border-fg-alt"
                         type="text"
                         value={classCode}
                         placeholder="Enter class code"
@@ -79,7 +79,7 @@ export default function CreateClass() {
                             <select
                                 value={slot.day}
                                 onChange={(e) => handleScheduleChange(index, "day", e.target.value)}
-                                className="w-2/5 bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-2/5 bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             >
                                 {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
                                     <option key={day} value={day}>
@@ -93,7 +93,7 @@ export default function CreateClass() {
                                 type="time"
                                 value={slot.startTime}
                                 onChange={(e) => handleScheduleChange(index, "startTime", e.target.value)}
-                                className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
 
                             {/* End Time */}
@@ -101,7 +101,7 @@ export default function CreateClass() {
                                 type="time"
                                 value={slot.endTime}
                                 onChange={(e) => handleScheduleChange(index, "endTime", e.target.value)}
-                                className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
 
                             {/* Remove Time Slot */}
@@ -130,7 +130,7 @@ export default function CreateClass() {
                     <select
                         value={frequency}
                         onChange={(e) => setFrequency(e.target.value)}
-                        className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                        className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
 
                     >
                         <option value="Weekly">Weekly</option>
@@ -145,7 +145,7 @@ export default function CreateClass() {
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                        className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
 
                         rows={4}
                     />
