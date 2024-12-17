@@ -16,7 +16,12 @@ interface LoginResponse {
   token: string;
   user: {
     id: number;
+    name: string;
     email: string;
+    password: string;
+    phone: string;
+    avatar: string;
+    role: UserRole;
   };
 }
 
@@ -65,8 +70,6 @@ interface CheckUserByEmailResponse {
     phone: string;
     avatar: string;
     role: UserRole;
-    isVerified: boolean;
-    resetToken: string | null;
   };
 }
 
