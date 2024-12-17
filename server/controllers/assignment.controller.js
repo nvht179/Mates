@@ -19,7 +19,7 @@ class AssignmentController {
       });
       res.status(200).json(attachment);
     } catch (err) {
-      res.status(404).json(err.message);
+      res.status(403).json(err.message);
     }
   };
 }

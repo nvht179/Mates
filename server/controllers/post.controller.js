@@ -12,12 +12,12 @@ class PostController {
       });
 
       // Trả về post đã tạo và các attachment liên quan
-      res.status(201).json({
+      res.status(200).json({
         message: "Post and attachments created successfully",
         data: newPost,
       });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(403).json({ error: err.message });
     }
   };
   async getPostsByClassId(req, res) {
@@ -31,7 +31,7 @@ class PostController {
 
       res.status(200).json(posts);
     } catch (err) {
-      res.status(404).json(err.message);
+      res.status(403).json(err.message);
     }
   }
 
@@ -47,7 +47,7 @@ class PostController {
 
       // If the post doesn't exist, return an error
       if (!currentPost) {
-        throw new ErrorHandler(404, "Post not found");
+        throw new ErrorHandler(403, "Post not found");
       }
 
       // Prepare the data to update, only include values that are not undefined
@@ -68,7 +68,7 @@ class PostController {
         data: updatedPost,
       });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(403).json({ error: err.message });
     }
   };
 
@@ -85,7 +85,7 @@ class PostController {
         message: "Post removed successfully",
       });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(403).json({ error: err.message });
     }
   };
 
@@ -105,7 +105,7 @@ class PostController {
         data: post,
       });
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      res.status(403).json({ message: err.message });
     }
   };
 }

@@ -1,27 +1,51 @@
 const AttachmentService = require("../services/attachment.service");
-
+const supabase = require("../config/supabase")
 class AttachmentController {
   /**
    * Add a new attachment
    */
   addAttachment = async (req, res) => {
     try {
-      const { link, linkTitle, assignmentId, postId } = req.body;
+      const { linkTitle, assignmentId, postId } = req.body;
+      
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
 
-      // Gọi service để thêm attachment mới
+      const file = req.file; // File từ frontend (được multer middleware xử lý trước)
+
+      // Upload file lên Supabase Storage
+      const filePath = `${Date.now()}_${file.originalname}`;
+      const { data, error } = await supabase.storage
+        .from("Attachments")
+        .upload(filePath, file.buffer);
+
+      if (error) {
+        throw new Error("File upload failed: " + error.message);
+      }
+
+      // Tạo public URL cho file
+      const { data: publicData } = supabase.storage
+        .from("Attachments")
+        .getPublicUrl(filePath);
+
+      const publicURL = publicData.publicUrl;
+
+      // Gọi service để thêm dữ liệu attachment vào database
       const newAttachment = await AttachmentService.addAttachment({
-        link,
+        link: publicURL,
         linkTitle,
         assignmentId,
         postId,
       });
 
-      res.status(201).json({
+      res.status(200).json({
         message: "Attachment created successfully",
         data: newAttachment,
       });
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      console.log('hello')
+      res.status(403).json({ message: err.message });
     }
   };
 
@@ -46,7 +70,7 @@ class AttachmentController {
         data: attachment,
       });
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      res.status(403).json({ message: err.message });
     }
   };
 
@@ -70,7 +94,7 @@ class AttachmentController {
         message: `${deletedAttachments} attachment(s) removed successfully`,
       });
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      res.status(403).json({ message: err.message });
     }
   };
   
@@ -80,7 +104,7 @@ class AttachmentController {
 
       // Kiểm tra nếu không có postId
       if (!postId) {
-        return res.status(400).json({
+        return res.status(403).json({
           message: "postId is required.",
         });
       }
