@@ -2,14 +2,15 @@ const PostDB = require("../db/post.db");
 const { ErrorHandler } = require("../helpers/error");
 
 class PostService {
-  addNewPostWithAttachments = async ({ classID, title, content, attachments }) => {
+  addNewPostWithAttachments = async ({ classID, title, content, attachments, personID }) => {
     try {
-      // Gọi DB để tạo post mới và các attachment
+      // Gọi DB để tạo post mới và các attachment, thêm personID vào
       const newPost = await PostDB.addNewPostWithAttachments({
         classID,
         title,
         content,
         attachments,
+        personID, // Thêm personID vào tham số
       });
 
       return newPost;

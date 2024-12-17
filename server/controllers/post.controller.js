@@ -2,16 +2,21 @@ const PostService = require("../services/post.service");
 class PostController {
   addNewPost = async (req, res) => {
     try {
-      const { classID, title, content, attachments } = req.body;
+      const { classID, title, content, attachments,personID } = req.body;
+
+      if (!personID) {
+        throw new Error("Person ID is required");
+      }
+  
       // Gọi PostService để tạo post mới với các attachment
       const newPost = await PostService.addNewPostWithAttachments({ 
         classID, 
         title, 
         content, 
-        attachments 
+        attachments, 
+        personID, // Thêm personID
       });
-
-      // Trả về post đã tạo và các attachment liên quan
+  
       res.status(200).json({
         message: "Post and attachments created successfully",
         data: newPost,
