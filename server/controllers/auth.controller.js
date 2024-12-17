@@ -16,7 +16,7 @@ class AuthController {
     }
     catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -40,7 +40,7 @@ class AuthController {
       res.status(200).json({ message, token, newUser, classUser });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -52,7 +52,7 @@ class AuthController {
       res.status(200).json({ message, user });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   }
 
@@ -70,7 +70,7 @@ class AuthController {
 
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -82,7 +82,7 @@ class AuthController {
       res.status(200).json({ message, email, OTP });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -94,7 +94,7 @@ class AuthController {
       res.status(200).json({ message, updatedUser });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -107,7 +107,7 @@ class AuthController {
       res.status(200).json({ message, updatedUser });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   }
 
@@ -127,7 +127,7 @@ class AuthController {
       res.json(tokens);
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 }

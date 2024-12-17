@@ -1,4 +1,3 @@
-const { P } = require("pino");
 const ClassService = require("../services/class.service");
 
 class ClassController {
@@ -14,7 +13,7 @@ class ClassController {
       res.status(200).json({ message, newClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -26,7 +25,7 @@ class ClassController {
       res.status(200).json({ message, allClassesInfo });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -38,7 +37,7 @@ class ClassController {
       res.status(200).json({ message, studentsClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -50,7 +49,7 @@ class ClassController {
       res.status(200).json({ message, teachersClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -62,7 +61,7 @@ class ClassController {
       res.status(200).json({ message, studentsInClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -74,7 +73,7 @@ class ClassController {
       res.status(200).json({ message, teachersInClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -87,7 +86,7 @@ class ClassController {
       res.status(200).json({ message, studentsInClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 
@@ -100,7 +99,7 @@ class ClassController {
       res.status(200).json({ message, teachersInClass });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 }

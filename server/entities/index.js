@@ -5,9 +5,10 @@ const Assignment = require("./assignment.model");
 const Attachment = require("./attachment.model");
 const Reaction = require("./reaction.model");
 const Post = require("./post.model");
-const {Class, TeacherClass, StudentClass} = require("./class.model");
+const { Class, TeacherClass, StudentClass } = require("./class.model");
 const Comment = require("./comment.model");
 const { Teacher, Student, Parent } = require("./user.model");
+const Lecture = require("./lecture.model");
 
 // Assignment and Attachment
 Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
@@ -59,5 +60,8 @@ module.exports = {
   Class,
   Teacher,
   Student,
-  Parent
+  Parent,
+  Lecture,
+  TeacherClass,
+  StudentClass
 };

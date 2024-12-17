@@ -10,7 +10,7 @@ class UserController {
       res.status(200).json({ message, user });
     } catch (err) {
       const message = err.message || "An error occurred";
-      res.status(err.statusCode).json({ message });
+      res.status(403).json({ message });
     }
   };
 }
