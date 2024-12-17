@@ -9,7 +9,7 @@ router.post("/resend-verification-link", AuthController.resendVerificationLink);
 
 router.get('/verify-email', AuthController.verifyEmailAndSignup);
 
-router.post('/check-email-otp', AuthController.forgetPasswordOTPEmail);
+router.post('/send-email-otp', AuthController.forgetPasswordOTPEmail);
 
 // token for reset password
 router.post("/refresh-token", AuthController.refreshToken);
