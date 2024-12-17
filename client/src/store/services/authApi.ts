@@ -11,10 +11,10 @@ import {
 
 } from "../../interfaces/Auth";
 
-interface CheckOTPRequest {
-  email: string;
-  otp: string;
-}
+// interface CheckOTPRequest {
+//   email: string;
+//   otp: string;
+// }
 
 export const authApi = createApi({
   reducerPath: "auth",

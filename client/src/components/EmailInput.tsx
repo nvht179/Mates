@@ -87,7 +87,7 @@ export default function EmailInput() {
                 className="mt-2 self-end"
                 disabled={isLoading}
             >
-                {isLoading ? "Loading" : "Get Verification Code"}
+                {isLoading ? "Loading..." : "Get Verification Code"}
             </Button>
         </div>
     )

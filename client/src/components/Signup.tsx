@@ -3,16 +3,14 @@ import Input from "./Input";
 import Button from "./Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../store";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
+
 
 interface RoleState {
     role: string | null;
 }
 
-// interface CheckEmailError {
-//   status: number;
-//   data?: string;
-//   error?: string;
-// }
 export default function SignupParent() {
     const [userName, setUserName] = useState("");
     const [errorMessageUN, setErrorMessageUN] = useState<string | undefined>();
@@ -25,18 +23,30 @@ export default function SignupParent() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errorMessagePw, setErrorMessagePw] = useState<string | undefined>();
-
+    const [signupMutation, { isLoading, data, isError, error, isSuccess }] = useSignupMutation();
+    
     const location = useLocation();
-    const role = (location.state as RoleState)?.role || null;
+    const role = (location.state as RoleState)?.role || "";
     const navigate = useNavigate();
 
-    const [signup] = useSignupMutation();
 
     useEffect(() => {
         if (!role || role === "") {
             navigate("/choose-role");
         }
     }, [role, navigate]);
+
+    useEffect(() => {
+        responseErrorHandler(
+            isError,
+            error as FetchBaseQueryError,
+            setErrorMessage,
+        );
+
+        if (isSuccess) {
+            navigate("/verification-sent");
+        }
+    }, [isError, isSuccess, error, navigate, data]);
 
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -116,20 +126,17 @@ export default function SignupParent() {
         if (!checkValidInput()) {
             return;
         }
-        const result = await signup({
-            role: role as string,
-            email,
-            name: fullName,
-            username: userName,
-            phone: phoneNumber,
-            password,
-            avatar: "",
+        
+        await signupMutation({ 
+            name: fullName, 
+            username: userName, 
+            phone: phoneNumber, 
+            email, 
+            password, 
+            role,
+            avatar : "",
             childEmail: "",
-        });
-
-        if (!result.error) {
-            navigate("/verification-sent");
-        }
+        }).unwrap();
     };
 
     return (
@@ -215,8 +222,9 @@ export default function SignupParent() {
             <Button
                 onClick={handleSubmit}
                 className="mt-2 self-end"
+                disabled={isLoading}
             >
-            Sign Up
+                {isLoading ? "Loading..." : "Sign Up"}
             </Button>
         </div>
     );
