@@ -75,7 +75,7 @@ class UserDB {
     return user;
   }
 
-  updatedResetTokenDB = async (id, OTP = null) => {
+  updatedResetTokenDB = async (id, OTP) => {
     const user = await Person.findByPk(id);
     user.resetToken = OTP;
     await user.save();

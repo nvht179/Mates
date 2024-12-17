@@ -4,6 +4,7 @@ const posts = require("./posts");
 const reactions = require("./reactions");
 const classes = require("./classes");
 const comments = require("./comments");
+const attachments = require("./attachments");
 
 module.exports = {
   paths: {
@@ -13,5 +14,6 @@ module.exports = {
     ...reactions,
     ...classes,
     ...comments,
+    ...attachments
   },
 };

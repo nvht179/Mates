@@ -241,7 +241,7 @@ class AuthService {
 
   signToken = async (data) => {
     try {
-      return jwt.sign({ id: data }, process.env.SECRET, { expiresIn: "560s" });
+      return jwt.sign({ id: data }, process.env.SECRET, { expiresIn: "60s" });
     } catch (err) {
       logger.error(err);
       throw new ErrorHandler(404, "An error occurced");
@@ -250,10 +250,10 @@ class AuthService {
 
   signRefreshToken = async (data) => {
     try {
-      return jwt.sign({ id: data }, process.env.REFRESH_SECRET, { expiresIn: "1h" });
+      return jwt.sign({ id: data }, process.env.REFRESH_SECRET);
     } catch (err) {
-      logger.error(err)
-      throw new ErrorHandler(404, err.message);
+      logger.error(err);
+      throw new ErrorHandler(500, err.message);
     }
   };
 

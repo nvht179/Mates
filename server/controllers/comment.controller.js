@@ -8,7 +8,7 @@ class CommentController {
 
       // Validate the input
       if (!content || !postId || !personId) {
-        return res.status(400).json({
+        return res.status(403).json({
           message: "Missing required fields: content, postId, or personId.",
         });
       }
@@ -19,7 +19,7 @@ class CommentController {
         personId,
       });
 
-      return res.status(201).json({
+      return res.status(200).json({
         message: "Comment added successfully.",
         data: newComment,
       });

@@ -101,7 +101,7 @@ class AuthController {
   forgetPasswordOTPEmail = async (req, res) => {
     try {
       const { email } = req.body;
-      const user = await UserService.checkUserByEmail(email);
+      const { user } = await UserService.checkUserByEmail(email);
       const updatedUser = await AuthService.forgetPasswordOTPEmail(user.id, email);
       const message = "Successful";
       res.status(200).json({ message, updatedUser });
@@ -109,7 +109,7 @@ class AuthController {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
     }
-  }
+  };
 
   refreshToken = async (req, res) => {
     try {

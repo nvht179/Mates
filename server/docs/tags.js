@@ -19,6 +19,10 @@ module.exports = {
     {
       "name": "Comments",
       "description": "API for comments"
-    }
+    },
+    {
+      "name": "Attachments",
+      "description": "API for attachments"
+    },
   ],
 }
