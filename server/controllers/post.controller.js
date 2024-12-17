@@ -34,7 +34,7 @@ class PostController {
 
           attachments.push({
             link: publicURL,
-            linkTitle: file.originalname, // Tên file làm linkTitle
+            linkTitle: file.originalname,
           });
         }
       }

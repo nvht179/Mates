@@ -7,13 +7,14 @@ class AttachmentService {
     return attachment;
   };
 
-  addAttachment = async ({ link, linkTitle, postId, assignmentId }) => {
+  addAttachment = async ({ link, linkTitle, postId, assignmentId, lectureId }) => {
     try {
       const newAttachment = await AttachmentDB.addAttachment({
         link,
         linkTitle,
         postId,
         assignmentId,
+        lectureId
       });
       return newAttachment;
     } catch (err) {

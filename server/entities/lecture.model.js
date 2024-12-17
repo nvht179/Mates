@@ -2,7 +2,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const { Class, TeacherClass, StudentClass } = require("./class.model");
-const Attachment = require("./attachment.model");
 
 const Lecture = sequelize.define(
   "Lecture",
@@ -27,14 +26,6 @@ const Lecture = sequelize.define(
       references: {
         model: Class,
         key: "classID",
-      },
-    },
-    attachmentID: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: Attachment,
-        key: "id",
       },
     }
   },

@@ -1,18 +1,21 @@
 const AttachmentService = require("../services/attachment.service");
 const supabase = require("../config/supabase")
+
 class AttachmentController {
   /**
    * Add a new attachment
    */
   addAttachment = async (req, res) => {
     try {
-      const { linkTitle, assignmentId, postId } = req.body;
+      const { assignmentId, postId, lectureId } = req.body;
       
       if (!req.file) {
-        return res.status(400).json({ message: "No file uploaded" });
+        return res.status(404).json({ message: "No file uploaded" });
       }
 
       const file = req.file; // File từ frontend (được multer middleware xử lý trước)
+      
+      const linkTitle = file.originalname
 
       // Upload file lên Supabase Storage
       const filePath = `${Date.now()}_${file.originalname}`;
@@ -37,6 +40,7 @@ class AttachmentController {
         linkTitle,
         assignmentId,
         postId,
+        lectureId
       });
 
       res.status(200).json({
@@ -44,7 +48,6 @@ class AttachmentController {
         data: newAttachment,
       });
     } catch (err) {
-      console.log('hello')
       res.status(403).json({ message: err.message });
     }
   };

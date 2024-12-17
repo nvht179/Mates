@@ -8,7 +8,7 @@ class AttachmentDB {
     return attachment;
   };
 
-  addAttachment = async ({ link, linkTitle, assignmentId, postId }, options) => {
+  addAttachment = async ({ link, linkTitle, assignmentId, postId, lectureId }, options) => {
     try {
       if (options?.transaction) {
         console.log("Transaction passed to addAttachment:", options.transaction.id); // Log transaction
@@ -22,8 +22,9 @@ class AttachmentDB {
           linkTitle,
           assignmentId,
           postId,
+          lectureId
         },
-        options 
+        options
       );
 
       return newAttachment;
@@ -52,7 +53,7 @@ class AttachmentDB {
       throw new Error("Error removing attachments by postId: " + err.message);
     }
   };
-  
+
   async findAttachmentsByPostId(postId) {
     try {
       const attachments = await Attachment.findAll({
@@ -65,7 +66,20 @@ class AttachmentDB {
       throw new Error(`Error fetching attachments by postId: ${error.message}`);
     }
   };
-  
+
+  findAttachmentsByLectureId = async (lectureId) => {
+    try {
+      const attachments = await Attachment.findAll({
+        where: { lectureId },
+      });
+
+      return attachments;
+    } catch (error) {
+      console.error("Error in AttachmentDB:", error);
+      throw new Error(`Error fetching attachments by postId: ${error.message}`);
+    }
+  }
+
 }
 
 module.exports = new AttachmentDB();

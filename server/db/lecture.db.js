@@ -1,7 +1,6 @@
 const Lecture = require("../entities/lecture.model");
 const { Class, TeacherClass, StudentClass } = require("../entities/class.model");
-const { Attachment } = require("../entities");
-const AttachmentDB = require("../db/attachment.db");
+const AttachmentDB = require("./attachment.db");
 
 class LectureDB {
   viewAllLecturesInClass = async (classID) => {
@@ -13,11 +12,24 @@ class LectureDB {
     return lectureInfo;
   };
 
-  createLecture = async (title, attachment, content, classID) => {
-    const attachmentID = 1;
+  createLecture = async (title, content, classID, attachments) => {
     const lecture = await Lecture.create({
-      title, content, classID 
+      title, content, classID
     });
+    const lectureId = lecture.id;
+
+    if (attachments && attachments.length > 0) {
+      for (let attachment of attachments) {
+        await AttachmentDB.addAttachment(
+          {
+            link: attachment.link,
+            linkTitle: attachment.linkTitle,
+            lectureId: lectureId,
+          }
+        );
+      }
+    }
+
     return lecture;
   };
 }
