@@ -1,10 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
-  CheckUserByEmailRequest, CheckUserByEmailResponseFail,
-  CheckUserByEmailResponseSuccess,
+  CheckUserByEmailRequest,
+  CheckUserByEmailResponse,
   LoginRequest,
-  LoginResponseFail,
-  LoginResponseSuccess,
+  LoginResponse,
   SignupRequest,
   SignupResponseFail,
   SignupResponseSuccess,
@@ -13,11 +12,10 @@ import {
   ResendVerificationEmailResponseSuccess
 } from "../../interfaces/Auth";
 
-// interface CheckOTPRequest {
-//   email: string;
-//   otp: string;
-// }
-
+interface CheckOTPRequest {
+  email: string;
+  otp: string;
+}
 
 export const authApi = createApi({
   reducerPath: "auth",
@@ -25,11 +23,8 @@ export const authApi = createApi({
     baseUrl: "http://localhost:8080/api",
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<
-      LoginResponseSuccess | LoginResponseFail,
-      LoginRequest
-    >({
-      query: (credentials: LoginRequest) => ({
+    login: builder.mutation<LoginResponse, LoginRequest>({
+      query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
@@ -45,7 +40,7 @@ export const authApi = createApi({
     }),
 
     checkUserByEmail: builder.query<
-      CheckUserByEmailResponseSuccess | CheckUserByEmailResponseFail,
+      CheckUserByEmailResponse,
       CheckUserByEmailRequest
     >({
       query: (emailRequest: CheckUserByEmailRequest) => ({
@@ -67,9 +62,9 @@ export const authApi = createApi({
   }),
 });
 
-export const  {  
+export const  {
   useResendVerificationEmailMutation,
-  useLoginMutation, 
+  useLoginMutation,
   useSignupMutation,
   useLazyCheckUserByEmailQuery,
 } = authApi;
