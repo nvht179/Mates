@@ -1,4 +1,4 @@
-const checkEmailOTP = require("./checkEmailOTP");
+const sendEmailOTP = require("./sendEmailOTP");
 const login = require("./login");
 const signup = require("./signup");
 const refreshToken = require("./refreshToken");
@@ -17,14 +17,14 @@ module.exports = {
   "/auth/resend-verification-link": {
     ...resendVerificationLink
   },
-  "/auth/check-email-otp": {
-    ...checkEmailOTP
-  },
-  "/auth/forgetPassword": {
-    ...forgetPassword
+  "/auth/send-email-otp": {
+    ...sendEmailOTP
   },
   "/auth/checkOTP": {
     ...checkOTP
+  },
+  "/auth/forgetPassword": {
+    ...forgetPassword
   },
   "/auth/verify-email": {
     ...verifyEmail
