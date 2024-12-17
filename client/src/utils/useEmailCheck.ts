@@ -1,4 +1,5 @@
 import { useLazyCheckUserByEmailQuery } from "../store";
+import { ResponseFail } from "../interfaces/Auth";
 
 interface CheckEmailError {
   status: number;
@@ -7,40 +8,21 @@ interface CheckEmailError {
 }
 
 const useEmailCheck = () => {
-  const [checkEmail, { isLoading }] = useLazyCheckUserByEmailQuery();
+  const [checkEmail, { isLoading, isError, error, data, isSuccess }] = useLazyCheckUserByEmailQuery();
 
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validateAndCheckEmail = async (email: string) => {
-    if (!isValidEmail(email)) {
-      return {
-        isValid: false,
-        error: "Please enter a valid email address."
-      };
-    }
-
-    const result = await checkEmail({ email });
-
-    if (result.isError) {
-      const { status, error, data } = result.error as CheckEmailError;
-      return {
-        isValid: false,
-        error: status === 403 ? data : error
-      };
-    }
-
-    return {
-      isValid: true,
-      error: undefined
-    };
-  };
-
   return {
-    validateAndCheckEmail,
-    isLoading
+    isValidEmail,
+    checkEmail,
+    isLoading,
+    isError,
+    isSuccess,
+    error,
+    data
   };
 };
 

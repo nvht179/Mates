@@ -4,17 +4,15 @@ import Button from "./Button";
 import { useLoginMutation } from "../store";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MatesLogo from "../assets/mates.svg";
-import { LoginError } from "../interfaces/Login";
 
-interface EnterPasswordState {
-  email: string | null;
-}
+import { ResponseFail } from "../interfaces/Auth";
+
 
 export default function EnterPassword() {
   const [password, setPassword] = useState<string>("");
   const [login, { isLoading }] = useLoginMutation();
   const location = useLocation();
-  const email = (location.state as EnterPasswordState)?.email || null;
+  const email = (location.state as string | null) || null;
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const navigate = useNavigate();
 
@@ -36,8 +34,8 @@ export default function EnterPassword() {
     try {
       await login({ email: email ?? "", password }).unwrap();
     } catch (e) {
-      const error = e as LoginError;
-      setErrorMessage(error.data);
+      const { data } = e as ResponseFail;
+      setErrorMessage(data?.message);
     }
   };
 

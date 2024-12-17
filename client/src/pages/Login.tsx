@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../components/Input.tsx";
 import Button from "../components/Button.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import MatesLogo from "../assets/mates.svg";
 import useEmailCheck from "../utils/useEmailCheck";
+import { ResponseFail } from "../interfaces/Auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const navigate = useNavigate();
-  const { validateAndCheckEmail, isLoading } = useEmailCheck();
+  const {
+    isValidEmail,
+    checkEmail,
+    isLoading,
+    data,
+    error,
+    isError,
+    isSuccess,
+  } = useEmailCheck();
+
+  useEffect(() => {
+    if (isError) {
+      const err = error as ResponseFail;
+      setErrorMessage(err.data ? err.data.message : err.error);
+    }
+    if (isSuccess && data) {
+      navigate("/enter-password", {state: data.user.email});
+    }
+  }, [isError, isSuccess, error, navigate, data]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -20,20 +39,20 @@ export default function Login() {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault();
-
-    const { isValid, error } = await validateAndCheckEmail(email);
-    if (!isValid) {
-      setErrorMessage(error);
+    if (!isValidEmail(email)) {
+      setErrorMessage(
+        "Invalid email format, please enter a valid email address.",
+      );
       return;
     }
 
-    navigate("/enter-password", { state: { email } });
+    await checkEmail({ email });
   };
 
   return (
     <div className="h-3/2 min-h-100 flex w-1/4 min-w-96 flex-col rounded bg-white p-8">
       <div className="mb-3 flex items-center">
-        <img src={MatesLogo} alt="Vite logo" className="h-8 w-8"/>
+        <img src={MatesLogo} alt="Vite logo" className="h-8 w-8" />
         <h1 className="ml-2 font-sans text-2xl font-bold text-fg-soft">
           Mates
         </h1>

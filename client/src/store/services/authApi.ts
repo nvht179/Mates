@@ -1,28 +1,30 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { LoginRequest, LoginResponse } from "../../interfaces/Login";
-import { SignupRequest, SignupResponse } from "../../interfaces/Signup";
-
-interface CheckUserByEmailRequest {
-  email: string;
-}
+import {
+  CheckEmailRequest,
+  LoginRequest,
+  LoginResponseSuccess,
+  SignupRequest,
+  SignupResponse,
+} from "../../interfaces/Auth";
 
 interface CheckUserByEmailResponse {
-  exists: boolean;
-  message?: string; // Optional message for the `403` case
+  message: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    phone: string;
+    avatar: string;
+    role: string;
+    isVerified: boolean;
+    resetToken: string | null;
+  }
 }
 
 interface CheckOTPRequest {
   email: string;
   otp: string;
-}
-
-interface CheckUserByEmailRequest {
-  email: string;
-}
-
-interface CheckUserByEmailResponse {
-  exists: boolean;
-  message?: string; // Optional message for the `403` case
 }
 
 export const authApi = createApi({
@@ -31,7 +33,7 @@ export const authApi = createApi({
     baseUrl: "http://localhost:8080/api",
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<LoginResponseSuccess, LoginRequest>({
       query: (credentials: LoginRequest) => ({
         url: "/auth/login",
         method: "POST",
@@ -49,9 +51,9 @@ export const authApi = createApi({
 
     checkUserByEmail: builder.query<
       CheckUserByEmailResponse,
-      CheckUserByEmailRequest
+      CheckEmailRequest
     >({
-      query: (emailRequest: CheckUserByEmailRequest) => ({
+      query: (emailRequest: CheckEmailRequest) => ({
         url: "/users/checkUserByEmail",
         method: "POST",
         body: emailRequest,
@@ -60,8 +62,8 @@ export const authApi = createApi({
   }),
 });
 
-export const  {  
-  useLoginMutation, 
+export const {
+  useLoginMutation,
   useSignupMutation,
-  useLazyCheckUserByEmailQuery
+  useLazyCheckUserByEmailQuery,
 } = authApi;
