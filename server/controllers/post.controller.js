@@ -1,22 +1,53 @@
 const PostService = require("../services/post.service");
+const supabase = require("../config/supabase")
 class PostController {
   addNewPost = async (req, res) => {
     try {
-      const { classID, title, content, attachments,personID } = req.body;
+      const { classID, title, content, personID } = req.body;
 
       if (!personID) {
         throw new Error("Person ID is required");
       }
-  
-      // Gọi PostService để tạo post mới với các attachment
-      const newPost = await PostService.addNewPostWithAttachments({ 
-        classID, 
-        title, 
-        content, 
-        attachments, 
-        personID, // Thêm personID
+      if (!classID){
+        throw new Error("class ID is required");
+      }
+
+      // Kiểm tra và xử lý các file upload
+      const attachments = [];
+      if (req.files && req.files.length > 0) {
+        for (const file of req.files) {
+          // Tạo đường dẫn file trên Supabase Storage
+          const filePath = `${Date.now()}_${file.originalname}`;
+          const { data, error } = await supabase.storage
+            .from("Attachments")
+            .upload(filePath, file.buffer);
+
+          if (error) {
+            throw new Error(`File upload failed: ${error.message}`);
+          }
+
+          const { data: publicData } = supabase.storage
+            .from("Attachments")
+            .getPublicUrl(filePath);
+
+          const publicURL = publicData.publicUrl;
+
+          attachments.push({
+            link: publicURL,
+            linkTitle: file.originalname, // Tên file làm linkTitle
+          });
+        }
+      }
+
+      // Gọi service để tạo post cùng với attachments
+      const newPost = await PostService.addNewPostWithAttachments({
+        classID,
+        title,
+        content,
+        attachments,
+        personID,
       });
-  
+
       res.status(200).json({
         message: "Post and attachments created successfully",
         data: newPost,
@@ -25,20 +56,6 @@ class PostController {
       res.status(403).json({ error: err.message });
     }
   };
-  async getPostsByClassId(req, res) {
-    try {
-      const { classId } = req.params;
-      const posts = await PostService.getPostsByClassId(classId);
-
-      if (posts.length === 0) {
-        throw new ErrorHandler(404, "No reactions found for this post");
-      }
-
-      res.status(200).json(posts);
-    } catch (err) {
-      res.status(403).json(err.message);
-    }
-  }
 
   // Edit a post
    // Edit a post

@@ -34,7 +34,7 @@ const Post = sequelize.define(
       allowNull: false,
       references: {
         model: Person, // Tham chiếu đến Person model
-        key: "personID", // Khóa chính của Person
+        key: "id", // Khóa chính của Person
       },
     },
     time: {
