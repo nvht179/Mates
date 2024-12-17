@@ -1,30 +1,33 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import useEmailOtp from "../utils/useEmailOtp";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
 import ConfirmButtons from "../components/ConfirmButtons";
 import Input from "../components/Input";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { responseErrorHandler } from "../utils/responseErrorHandler";
+import { useLazyCheckOtpQuery } from "../store";
 
 const DATA = {
-  title: "Password Recovery",
-  description: "Please enter your account email.",
-  placeholder: "Enter your email",
+  title: "Verify your identity",
+  description:
+    "A verification code has been sent to your email. Please check your inbox, including the spam folder.",
+  placeholder: "Enter your verification code",
 };
 
-export default function ForgetPassword() {
+export default function ForgetPasswordOtp() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [email, setEmail] = useState("");
-  const {
-    isValidEmail,
-    checkEmail,
-    isLoading,
-    isError,
-    isSuccess,
-    error,
-  } = useEmailOtp();
+  const [otp, setOtp] = useState("");
+  const { state: email } = useLocation();
+  const [
+    checkOtp,
+    {
+      isLoading,
+      isError,
+      isSuccess,
+      error,
+    },
+  ] = useLazyCheckOtpQuery();
 
   useEffect(() => {
     responseErrorHandler(
@@ -33,25 +36,19 @@ export default function ForgetPassword() {
       setErrorMessage,
     );
     if (isSuccess) {
-      navigate("/forget-password-otp", { state: email });
+      navigate("/forget-password-reset", { state: email });
     }
   }, [error, email, isError, isSuccess, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+    setOtp(e.target.value);
   };
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault();
-    if (!isValidEmail(email)) {
-      setErrorMessage(
-        "Invalid email format, please enter a valid email address.",
-      );
-    } else {
-      await checkEmail({ email: email });
-    }
+    await checkOtp({ email: email, OTP: otp });
   };
 
   return (
