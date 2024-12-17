@@ -31,11 +31,11 @@ const Lecture = sequelize.define(
     },
     attachmentID: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      // references: {
-      //   model: Attachment,
-      //   key: "id",
-      // },
+      allowNull: true,
+      references: {
+        model: Attachment,
+        key: "id",
+      },
     }
   },
   {
