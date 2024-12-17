@@ -45,11 +45,24 @@ class ClassService {
       if (!allClasses) {
         throw new ErrorHandler(403, "There are not exist classes");
       }
-      return allClasses;
+
+      const classesInfo = [];
+      for (const classInfo of allClasses) {
+        const classID = classInfo.classID;
+        console.log("ClassService:", classID);
+        const info = await ClassDB.getInfoByID(classID);
+        if (!info) {
+          throw new ErrorHandler(404, "There are not exist classes");
+        }
+        console.log("ClassService:", info);
+        classesInfo.push(info);
+      }
+
+      return classesInfo;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
-  }
+  };
 
   addStudentsToClass = async (classID, emailStudents) => {
     try {
