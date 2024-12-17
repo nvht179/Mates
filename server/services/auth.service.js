@@ -15,7 +15,7 @@ class AuthService {
       if (!user) {
         throw new ErrorHandler(403, "Email is incorrect");
       }
-      const { id, name, emailDB, password: dbPassword, isVerified, phone, role, avatar } = user;
+      const { id, name, password: dbPassword, isVerified, phone, role, avatar } = user;
       if (!isVerified) {
         throw new ErrorHandler(403, "Email is not verified");
       }

@@ -1,5 +1,6 @@
 const { ErrorHandler } = require("../helpers/error");
 const UserDB = require("../db/user.db");
+const ClassDB = require("../db/class.db");
 
 class UserService {
   checkUserByEmail = async (email) => {
@@ -8,7 +9,19 @@ class UserService {
       if (!user) {
         throw new ErrorHandler(403, "Email does not exist");
       }
-      return user;
+      const { id, name, phone, role, avatar } = user;
+
+      let childEmail;
+      if (role == "Parent") {
+        const childID = await ClassDB.findChildID(id);
+        const child = await UserDB.getUserByIdDB(childID);
+        childEmail = child.email;
+      }
+      else {
+        childEmail = ""
+      }
+
+      return { user: { id, email, name, phone, role, avatar, childEmail } };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
