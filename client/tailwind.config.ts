@@ -12,6 +12,7 @@ export default {
           softer: "#616161",
           disabled: "#C7C7C7",
           border: "#D1D1D1",
+          alt: "#F5F5F5",
         },
         bg: {
           default: "#FFFFFF",
