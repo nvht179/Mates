@@ -15,6 +15,15 @@ class ClassDB {
     return newClass;
   };
 
+  findClassByCode = async (code) => {
+    const classInfo = await Class.findAll({
+      where: {
+        code: code 
+      }
+    });
+    return classInfo;
+  };
+
   viewAllClasses = async () => {
     const allClasses = await Class.findAll();
     return allClasses;

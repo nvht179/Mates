@@ -79,7 +79,7 @@ class AuthController {
       const { email, OTP } = req.body;
       const result = await AuthService.checkOTP(email, OTP);
       const message = "Successful";
-      res.status(200).json({ message, email, OTP });
+      res.status(200).json({ message });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
@@ -89,7 +89,7 @@ class AuthController {
   forgetPassword = async (req, res) => {
     try {
       const { email, newPassword, newPassword2 } = req.body;
-      const updatedUser = await AuthService.forgetPassword(email, newPassword, newPassword2);
+      const { updatedUser } = await AuthService.forgetPassword(email, newPassword, newPassword2);
       const message = "Successful";
       res.status(200).json({ message, updatedUser });
     } catch (err) {
@@ -102,7 +102,8 @@ class AuthController {
     try {
       const { email } = req.body;
       const { user } = await UserService.checkUserByEmail(email);
-      const updatedUser = await AuthService.forgetPasswordOTPEmail(user.id, email);
+      const { updatedUser } = await AuthService.forgetPasswordOTPEmail(user.id, email);
+      console.log("AuthController", updatedUser)
       const message = "Successful";
       res.status(200).json({ message, updatedUser });
     } catch (err) {

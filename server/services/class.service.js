@@ -1,9 +1,7 @@
-const { P } = require("pino");
 const ClassDB = require("../db/class.db");
 const UserDB = require("../db/user.db");
 
 const { ErrorHandler } = require("../helpers/error");
-const { Class } = require("../entities");
 
 class ClassService {
   createNewClass = async ({ className, code, description }) => {

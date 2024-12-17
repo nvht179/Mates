@@ -204,7 +204,20 @@ class AuthService {
         email,
         hashPassword
       );
-      return { updatedUser };
+
+      const { id, name, phone, role, avatar } = updatedUser;
+
+      let childEmail;
+      if (role == "Parent") {
+        const childID = await ClassDB.findChildID(id);
+        const child = await UserDB.getUserByIdDB(childID);
+        childEmail = child.email;
+      }
+      else {
+        childEmail = ""
+      }
+
+      return { updatedUser: { id, email, name, phone, role, avatar, childEmail } };
     }
     catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
@@ -213,7 +226,7 @@ class AuthService {
 
   forgetPasswordOTPEmail = async (id, email) => {
     const OTP = Math.floor(100000 + Math.random() * 900000);
-    const user = UserDB.updatedResetTokenDB(id, OTP.toString());
+    const user = await UserDB.updatedResetTokenDB(id, OTP.toString());
 
     // Send the verification email
     try {
@@ -224,7 +237,19 @@ class AuthService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
 
-    return user;
+    const { name, phone, role, avatar } = user;
+
+    let childEmail;
+    if (role == "Parent") {
+      const childID = await ClassDB.findChildID(id);
+      const child = await UserDB.getUserByIdDB(childID);
+      childEmail = child.email;
+    }
+    else {
+      childEmail = ""
+    }
+
+    return { updatedUser: { id, email, name, phone, role, avatar, childEmail } };
   }
 
   generateRefreshToken = async (data) => {
