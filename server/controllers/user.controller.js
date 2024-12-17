@@ -6,7 +6,8 @@ class UserController {
     try {
       const { email } = req.body;
       const user = await UserService.checkUserByEmail(email);
-      res.status(200).json(user);
+      const message = "Successful";
+      res.status(200).json({ message, user });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(err.statusCode).json({ message });
