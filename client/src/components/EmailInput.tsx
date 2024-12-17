@@ -1,10 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "./Input";
 import Button from "./Button";
+import { useResendVerificationEmailMutation } from "../store";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ResponseFail } from "../interfaces/Auth";
+
+interface EmailState {
+    email: string | null;
+}
 
 export default function EmailInput() {
-    const [email, setEmail] = useState("");
+    var [email, setEmail] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
+    const [resendVerificationEmail, { isLoading, data, isError, error, isSuccess }] = useResendVerificationEmailMutation();
+    const navigate = useNavigate();
+    const location = useLocation();
+    email = (location.state as EmailState)?.email || email;
+
+    useEffect(() => {
+        if (isError) {
+            const err = error as ResponseFail;
+            setErrorMessage(err.data ? err.data.message : err.error);
+        }
+        if (isSuccess && data && "user" in data) {
+            navigate("/verification-sent");
+        }
+
+    }, [isError, error, isSuccess, navigate, data]);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -25,15 +47,15 @@ export default function EmailInput() {
             setErrorMessage("Please enter a valid email address.");
             return;
         }
+        await resendVerificationEmail({ email }).unwrap();
 
+        if (isSuccess) {
+            navigate("/verification-sent");
+        }
     };
 
     return (
         <div className="h-2/7 min-h-150 flex w-2/6 min-w-96 flex-col rounded bg-white pl-8 pr-8 pt-4 pb-6">
-            {/* <div className="mb-2 flex items-center">
-                <h1 className="font-sans text-2xl font-bold text-fg-soft">Enter Email</h1>
-            </div> */}
-
             <h1 className="text-xl font-sans font-semibold">Email</h1>
             <form className="mt-1" onSubmit={handleSubmit}>
                 <Input
@@ -50,8 +72,9 @@ export default function EmailInput() {
             <Button
                 onClick={handleSubmit}
                 className="mt-2 self-end"
+                disabled={isLoading}
             >
-                Get Verification Code
+                {isLoading ? "Loading" : "Get Verification Code"}
             </Button>
         </div>
     )

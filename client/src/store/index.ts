@@ -16,5 +16,10 @@ setupListeners(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export { useSignupMutation, useLoginMutation, useLazyCheckUserByEmailQuery } from "./services/authApi";
+export { 
+  useSignupMutation, 
+  useLoginMutation, 
+  useLazyCheckUserByEmailQuery,
+  useResendVerificationEmailMutation, 
+} from "./services/authApi";
 export * from "./slices/userSlice"

@@ -15,6 +15,7 @@ import Calendar from "./pages/Calendar";
 import ForgetPassword from "./pages/ForgetPassword";
 import VerificationSent from "./components/VerificationSent";
 import EmailInput from "./components/EmailInput";
+import CreateClass from "./pages/CreateClass";
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
         {/* Protected routes with main layout */}
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/create-class" element={<CreateClass />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/class/:classCode" element={<ClassLayout />}>
             <Route path="lecture" element={<LecturePage />} />

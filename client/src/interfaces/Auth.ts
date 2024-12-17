@@ -2,7 +2,7 @@ import { UserRole } from "./Misc";
 
 interface ResponseFail {
   status: number | string;
-  data?: LoginResponseFail | CheckUserByEmailResponseFail;
+  data?: LoginResponseFail | CheckUserByEmailResponseFail | SignupResponseFail | ResendVerificationEmailResponseFail;
   error?: string;
 }
 
@@ -35,9 +35,36 @@ interface SignupRequest {
   childEmail: string;
 }
 
-interface SignupResponse {
-  userId: number;
+interface SignupResponseSuccess {
+  message: string;
+  token: string;
+  newUser: {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    avatar: string;
+    role: UserRole;
+    isVerified: boolean;
+    resetToken: string | null;
+  };
+}
+
+interface SignupResponseFail {
+  message: string;
+}
+
+interface ResendVerificationEmailRequest {
   email: string;
+}
+
+interface ResendVerificationEmailResponseFail {
+  message: string;
+}
+
+interface ResendVerificationEmailResponseSuccess {
+  message: string;
+
 }
 
 interface CheckUserByEmailResponseFail {
@@ -68,10 +95,14 @@ export type {
   LoginRequest,
   LoginResponseSuccess,
   LoginResponseFail,
-  SignupResponse,
+  SignupResponseSuccess,
+  SignupResponseFail,
   SignupRequest,
   CheckUserByEmailResponseSuccess,
   CheckUserByEmailResponseFail,
-  CheckUserByEmailRequest
+  CheckUserByEmailRequest,
+  ResendVerificationEmailRequest,
+  ResendVerificationEmailResponseFail,
+  ResendVerificationEmailResponseSuccess
 };
 
