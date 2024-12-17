@@ -6,8 +6,7 @@ const { ErrorHandler } = require("../helpers/error");
 const UserDB = require("../db/user.db");
 const { logger } = require("../utils/logger");
 const MailService = require("./mail.service");
-const { P } = require("pino");
-// const { P } = require("pino");
+const ClassDB = require("../db/class.db");
 
 class AuthService {
   loginUser = async (email, password) => {
@@ -16,7 +15,7 @@ class AuthService {
       if (!user) {
         throw new ErrorHandler(403, "Email is incorrect");
       }
-      const { id, emailDB, password: dbPassword, isVerified } = user;
+      const { id, name, emailDB, password: dbPassword, isVerified, phone, role, avatar } = user;
       if (!isVerified) {
         throw new ErrorHandler(403, "Email is not verified");
       }
@@ -28,7 +27,17 @@ class AuthService {
       const token = await this.signToken(id);
       const refreshToken = await this.signRefreshToken(id);
 
-      return { token, refreshToken, user: { id, email } };
+      let childEmail;
+      if (role == "Parent") {
+        const childID = await ClassDB.findChildID(id);
+        const child = await UserDB.getUserByIdDB(childID);
+        childEmail = child.email;
+      }
+      else {
+        childEmail = ""
+      }
+
+      return { token, refreshToken, user: { id, email, name, phone, role, avatar, childEmail } };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
@@ -100,7 +109,8 @@ class AuthService {
       const token = await this.signToken(newUser.id);
       const refreshToken = await this.signRefreshToken(newUser.id);
 
-      return { token, refreshToken, newUser, classUser };
+      const id = newUser.id;
+      return { token, refreshToken, newUser: { id, email, name, phone, role, avatar, childEmail }, classUser };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
@@ -129,7 +139,8 @@ class AuthService {
       logger.error('Error sending verification email:', err);
       throw new ErrorHandler(err.statusCode, err.message);
     }
-    return newUser;
+    const { id, name, phone, role, avatar } = newUser;
+    return { newUser: { id, email, name, phone, role, avatar } };
   };
 
   verifyEmailAndSignup = async (token) => {
