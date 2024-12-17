@@ -8,7 +8,7 @@ class ReactionController {
       const newReaction = await ReactionService.createReaction({ personId, postId, type });
       res.status(200).json(newReaction);
     } catch (err) {
-      res.status(404).json(err);
+      res.status(403).json(err);
     }
   }
 
@@ -19,12 +19,12 @@ class ReactionController {
       const reactions = await ReactionService.getReactionsByPostId(postId);
 
       if (reactions.length === 0) {
-        throw new ErrorHandler(404, "No reactions found for this post");
+        throw new ErrorHandler(403, "No reactions found for this post");
       }
 
       res.status(200).json(reactions);
     } catch (err) {
-      res.status(404).json(err.message);
+      res.status(403).json(err.message);
     }
   }
 
@@ -36,7 +36,7 @@ class ReactionController {
 
       res.status(200).json(response);
     } catch (err) {
-      res.status(404).json(err);
+      res.status(403).json(err);
     }
   }
 
@@ -48,7 +48,7 @@ class ReactionController {
 
       res.status(200).json(updatedReaction);
     } catch (err) {
-      res.status(404).json(err);
+      res.status(403).json(err);
     }
   }
 }
