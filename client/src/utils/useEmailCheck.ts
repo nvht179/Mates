@@ -1,11 +1,4 @@
 import { useLazyCheckUserByEmailQuery } from "../store";
-import { ResponseFail } from "../interfaces/Auth";
-
-interface CheckEmailError {
-  status: number;
-  data?: string;
-  error?: string;
-}
 
 const useEmailCheck = () => {
   const [checkEmail, { isLoading, isError, error, data, isSuccess }] = useLazyCheckUserByEmailQuery();

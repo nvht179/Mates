@@ -25,7 +25,7 @@ export default function Login() {
       const err = error as ResponseFail;
       setErrorMessage(err.data ? err.data.message : err.error);
     }
-    if (isSuccess && data) {
+    if (isSuccess && data && "user" in data) {
       navigate("/enter-password", {state: data.user.email});
     }
   }, [isError, isSuccess, error, navigate, data]);

@@ -4,13 +4,12 @@ import Button from "./Button";
 import { useLoginMutation } from "../store";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MatesLogo from "../assets/mates.svg";
-
 import { ResponseFail } from "../interfaces/Auth";
 
 
 export default function EnterPassword() {
   const [password, setPassword] = useState<string>("");
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, data, isError, error, isSuccess }] = useLoginMutation();
   const location = useLocation();
   const email = (location.state as string | null) || null;
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -22,6 +21,14 @@ export default function EnterPassword() {
     }
   }, [email, navigate]);
 
+  useEffect(() => {
+    if (isError) {
+      const err = error as ResponseFail;
+      setErrorMessage(err.data ? err.data.message : err.error);
+    }
+
+  }, [isError, error, isSuccess, data]);
+
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     setErrorMessage("");
@@ -31,12 +38,7 @@ export default function EnterPassword() {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault();
-    try {
-      await login({ email: email ?? "", password }).unwrap();
-    } catch (e) {
-      const { data } = e as ResponseFail;
-      setErrorMessage(data?.message);
-    }
+    await login({ email: email ?? "", password }).unwrap();
   };
 
   return (

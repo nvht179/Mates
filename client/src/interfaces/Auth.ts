@@ -2,7 +2,7 @@ import { UserRole } from "./Misc";
 
 interface ResponseFail {
   status: number | string;
-  data?: LoginResponseFail;
+  data?: LoginResponseFail | CheckUserByEmailResponseFail;
   error?: string;
 }
 
@@ -40,11 +40,11 @@ interface SignupResponse {
   email: string;
 }
 
-interface CheckEmailRequest {
-  email: string;
+interface CheckUserByEmailResponseFail {
+  message: string;
 }
 
-interface CheckUserByEmailSuccess {
+interface CheckUserByEmailResponseSuccess {
   message: string;
   user: {
     id: number;
@@ -55,11 +55,12 @@ interface CheckUserByEmailSuccess {
     avatar: string;
     role: UserRole;
     isVerified: boolean;
+    resetToken: string | null;
   };
 }
 
-interface CheckUserByEmailFail {
-  message: string;
+interface CheckUserByEmailRequest {
+  email: string;
 }
 
 export type {
@@ -69,7 +70,8 @@ export type {
   LoginResponseFail,
   SignupResponse,
   SignupRequest,
-  CheckUserByEmailSuccess,
-  CheckUserByEmailFail,
-  CheckEmailRequest,
+  CheckUserByEmailResponseSuccess,
+  CheckUserByEmailResponseFail,
+  CheckUserByEmailRequest
 };
+

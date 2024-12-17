@@ -1,26 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
-  CheckEmailRequest,
+  CheckUserByEmailRequest, CheckUserByEmailResponseFail,
+  CheckUserByEmailResponseSuccess,
   LoginRequest,
+  LoginResponseFail,
   LoginResponseSuccess,
   SignupRequest,
-  SignupResponse,
+  SignupResponse
 } from "../../interfaces/Auth";
-
-interface CheckUserByEmailResponse {
-  message: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    avatar: string;
-    role: string;
-    isVerified: boolean;
-    resetToken: string | null;
-  }
-}
 
 interface CheckOTPRequest {
   email: string;
@@ -33,7 +20,10 @@ export const authApi = createApi({
     baseUrl: "http://localhost:8080/api",
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponseSuccess, LoginRequest>({
+    login: builder.mutation<
+      LoginResponseSuccess | LoginResponseFail,
+      LoginRequest
+    >({
       query: (credentials: LoginRequest) => ({
         url: "/auth/login",
         method: "POST",
@@ -50,10 +40,10 @@ export const authApi = createApi({
     }),
 
     checkUserByEmail: builder.query<
-      CheckUserByEmailResponse,
-      CheckEmailRequest
+      CheckUserByEmailResponseSuccess | CheckUserByEmailResponseFail,
+      CheckUserByEmailRequest
     >({
-      query: (emailRequest: CheckEmailRequest) => ({
+      query: (emailRequest: CheckUserByEmailRequest) => ({
         url: "/users/checkUserByEmail",
         method: "POST",
         body: emailRequest,

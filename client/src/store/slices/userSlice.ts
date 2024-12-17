@@ -35,8 +35,10 @@ const userSlice = createSlice({
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
       (state, { payload }) => {
-        state.userId = payload.userId;
-        state.email = payload.email;
+        if ("user" in payload) {
+          state.userId = payload.user.id;
+          state.email = payload.user.email;
+        }
         state.isAuthenticated = true;
       }
     );
