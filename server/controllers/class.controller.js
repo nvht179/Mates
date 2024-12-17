@@ -21,9 +21,9 @@ class ClassController {
   viewAllClasses = async (req, res) => {
     try {
       const { email } = req.params;
-      const allClasses = await ClassService.viewAllClasses(email);
+      const allClassesInfo = await ClassService.viewAllClasses(email);
       const message = "Successful";
-      res.status(200).json({ message, allClasses });
+      res.status(200).json({ message, allClassesInfo });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(err.statusCode).json({ message });

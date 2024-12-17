@@ -20,8 +20,13 @@ router.use("/attachments", attachmentRouter);
 router.use("/classes",classRouter);
 router.use("/posts",postRouter);
 router.use("/comments",commentRouter);
-router.use("/reactions", reactionRouter);  // Adding the reactions route
+
+// Custom Swagger UI options
+const swaggerOptions = {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Mates API Documentation",
+};
 
 
-router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 module.exports = router;

@@ -7,6 +7,7 @@ const unknownEndpoint = require("./middleware/unknownEndpoint.middleware");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const helmet = require("helmet");
+const homeView = require('./view');
 
 const app = express();
 
@@ -19,9 +20,7 @@ app.use(helmet());
 app.use(cookieParser());
 
 app.use("/api", routers);
-app.get("/", (req, res) =>
-  res.send("<h1 style='text-align: center'>Mates API</h1>"),
-);
+app.get("/", (req, res) => res.send(homeView));
 
 app.use(handleError);
 // app.use(unknownEndpoint);

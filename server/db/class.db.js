@@ -56,6 +56,11 @@ class ClassDB {
     return studentID;
   };
 
+  getInfoByID = async (classID) => {
+    const classInfo = await Class.findByPk(classID);
+    return classInfo;
+  };
+
   addStudentsToClass = async (studentID, classID) => {
     const studentClass = await StudentClass.create({
       classID,
