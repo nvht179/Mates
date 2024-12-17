@@ -13,21 +13,37 @@ import { HiArrowLongRight } from "react-icons/hi2";
 export default function CreateClass() {
     const [className, setClassName] = useState("");
     const [classCode, setClassCode] = useState("");
-    const [schedule, setSchedule] = useState([
+    const [description, setDescription] = useState("");
+    type ScheduleSlot = {
+        day: string;
+        startTime: string;
+        endTime: string;
+    };
+    const navigate = useNavigate();
+
+    const [schedule, setSchedule] = useState<ScheduleSlot[]>([
         { day: "Monday", startTime: "13:30", endTime: "15:10" },
     ]);
     const [frequency, setFrequency] = useState("Weekly");
-    const [description, setDescription] = useState("");
+    const handleScheduleChange = (index: number, field: keyof ScheduleSlot, value: string) => {
+        const updatedSchedule = [...schedule];
+        updatedSchedule[index][field] = value;
+        setSchedule(updatedSchedule);
+    }
 
     const addTimeSlot = () => {
-        setSchedule([...schedule, { day: "Monday", startTime: "", endTime: "" }]);
+        setSchedule([...schedule, {day: "Monday", startTime: "", endTime: "" }]);
     };
 
-    const handleScheduleChange = (index: number, field: string, value: string) => {
-        const updatedSchedule = [...schedule];
-        // updatedSchedule[index][field] = value;
-        setSchedule(updatedSchedule);
-    };
+    // const handleScheduleChange = (index: number, field: string, value: string) => {
+    //     const updatedSchedule = [...schedule];
+    //     updatedSchedule[index][field] = value;
+    //     setSchedule(updatedSchedule);
+    // };
+
+    const handleSubmit = () => {
+        console.log({ className, classCode, schedule, frequency, description });
+    }
 
     return (
         <div className="max-w mx-auto ">
@@ -35,10 +51,10 @@ export default function CreateClass() {
                 <h1 className="text-3xl font-bold">New Class</h1>
                 {/* Buttons */}
                 <div className="flex justify-end space-x-7">
-                    <Button secondary>
+                    <Button secondary onClick={() => navigate("/")}>
                         Close
                     </Button>
-                    <Button>
+                    <Button onClick={handleSubmit}>
                         Create
                     </Button>
                 </div>
@@ -148,7 +164,7 @@ export default function CreateClass() {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
-
+                        placeholder="Enter class description"
                         rows={4}
                     />
                 </div>
