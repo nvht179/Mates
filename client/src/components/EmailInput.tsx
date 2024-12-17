@@ -3,7 +3,8 @@ import Input from "./Input";
 import Button from "./Button";
 import { useResendVerificationEmailMutation } from "../store";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ResponseFail } from "../interfaces/Auth";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
 
 interface EmailState {
     email: string | null;
@@ -17,16 +18,28 @@ export default function EmailInput() {
     const location = useLocation();
     email = (location.state as EmailState)?.email || email;
 
+    // useEffect(() => {
+    //     if (isError) {
+    //         const err = error as ResponseFail;
+    //         setErrorMessage(err.data ? err.data.message : err.error);
+    //     }
+    //     if (isSuccess && data && "user" in data) {
+    //         navigate("/verification-sent");
+    //     }
+
+    // }, [isError, error, isSuccess, navigate, data]);
+
     useEffect(() => {
-        if (isError) {
-            const err = error as ResponseFail;
-            setErrorMessage(err.data ? err.data.message : err.error);
-        }
+        responseErrorHandler(
+            isError,
+            error as FetchBaseQueryError,
+            setErrorMessage,
+        );
+
         if (isSuccess && data && "user" in data) {
             navigate("/verification-sent");
         }
-
-    }, [isError, error, isSuccess, navigate, data]);
+    }, [isError, isSuccess, error, navigate, data]);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);

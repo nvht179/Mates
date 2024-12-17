@@ -31,7 +31,7 @@ interface SignupRequest {
   childEmail: string;
 }
 
-interface SignupResponseSuccess {
+interface SignupResponse {
   message: string;
   token: string;
   newUser: {
@@ -46,25 +46,13 @@ interface SignupResponseSuccess {
   };
 }
 
-interface SignupResponseFail {
-  message: string;
-}
 
 interface ResendVerificationEmailRequest {
   email: string;
 }
 
-interface ResendVerificationEmailRequest {
-  email: string;
-}
-
-interface ResendVerificationEmailResponseFail {
+interface ResendVerificationEmailResponse {
   message: string;
-}
-
-interface ResendVerificationEmailResponseSuccess {
-  message: string;
-
 }
 
 interface CheckUserByEmailResponse {
@@ -90,12 +78,10 @@ export type {
   LoginRequest,
   LoginResponse,
   SignupRequest,
-  SignupResponseSuccess,
-  SignupResponseFail,
+  SignupResponse,
   CheckUserByEmailRequest,
   CheckUserByEmailResponse,
   ResendVerificationEmailRequest,
-  ResendVerificationEmailResponseFail,
-  ResendVerificationEmailResponseSuccess
+  ResendVerificationEmailResponse,
 };
 

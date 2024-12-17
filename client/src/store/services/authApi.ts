@@ -5,11 +5,10 @@ import {
   LoginRequest,
   LoginResponse,
   SignupRequest,
-  SignupResponseFail,
-  SignupResponseSuccess,
+  SignupResponse,
   ResendVerificationEmailRequest,
-  ResendVerificationEmailResponseFail,
-  ResendVerificationEmailResponseSuccess
+  ResendVerificationEmailResponse,
+
 } from "../../interfaces/Auth";
 
 interface CheckOTPRequest {
@@ -31,7 +30,7 @@ export const authApi = createApi({
       }),
     }),
 
-    signup: builder.mutation<SignupResponseSuccess | SignupResponseFail, SignupRequest>({
+    signup: builder.mutation<SignupResponse, SignupRequest>({
       query: (credentials: SignupRequest) => ({
         url: "/auth/signUp",
         method: "POST",
@@ -51,7 +50,7 @@ export const authApi = createApi({
     }),
 
     resendVerificationEmail: builder.mutation<
-      ResendVerificationEmailResponseSuccess | ResendVerificationEmailResponseFail,
+      ResendVerificationEmailResponse,
       ResendVerificationEmailRequest>({
       query: (emailRequest: ResendVerificationEmailRequest) => ({
         url: "/auth/resend-verification-link",

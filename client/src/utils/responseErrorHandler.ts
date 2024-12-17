@@ -6,7 +6,7 @@ export const responseErrorHandler = (
   setError: (message: string) => void,
 ): void => {
   if (isError && error) {
-    if (error.status === 403 && error.data && typeof error.data === "object") {
+    if ((error.status === 403 || error.status === 404) && error.data && typeof error.data === "object") {
       setError((error.data as { message: string }).message);
     } else if ("error" in error) {
       setError(error.error as string);
