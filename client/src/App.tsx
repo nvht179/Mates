@@ -16,6 +16,8 @@ import ForgetPassword from "./pages/ForgetPassword";
 import VerificationSent from "./components/VerificationSent";
 import EmailInput from "./components/EmailInput";
 import CreateClass from "./pages/CreateClass";
+import ForgetPasswordOtp from "./pages/ForgetPasswordOtp";
+import ForgetPasswordReset from "./pages/ForgetPasswordReset";
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/choose-role" element={<ChooseRole />} />
           <Route path="/verification-sent" element={<VerificationSent />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/forget-password-otp" element={<ForgetPasswordOtp />} />
+          <Route path="/forget-password-reset" element={<ForgetPasswordReset />} />
           <Route path="/email-input" element={<EmailInput />} />
         </Route>
         {/* Protected routes with main layout */}

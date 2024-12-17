@@ -51,7 +51,6 @@ interface SignupResponse {
   };
 }
 
-
 interface ResendVerificationEmailRequest {
   email: string;
 }
@@ -73,8 +72,36 @@ interface CheckUserByEmailResponse {
   };
 }
 
+interface CheckEmailOtpRequest {
+  email: string;
+}
+
+interface CheckEmailOtpResponse {
+  message: string;
+}
+
 interface CheckUserByEmailRequest {
   email: string;
+}
+
+interface RefreshTokenResponse {
+  token: string;
+  refreshToken: string;
+}
+
+interface CheckOtpRequest {
+  email: string;
+  OTP: string;
+}
+
+interface CheckOtpResponse {
+  message: string;
+}
+
+interface ForgetPasswordRequest {
+  email: string;
+  newPassword: string;
+  newPassword2: string;
 }
 
 export type {
@@ -84,7 +111,12 @@ export type {
   SignupResponse,
   CheckUserByEmailRequest,
   CheckUserByEmailResponse,
+  CheckEmailOtpRequest,
+  CheckEmailOtpResponse,
   ResendVerificationEmailRequest,
   ResendVerificationEmailResponse,
+  RefreshTokenResponse,
+  CheckOtpRequest,
+  CheckOtpResponse,
+  ForgetPasswordRequest,
 };
-
