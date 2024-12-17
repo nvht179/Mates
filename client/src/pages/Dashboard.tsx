@@ -1,5 +1,6 @@
 import Button from "../components/Button";
 import ClassCardList from "../components/ClassCardList";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const classes = [
@@ -35,11 +36,18 @@ function Dashboard() {
     },
   ];
 
+  const navigate = useNavigate();
+
+  const handleCreateClass = () => {
+    // console.log("Create class clicked");
+    navigate("/create-class");
+  };
+
   return (
     <div>
       <div className="flex flex-row items-center justify-between">
         <p className="ml-8 text-xl font-bold">My classes</p>
-        <Button className="m-4">Create or join Class</Button>
+        <Button onClick={handleCreateClass} className="m-4">Create or join Class</Button>
       </div>
       <div className="border-b-2"></div>
       <ClassCardList classes={classes} />

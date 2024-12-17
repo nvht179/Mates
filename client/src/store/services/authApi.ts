@@ -5,8 +5,17 @@ import {
   LoginRequest,
   LoginResponse,
   SignupRequest,
-  SignupResponse,
+  SignupResponseFail,
+  SignupResponseSuccess,
+  ResendVerificationEmailRequest,
+  ResendVerificationEmailResponseFail,
+  ResendVerificationEmailResponseSuccess
 } from "../../interfaces/Auth";
+
+interface CheckOTPRequest {
+  email: string;
+  otp: string;
+}
 
 export const authApi = createApi({
   reducerPath: "auth",
@@ -22,8 +31,8 @@ export const authApi = createApi({
       }),
     }),
 
-    signup: builder.mutation<SignupResponse, SignupRequest>({
-      query: (credentials) => ({
+    signup: builder.mutation<SignupResponseSuccess | SignupResponseFail, SignupRequest>({
+      query: (credentials: SignupRequest) => ({
         url: "/auth/signUp",
         method: "POST",
         body: credentials,
@@ -34,8 +43,18 @@ export const authApi = createApi({
       CheckUserByEmailResponse,
       CheckUserByEmailRequest
     >({
-      query: (emailRequest) => ({
+      query: (emailRequest: CheckUserByEmailRequest) => ({
         url: "/users/checkUserByEmail",
+        method: "POST",
+        body: emailRequest,
+      }),
+    }),
+
+    resendVerificationEmail: builder.mutation<
+      ResendVerificationEmailResponseSuccess | ResendVerificationEmailResponseFail,
+      ResendVerificationEmailRequest>({
+      query: (emailRequest: ResendVerificationEmailRequest) => ({
+        url: "/auth/resend-verification-link",
         method: "POST",
         body: emailRequest,
       }),
@@ -43,7 +62,8 @@ export const authApi = createApi({
   }),
 });
 
-export const {
+export const  {
+  useResendVerificationEmailMutation,
   useLoginMutation,
   useSignupMutation,
   useLazyCheckUserByEmailQuery,

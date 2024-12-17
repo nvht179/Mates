@@ -31,9 +31,40 @@ interface SignupRequest {
   childEmail: string;
 }
 
-interface SignupResponse {
-  userId: number;
+interface SignupResponseSuccess {
+  message: string;
+  token: string;
+  newUser: {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    avatar: string;
+    role: UserRole;
+    isVerified: boolean;
+    resetToken: string | null;
+  };
+}
+
+interface SignupResponseFail {
+  message: string;
+}
+
+interface ResendVerificationEmailRequest {
   email: string;
+}
+
+interface ResendVerificationEmailRequest {
+  email: string;
+}
+
+interface ResendVerificationEmailResponseFail {
+  message: string;
+}
+
+interface ResendVerificationEmailResponseSuccess {
+  message: string;
+
 }
 
 interface CheckUserByEmailResponse {
@@ -58,9 +89,12 @@ interface CheckUserByEmailRequest {
 export type {
   LoginRequest,
   LoginResponse,
-  SignupResponse,
   SignupRequest,
-  CheckUserByEmailResponse,
-  CheckUserByEmailRequest
+  SignupResponseSuccess,
+  SignupResponseFail,
+  CheckUserByEmailRequest,
+  ResendVerificationEmailRequest,
+  ResendVerificationEmailResponseFail,
+  ResendVerificationEmailResponseSuccess
 };
 
