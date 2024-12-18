@@ -2,7 +2,6 @@ const { Event, Event_Person } = require("../entities/event.model");
 const { ErrorHandler } = require("../helpers/error");
 const sequelize = require("../config/db");
 
-
 class EventDB {
   createEvent = async (title, description, repeatTime, startTime, endTime, classID, personID) => {
     console.log("EventDB:", title, description, repeatTime, startTime, endTime, classID, personID)
@@ -44,6 +43,35 @@ class EventDB {
       }
     });
     return events;
+  };
+
+  updateEvent = async (eventID, title, description, repeatTime, startTime, endTime) => {
+    const updatedEvent = await this.getEventByID(eventID);
+    updatedEvent.title = title;
+    updatedEvent.description = description;
+    updatedEvent.repeatTime = repeatTime;
+    updatedEvent.startTime = startTime;
+    updatedEvent.endTime = endTime;
+    updatedEvent.save();
+    return updatedEvent;
+  };
+
+  getPersonEventByID = async (eventID) => {
+    const event_persons = await Event_Person.findAll({
+      where: {
+        eventID: eventID
+      }
+    });
+    return event_persons;
+  }
+
+  removeEvent = async (eventID) => {
+    const removedEvent = await this.getEventByID(eventID);
+    const event_persons = await this.getPersonEventByID(eventID);
+    for (const event_person of event_persons) {
+      event_person.destroy();
+    }
+    removedEvent.destroy();
   };
 }
 
