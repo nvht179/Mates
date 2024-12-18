@@ -30,7 +30,12 @@ const Comment = sequelize.define(
           model: Person,
           key: "id",
         },
-    }
+    },
+    time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW, // Tự động gán giá trị thời gian hiện tại
+    },
   },
   {
     tableName: "Comment",

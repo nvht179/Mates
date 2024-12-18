@@ -1,6 +1,7 @@
 "use strict";
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
+const Class = require("./class.model");
 
 const Assignment = sequelize.define(
   "Assignment",
@@ -24,8 +25,17 @@ const Assignment = sequelize.define(
     },
     endTime:{
         type: DataTypes.DATE,
-    }
+    },
+    classID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: Class,
+              key: "classID",
+            },
+    },
   },
+  
   {
     tableName: "Assignment",
     timestamps: false,
