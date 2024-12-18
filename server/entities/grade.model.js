@@ -2,23 +2,24 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const { Class } = require("./class.model");
-const Person = require("./person.model");
+const Assignment = require("./assignment.model");
+const { Teacher, Student, Parent } = require("./user.model");
 
-const Post = sequelize.define(
-  "Post",
+const Grade = sequelize.define(
+  "Grade",
   {
-    id: {
+    gradeId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    title: {
+    comment: {
       type: DataTypes.STRING,
-      unique: true,
+      allowNull: true,
     },
-    content: {
-      type: DataTypes.STRING,
+    grade100: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     classID: {
@@ -29,24 +30,28 @@ const Post = sequelize.define(
         key: "classID",
       },
     },
-    personID: {
+    assignmentID: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Person, // Tham chiếu đến Person model
-        key: "id", // Khóa chính của Person
+        model: Assignment,
+        key: "id",
       },
     },
-    time: {
-      type: DataTypes.DATE,
+    studentID: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: DataTypes.NOW, // Tự động gán giá trị thời gian hiện tại
+      references: {
+        model: Student,
+        key: "studentID",
+      },
     },
   },
+
   {
-    tableName: "Post",
+    tableName: "Grade",
     timestamps: false,
   },
 );
 
-module.exports = Post;
+module.exports = Grade;
