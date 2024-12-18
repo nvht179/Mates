@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi } from "../services/authApi.ts";
-import Cookies from "js-cookie";
 import { UserRole } from "../../interfaces/Misc";
 
-export interface AuthState {
-  userId: number | null;
+interface UserState {
+  id: number | null;
   email: string | null;
   name: string | null;
   phone: string | null;
@@ -16,8 +15,17 @@ export interface AuthState {
   tokenSavedTime: number | null;
 }
 
-const initialState: AuthState = {
-  userId: null,
+interface UserInfo {
+  email: string | null;
+  name: string | null;
+  phone: string | null;
+  avatar: string | null;
+  role: UserRole | null;
+  childEmail: string | null;
+}
+
+const initialState: UserState = {
+  id: null,
   email: null,
   name: null,
   phone: null,
@@ -33,13 +41,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setCredentials: (
-      state,
-      action: PayloadAction<{ userId: number | null; email: string }>,
-    ) => {
-      const { userId, email } = action.payload;
-      state.userId = userId;
+    setUserInfo: (state, action: PayloadAction<UserInfo>) => {
+      const { email, name, phone, avatar, role, childEmail } = action.payload;
       state.email = email;
+      state.name = name;
+      state.phone = phone;
+      state.avatar = avatar;
+      state.role = role;
+      state.childEmail = childEmail;
     },
     setToken: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
@@ -50,24 +59,27 @@ const userSlice = createSlice({
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
-    logout: (state) => {
-      state.userId = null;
-      state.email = null;
-      state.isAuthenticated = false;
-      state.token = null;
-      state.tokenSavedTime = null;
-      Cookies.remove("refreshToken");
-    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
       (state, { payload }) => {
         if ("user" in payload) {
-          state.userId = payload.user.id;
+          state.id = payload.user.id;
           state.email = payload.user.email;
         }
         state.isAuthenticated = true;
+        const user = payload.user;
+        state.id = user.id;
+        state.email = user.email;
+        state.name = user.name;
+        state.phone = user.phone;
+        state.avatar = user.avatar;
+        state.role = user.role;
+        state.childEmail = user.childEmail;
+
+        // update userId in localStorage
+        localStorage.setItem("userId", user.id.toString());
       },
     );
     builder.addMatcher(
@@ -76,29 +88,18 @@ const userSlice = createSlice({
         state.token = payload.token;
         state.isAuthenticated = true;
         state.tokenSavedTime = Date.now();
-      },
-    );
-    builder.addMatcher(
-      authApi.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        const user = payload.user;
-        state.userId = user.id;
-        state.email = user.email;
-        state.name = user.name;
-        state.phone = user.phone;
-        state.avatar = user.avatar;
-        state.role = user.role;
-        state.childEmail = user.childEmail;
+
+        // update userId from localStorage if it's null in state
+        if (state.id === null) {
+          const storedUserId = localStorage.getItem("userId");
+          if (storedUserId) {
+            state.id = parseInt(storedUserId);
+          }
+        }
       },
     );
   },
 });
 
-export const {
-  setCredentials,
-  setToken,
-  setTokenSavedTime,
-  setAuthenticated,
-  logout,
-} = userSlice.actions;
+export const { setUserInfo, setToken, setTokenSavedTime } = userSlice.actions;
 export default userSlice.reducer;

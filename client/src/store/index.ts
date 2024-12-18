@@ -1,12 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import userReducer, { AuthState } from "./slices/userSlice";
+import userReducer from "./slices/userSlice";
 import { authApi } from "./services/authApi";
 import { classApi } from "./services/classApi";
-
-export interface SelectorState {
-  user: AuthState;
-}
 
 export const store = configureStore({
   reducer: {

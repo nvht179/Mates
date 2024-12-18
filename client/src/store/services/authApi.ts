@@ -14,6 +14,7 @@ import {
   SignupRequest,
   SignupResponse,
   ForgetPasswordRequest,
+  GetUsesrInfoResponse,
 } from "../../interfaces/Auth";
 
 // interface CheckOTPRequest {
@@ -25,6 +26,7 @@ export const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
@@ -95,6 +97,13 @@ export const authApi = createApi({
         method: "POST",
       }),
     }),
+
+    getUserById: builder.query<GetUsesrInfoResponse, number>({
+      query: (id: number) => ({
+        url: `/users/getUserByID/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -107,4 +116,5 @@ export const {
   useLazyCheckOtpQuery,
   useForgetPasswordMutation,
   useLazyRefreshTokenQuery,
+  useLazyGetUserByIdQuery,
 } = authApi;

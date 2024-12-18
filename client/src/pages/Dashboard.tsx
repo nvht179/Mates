@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import ClassCardList from "../components/ClassCardList";
 import { useSelector } from "react-redux";
-import { SelectorState, useViewAllClassesQuery } from "../store";
+import { RootState, useViewAllClassesQuery } from "../store";
 import { useNavigate } from "react-router-dom";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -10,8 +10,8 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 function Dashboard() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
-  const user = useSelector((state: SelectorState) => state.user);
 
+  const user = useSelector((state: RootState) => state.user);
   const { data, isError, isLoading, error } = useViewAllClassesQuery(
     { email: user.email ?? "" },
   );

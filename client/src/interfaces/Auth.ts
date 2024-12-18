@@ -11,18 +11,25 @@ interface LoginRequest {
   password: string;
 }
 
+interface UserInfo {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  avatar: string;
+  role: UserRole;
+  childEmail: string;
+}
+
+interface GetUsesrInfoResponse {
+  message: string;
+  user: UserInfo;
+}
+
 interface LoginResponse {
   message: string;
   token: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-    phone: string;
-    avatar: string;
-    role: UserRole;
-    childEmail: string;
-  };
+  user: UserInfo;
 }
 
 interface SignupRequest {
@@ -39,16 +46,7 @@ interface SignupRequest {
 interface SignupResponse {
   message: string;
   token: string;
-  newUser: {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    avatar: string;
-    role: UserRole;
-    isVerified: boolean;
-    resetToken: string | null;
-  };
+  newUser: UserInfo;
 }
 
 interface ResendVerificationEmailRequest {
@@ -61,15 +59,7 @@ interface ResendVerificationEmailResponse {
 
 interface CheckUserByEmailResponse {
   message: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    avatar: string;
-    role: UserRole;
-  };
+  user: UserInfo;
 }
 
 interface CheckEmailOtpRequest {
@@ -119,4 +109,6 @@ export type {
   CheckOtpRequest,
   CheckOtpResponse,
   ForgetPasswordRequest,
+  GetUsesrInfoResponse,
+  UserInfo,
 };

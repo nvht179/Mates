@@ -114,10 +114,10 @@ class AuthController {
 
   refreshToken = async (req, res) => {
     try {
+      console.log("meomeo: ", req.cookies)
       if (!req.cookies.refreshToken) {
         throw new ErrorHandler(401, "Token missing");
       }
-
       const tokens = await AuthService.generateRefreshToken(
         req.cookies.refreshToken
       );
@@ -125,6 +125,7 @@ class AuthController {
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
       });
+      console.log("auth-service: ", tokens)
       res.json(tokens);
     } catch (err) {
       const message = err.message || "An error occurred";

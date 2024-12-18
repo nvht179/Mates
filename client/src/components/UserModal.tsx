@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { SelectorState } from "../store";
-import { useSelector } from "react-redux";
+import { RootState, setUserInfo } from "../store";
+import { useDispatch, useSelector } from "react-redux";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import DefaultAvatar from "../assets/default_ava.png";
 import Input from "./Input";
 import Button from "./Button";
-import { FaRegEdit } from "react-icons/fa";
 
 interface UserModalProps {
   onClose: () => void;
 }
 
+function getUsername(email: string | null) {
+  if (!email) return "";
+  return email.split("@")[0];
+}
+
 function UserModal({ onClose }: UserModalProps) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const hihi = useSelector((state: SelectorState) => state.user);
+  const { role, email, avatar, name, phone } = useSelector(
+    (state: RootState) => state.user,
+  );
+  const dispatch = useDispatch();
 
   const defaultAvatar = DefaultAvatar;
 
-  const user = {
-    email: "thanh@gmail.com",
-    userName: "thanh",
-    fullName: "Dao Xuan Thanh",
-    role: "Student",
-    picture: defaultAvatar,
-  };
+  const userHandler = getUsername(email);
 
-  const [userEmail, setUserEmail] = useState(user.email ?? "");
-  const [userName, setUserName] = useState(user.userName ?? "");
-  const [userFullName, setUserFullName] = useState(user.fullName ?? "");
+  const [userEmail, setUserEmail] = useState(email ?? "");
+  const [userName, setUserName] = useState(userHandler ?? "");
+  const [userFullName, setUserFullName] = useState(name ?? "");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -50,27 +51,42 @@ function UserModal({ onClose }: UserModalProps) {
 
   const handleSaveClick = () => {
     setIsEditing(false);
-    // dispatch(updateUser({ email: userEmail, userName, fullName: userFullName }));
+    dispatch(
+      setUserInfo({
+        email: userEmail,
+        name: userFullName,
+        childEmail: "",
+        role: role,
+        avatar,
+        phone,
+      }),
+    );
   };
 
   const handleViewClick = () => {
     setIsEditing(false);
-    setUserEmail(user.email);
-    setUserName(user.userName);
-    setUserFullName(user.fullName);
+    setUserEmail(email || "");
+    setUserName(userName || "");
+    setUserFullName(name || "");
   };
 
   const UserInfo = () => (
     <div className="flex items-center">
       <img
-        src={user?.picture ?? defaultAvatar}
+        src={defaultAvatar}
         alt="user"
-        className="h-14 w-14 rounded-full object-cover"
+        className="h-12 w-12 rounded-full object-cover"
       />
-      <div className="ml-4 flex flex-col space-y-1">
-        <div className="text-lg font-bold">{userFullName}</div>
-        <p className="text-sm text-gray-600">{userEmail}</p>
-        <p className="text-sm text-gray-600">Role: {user.role}</p>
+      <div className="ml-4 flex flex-col">
+        <p className="text-sm font-bold uppercase">{userFullName}</p>
+        <p className="text-xs text-fg-soft">{userEmail}</p>
+        <a
+          className="mt-1 cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+          onClick={() => setIsEditing(true)}
+        >
+          Edit account info
+        </a>
+        {/*<p className="text-sm text-gray-600">Role: {role}</p>*/}
       </div>
     </div>
   );
@@ -78,11 +94,11 @@ function UserModal({ onClose }: UserModalProps) {
   const EditableUserInfo = () => (
     <div className="flex items-center">
       <img
-        src={user?.picture ?? defaultAvatar}
+        src={defaultAvatar}
         alt="user"
         className="h-14 w-14 rounded-full object-cover"
       />
-      <div className="ml-4 flex flex-col space-y-2">
+      <div className="ml-4 flex flex-col">
         <Input
           className="font-semibold"
           placeholder="Enter your full name"
@@ -94,7 +110,7 @@ function UserModal({ onClose }: UserModalProps) {
           value={userEmail}
           onChange={handleInputChange(setUserEmail)}
         />
-        <p className="text-sm text-gray-600">Role: {user.role}</p>
+        <p className="text-sm text-gray-600">Role: {role}</p>
       </div>
     </div>
   );
@@ -102,14 +118,14 @@ function UserModal({ onClose }: UserModalProps) {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-end">
       <div
-        className="absolute inset-0 bg-black bg-opacity-0 shadow transition-opacity"
+        className="absolute inset-0 bg-black bg-opacity-0 transition-opacity"
         onClick={onClose}
       />
       <div
-        className="relative mt-12 w-96 transform rounded bg-white p-6 shadow-xl transition-all"
+        className="border-bg-soft relative mr-1 mt-12 transform rounded bg-white p-4 shadow drop-shadow-2xl transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b">
+        <div className="flex items-center justify-between">
           {isEditing ? (
             <Input
               className="w-64 font-semibold"
@@ -118,39 +134,46 @@ function UserModal({ onClose }: UserModalProps) {
               onChange={handleInputChange(setUserName)}
             />
           ) : (
-            <p className="text-xl font-semibold">{userName}</p>
-          )}
-          {!isEditing && (
-            <button
-              onClick={handleSignOutClick}
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Sign out
-            </button>
+            <div className="flex w-full flex-row items-center justify-between">
+              <div className="flex flex-row items-center">
+                <p className="mr-2 text-sm font-semibold uppercase">
+                  {userName}
+                </p>
+                <p className="text-xs">{role}</p>
+              </div>
+              {!isEditing && (
+                <a
+                  onClick={handleSignOutClick}
+                  className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+                >
+                  Sign out
+                </a>
+              )}
+            </div>
           )}
         </div>
 
-        <div className="mt-4">
+        <div className="mt-2">
           {isEditing ? <EditableUserInfo /> : <UserInfo />}
         </div>
 
-        <div className="mt-6 flex justify-end space-x-2">
-          {isEditing ? (
-            <>
-              <Button secondary onClick={handleViewClick}>
-                Cancel
-              </Button>
-              <Button primary onClick={handleSaveClick}>
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button primary onClick={() => setIsEditing(true)}>
-              <FaRegEdit className="mr-2"/>
-              Edit
-            </Button>
-          )}
-        </div>
+        {/*<div className="mt-6 flex justify-end space-x-2">*/}
+        {/*  {isEditing ? (*/}
+        {/*    <>*/}
+        {/*      <Button secondary onClick={handleViewClick}>*/}
+        {/*        Cancel*/}
+        {/*      </Button>*/}
+        {/*      <Button primary onClick={handleSaveClick}>*/}
+        {/*        Save*/}
+        {/*      </Button>*/}
+        {/*    </>*/}
+        {/*  ) : (*/}
+        {/*    <Button primary onClick={() => setIsEditing(true)}>*/}
+        {/*      <FaRegEdit className="mr-2"/>*/}
+        {/*      Edit*/}
+        {/*    </Button>*/}
+        {/*  )}*/}
+        {/*</div>*/}
       </div>
     </div>,
     document.querySelector(".modal-container") as Element,

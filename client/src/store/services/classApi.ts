@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getAuthToken } from "../../utils/getAuthToken";
 import {
   CreateClassRequest,
   CreateClassResponse,
@@ -10,6 +11,13 @@ export const classApi = createApi({
   reducerPath: "class",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
+    prepareHeaders: async (headers) => {
+      const token = await getAuthToken();
+      if (token) {
+        headers.set("auth-token", token);
+      }
+      return headers
+    }
   }),
   endpoints: (builder) => ({
     viewAllClasses: builder.query<
