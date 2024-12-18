@@ -2,7 +2,7 @@ import Panel from "./Panel";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import ClassType from "../interfaces/Class";
+import {ClassType} from "../interfaces/Class";
 
 interface ClassCardListProps {
   classes: ClassType[];
@@ -15,6 +15,9 @@ function ClassCardList({ classes }: ClassCardListProps) {
   };
 
   const renderedClassCard = classes.map((cla: ClassType) => {
+    const randomSeed = Math.floor(Math.random() * 10000);
+    const randomImage = `https://picsum.photos/seed/${randomSeed}/200/300`;
+
     return (
       <Panel key={cla.classID} className="p-3">
         <div
@@ -23,7 +26,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
         >
           <img
             className="h-20 w-20 rounded object-cover"
-            src={cla.image}
+            src={randomImage}
             alt={cla.className}
           />
           <div className="ml-4 truncate">{cla.className}</div>

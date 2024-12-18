@@ -10,36 +10,42 @@ import { HiArrowLongRight } from "react-icons/hi2";
 import { FaRegFile } from "react-icons/fa";
 
 export default function CreateAssignment() {
-    const [assignmentTitle, setAssignmentTitle] = useState("");
-    const [assignmentCode, setAssignmentCode] = useState("");
-    const [description, setDescription] = useState("");
-    const [attachment, setAttachment] = useState("");
+  const [assignmentTitle, setAssignmentTitle] = useState("");
+  const [assignmentCode, setAssignmentCode] = useState("");
+  const [description, setDescription] = useState("");
+  const [attachment, setAttachment] = useState("");
 
-    type ScheduleSlot = {
-        startDate: string;
-        startTime: string;
-        endDate: string;
-        endTime: string;
-    };
+  type ScheduleSlot = {
+    startDate: string;
+    startTime: string;
+    endDate: string;
+    endTime: string;
+  };
 
-    const [schedule, setSchedule] = useState<ScheduleSlot>({
-        startDate: "",
-        startTime: "",
-        endDate: "",
-        endTime: "",
+  const [schedule, setSchedule] = useState<ScheduleSlot>({
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: "",
+  });
+
+  const handleScheduleChange = (field: keyof ScheduleSlot, value: string) => {
+    setSchedule((prevSchedule) => ({
+      ...prevSchedule,
+      [field]: value,
+    }));
+  };
+
+  const navigate = useNavigate();
+  const handleSubmit = () => {
+    console.log({
+      assignmentTitle,
+      assignmentCode,
+      schedule,
+      description,
+      attachment,
     });
-    
-    const handleScheduleChange = (field: keyof ScheduleSlot, value: string) => {
-        setSchedule((prevSchedule) => ({
-            ...prevSchedule,
-            [field]: value,
-        }));
-    };
-    
-    const navigate = useNavigate();
-    const handleSubmit = () => {
-        console.log({ assignmentTitle, assignmentCode, schedule, description, attachment });
-    }
+  };
 
     return (
         <div className="max-w mx-auto ">
@@ -82,10 +88,10 @@ export default function CreateAssignment() {
                     />
                 </div>
 
-                {/* Attachment */}
-                <div className="flex items-center mb-4 w-1/4">
-                    {/* <label className="block text-gray-700 mb-1 mx-3">Attachment</label> */}
-                    <FaRegFile className="ml-4 mr-4 text-2xl" />
+        {/* Attachment */}
+        <div className="mb-4 flex w-1/4 items-center">
+          {/* <label className="block text-gray-700 mb-1 mx-3">Attachment</label> */}
+          <FaRegFile className="ml-4 mr-4 text-2xl" />
 
                     <Input
                         className="bg-bg-alt border-bg-alt"
