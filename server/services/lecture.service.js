@@ -1,7 +1,6 @@
 const { ErrorHandler } = require("../helpers/error");
 const LectureDB = require("../db/lecture.db")
 const AttachmentDB = require("../db/attachment.db");
-const { P } = require("pino");
 
 class LectureService {
   viewAllLecturesInClass = async (classID) => {

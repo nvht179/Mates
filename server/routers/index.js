@@ -12,6 +12,7 @@ const attachmentRouter = require('./attachment.router')
 const reactionRouter = require('./reaction.router');
 const commentRouter = require('./comment.router');
 const lectureRouter = require('./lecture.router');
+const eventRouter = require('./event.router');
 
 router.use("/reactions", reactionRouter);
 router.use("/auth", authRouter);
@@ -22,6 +23,7 @@ router.use("/classes", classRouter);
 router.use("/posts", postRouter);
 router.use("/comments", commentRouter);
 router.use("/lectures", lectureRouter);
+router.use("/events", eventRouter);
 
 // Custom Swagger UI options
 const swaggerOptions = {
