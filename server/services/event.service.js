@@ -33,6 +33,28 @@ class EventService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  updateEvent = async (eventID, title, description, repeatTime, startTime, endTime) => {
+    try {
+      const updatedEvent = await EventDB.updateEvent(eventID, title, description, repeatTime, startTime, endTime);
+
+      if (!updatedEvent) {
+        throw new ErrorHandler(403, "Can not update the event");
+      }
+
+      return updatedEvent;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  removeEvent = async (eventID) => {
+    try {
+      await EventDB.removeEvent(eventID);
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new EventService();
