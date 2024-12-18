@@ -1,7 +1,6 @@
 const Lecture = require("../entities/lecture.model");
 const { Class, TeacherClass, StudentClass } = require("../entities/class.model");
 const AttachmentDB = require("./attachment.db");
-const { getLectureByID } = require("../services/lecture.service");
 
 class LectureDB {
   viewAllLecturesInClass = async (classID) => {

@@ -15,14 +15,13 @@ const Event = sequelize.define(
     },
     title: {
       type: DataTypes.STRING,
-      unique: true,
     },
     description: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     repeatTime: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
     startTime: {
       type: DataTypes.DATE,

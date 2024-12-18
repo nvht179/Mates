@@ -41,7 +41,7 @@ const Person = sequelize.define(
     },
     isVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
     resetToken: {
       type: DataTypes.STRING,

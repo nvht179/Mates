@@ -14,7 +14,35 @@ module.exports =
         "description": {
           "type": "string",
           "example": "Meow Meow"
-        }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            {
+              "startTime": "2024-12-25T09:00:00Z",
+              "endTime": "2024-12-25T11:00:00Z"
+            },
+            {
+              "startTime": "2025-01-05T10:00:00Z",
+              "endTime": "2025-01-05T12:00:00Z"
+            },
+            {
+              "startTime": "2025-02-10T14:00:00Z",
+              "endTime": "2025-02-10T16:00:00Z"
+            }
+          ],
+        },
+        "userID": {
+          "type": "string",
+          "example": "1"
+        },
+        "role": {
+          "type": "string",
+          "example": "TA"
+        },
       }
     },
     "addStudentToClass": {

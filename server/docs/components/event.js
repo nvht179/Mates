@@ -13,8 +13,7 @@ module.exports =
         },
         "repeatTime": {
           "type": "string",
-          "format": "date-time",
-          "example": "2024-12-25T10:00:00Z"
+          "example": "Weekly"
         },
         "startTime": {
           "type": "string",
