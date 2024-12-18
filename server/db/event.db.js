@@ -12,6 +12,16 @@ class EventDB {
     return { event, event_person };
   };
 
+  addPersonToEvent = async (eventID, personID) => {
+    const event_person = await Event_Person.create({ eventID, personID });
+    return event_person;
+  };
+
+  getEventByID = async (eventID) => {
+    const event = Event.findByPk(eventID);
+    return event;
+  };
+
   viewEventByID = async (eventID) => {
     const event = await Event.findByPk(eventID);
     return event;
@@ -25,6 +35,15 @@ class EventDB {
       }
     });
     return eventsUser;
+  };
+
+  getAllEventByClassID = async (classID) => {
+    const events = await Event.findAll({
+      where: {
+        classID: classID
+      }
+    });
+    return events;
   };
 }
 
