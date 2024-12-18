@@ -77,7 +77,6 @@ class ClassDB {
   };
 
   addTeachersToClass = async (teacherID, classID, role) => {
-    console.log("ClassDB:", teacherID, classID, role)
     const teacherClass = await TeacherClass.create({
       classID,
       teacherID,
