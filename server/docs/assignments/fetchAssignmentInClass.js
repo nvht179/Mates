@@ -1,44 +1,37 @@
-module.exports =
-{
-  "get": {
-        "tags": ["Posts"],
-        "summary": "Get posts by classID",
-        "description": "Fetch all posts by classID.",
-        "operationId": "getPostsByClassId",
+module.exports={
+    "get": {
+        "tags": ["Assignments"],
+        "summary": "Get all assignments in a class",
+        "description": "Fetches all assignments for a specific class by its ID.",
+        "operationId": "viewAllAssignmentsInClass",
         "parameters": [
           {
             "name": "classID",
             "in": "path",
-            "description": "The classID to fetch posts by",
+            "description": "ID of the class to fetch assignments for",
             "required": true,
             "type": "integer"
           }
         ],
         "responses": {
           "200": {
-            "description": "Posts retrieved successfully",
+            "description": "Assignments fetched successfully",
             "schema": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
                   "title": {
                     "type": "string"
                   },
-                  "content": {
+                  "description": {
                     "type": "string"
                   },
-                  "classID": {
-                    "type": "integer"
-                  },
-                  "createdAt": {
+                  "startTime": {
                     "type": "string",
                     "format": "date-time"
                   },
-                  "updatedAt": {
+                  "endTime": {
                     "type": "string",
                     "format": "date-time"
                   }
@@ -46,12 +39,13 @@ module.exports =
               }
             }
           },
-          "400": {
-            "description": "Bad request, invalid classID"
+          "404": {
+            "description": "No assignments found for the given class"
           },
           "500": {
             "description": "Internal server error"
           }
         }
-  }
+      }
+    
 }

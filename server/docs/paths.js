@@ -6,6 +6,7 @@ const classes = require("./classes");
 const comments = require("./comments");
 const attachments = require("./attachments");
 const lectures = require("./lectures");
+const assignments = require("./assignments");
 
 module.exports = {
   paths: {
@@ -16,6 +17,7 @@ module.exports = {
     ...classes,
     ...comments,
     ...attachments,
-    ...lectures
+    ...lectures,
+    ...assignments,
   },
 };

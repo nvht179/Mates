@@ -155,6 +155,29 @@ class PostController {
       res.status(403).json({ message: err.message });
     }
   };
+
+  getPostsByClassId = async (req, res) => {
+    try {
+      const { classID } = req.params;  // Lấy classID từ URL parameters
+  
+      // Kiểm tra xem classID có được truyền vào không
+      if (!classID) {
+        return res.status(400).json({ message: "classID is required." });
+      }
+  
+      // Logic để lấy các bài viết theo classID
+      const posts = await PostService.getPostsByClassId(classID);
+  
+      if (!posts) {
+        return res.status(404).json({ message: "No posts found for this class ID." });
+      }
+  
+      return res.status(200).json({ data: posts });
+    } catch (error) {
+      console.error("Error fetching posts by class ID:", error);
+      return res.status(500).json({ message: "Error fetching posts." });
+    }
+  };
 }
 
 module.exports = new PostController();

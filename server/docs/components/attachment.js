@@ -5,7 +5,7 @@ module.exports =
       "type": "object",
       "properties": {
         "link": {
-          "type": "string"
+          "type": "string",          
         },
         "linkTitle": {
           "type": "string"

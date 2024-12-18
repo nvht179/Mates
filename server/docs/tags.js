@@ -30,7 +30,11 @@ module.exports = {
     },
     {
       "name": "Lectures",
-      "description": "API for lectures"
+      "description": "API for lectures",
+    },
+    {
+      "name": "Assignments",
+      "description": "API for assignments"
     },
   ],
 }
