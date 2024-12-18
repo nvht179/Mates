@@ -102,6 +102,11 @@ export default function SignupParent() {
             pass = false;
         }
 
+        if (password === "") {
+            setErrorMessagePw("Please enter a password.");
+            pass = false;
+        }
+
         if (password !== confirmPassword) {
             setErrorMessagePw("Passwords do not match.");
             pass = false;
