@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import UserModal from "./UserModal";
 import MatesLogo from "../assets/mates.svg";
 import Input from "./Input";
 
 export default function TopBar() {
+  const [showModal, setShowModal] = useState(false);
+
+  const userModal = (
+    <UserModal onClose={() => setShowModal(false)} />
+  );
+
   return (
     <div className="sticky top-0 flex h-12 items-center justify-between border bg-primary-bg p-1 px-4 shadow-md">
       {/* Logo */}
@@ -25,9 +33,13 @@ export default function TopBar() {
         <img
           src="../../public/vite.svg"
           alt="User Profile"
-          className="h-6 w-6 rounded-full"
+          className="h-6 w-6 rounded-full cursor-pointer active:opacity-30"
+          onClick={() => setShowModal(true)}
         />
       </div>
+      
+      {/* User Modal */}
+      {showModal && userModal}
     </div>
   );
 }
