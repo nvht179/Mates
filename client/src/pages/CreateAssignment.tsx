@@ -61,7 +61,7 @@ export default function CreateAssignment() {
                     {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
                     <LuPencilLine className="mx-4 text-2xl" />
                     <Input
-                        className="bg-bg-alt border-fg-alt"
+                        className="bg-bg-alt border-bg-alt"
                         type="text"
                         value={assignmentTitle}
                         placeholder="Enter assignment title"
@@ -74,7 +74,7 @@ export default function CreateAssignment() {
                     {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
                     <IoMdCode className="ml-3 mr-4 text-3xl" />
                     <Input
-                        className="bg-bg-alt border-fg-alt"
+                        className="bg-bg-alt border-bg-alt"
                         type="text"
                         value={assignmentCode}
                         placeholder="Enter class code"
@@ -88,7 +88,7 @@ export default function CreateAssignment() {
                     <FaRegFile className="ml-4 mr-4 text-2xl" />
 
                     <Input
-                        className="bg-bg-alt border-fg-alt"
+                        className="bg-bg-alt border-bg-alt"
                         type="file"
                         onChange={(e) => {
                             if (e.target.files && e.target.files[0]) {
@@ -107,7 +107,7 @@ export default function CreateAssignment() {
                                 type="date"
                                 value={schedule.startDate}
                                 onChange={(e) => handleScheduleChange("startDate", e.target.value)}
-                                className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
 
                             {/* Start Time */}
@@ -115,7 +115,7 @@ export default function CreateAssignment() {
                                 type="time"
                                 value={schedule.startTime}
                                 onChange={(e) => handleScheduleChange("startTime", e.target.value)}
-                                className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
                             <HiArrowLongRight className="text-8xl h-auto" />
 
@@ -124,7 +124,7 @@ export default function CreateAssignment() {
                                 type="date"
                                 value={schedule.endDate}
                                 onChange={(e) => handleScheduleChange("endDate", e.target.value)}
-                                className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
 
                             {/* End Time */}
@@ -132,7 +132,7 @@ export default function CreateAssignment() {
                                 type="time"
                                 value={schedule.endTime}
                                 onChange={(e) => handleScheduleChange("endTime", e.target.value)}
-                                className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                                className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                             />
                         </div>
                 </div>
@@ -144,7 +144,7 @@ export default function CreateAssignment() {
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full bg-bg-alt border-fg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
+                        className="w-full bg-bg-alt border-bg-alt rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition"
                         placeholder="Enter assignment description"
                         rows={4}
                     />
