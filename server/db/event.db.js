@@ -17,9 +17,10 @@ class EventDB {
   };
 
   getAllEventByUserID = async (userID) => {
+    const personID = userID;
     const eventsUser = await Event_Person.findAll({
       where: {
-        userID: userID
+        personID: personID
       }
     });
     return eventsUser;
