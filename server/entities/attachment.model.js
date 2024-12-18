@@ -21,28 +21,28 @@ const Attachment = sequelize.define(
       type: DataTypes.STRING,
     },
     assignmentId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: Assignment,
-          key: "id",
-        },
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: Assignment,
+        key: "id",
+      },
     },
     postId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: Post,
-          key: "id",
-        },
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: Post,
+        key: "id",
+      },
     },
     lectureId: {
       type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: Lecture,
-          key: "id",
-        },
+      allowNull: true,
+      references: {
+        model: Lecture,
+        key: "id",
+      },
     }
   },
   {

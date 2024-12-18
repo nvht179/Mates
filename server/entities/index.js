@@ -9,6 +9,8 @@ const { Class, TeacherClass, StudentClass } = require("./class.model");
 const Comment = require("./comment.model");
 const { Teacher, Student, Parent } = require("./user.model");
 const Lecture = require("./lecture.model");
+const Grade = require("./grade.model");
+const { Event, Event_Person } = require("./event.model");
 
 // Assignment and Attachment
 Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
@@ -61,16 +63,6 @@ sequelize
         "phone": "113",
         "avatar": "",
         "isVerified": true
-      },
-      {
-        "role": "Student",
-        "password": "123",
-        "email": "nvhthong22@apcs.fitus.edu.vn",
-        "name": "Thong",
-        "username": "Ho Tuan Thong",
-        "phone": "113",
-        "avatar": "",
-        "isVerified": true
       }
     ];
 
@@ -84,16 +76,19 @@ sequelize
 module.exports = {
   sequelize,
   Person,
+  Class,
+  TeacherClass,
+  StudentClass,
   Assignment,
   Attachment,
   Post,
   Reaction,
   Comment,
-  Class,
   Teacher,
   Student,
   Parent,
   Lecture,
-  TeacherClass,
-  StudentClass
+  Event,
+  Event_Person,
+  Grade
 };

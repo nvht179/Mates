@@ -13,23 +13,23 @@ const Reaction = sequelize.define(
       allowNull: false,
     },
     personId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: Person,
-          key: "id",
-        },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Person,
+        key: "id",
+      },
     },
     type: {
       type: DataTypes.STRING,
     },
     postId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: Post,
-          key: "id",
-        },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Post,
+        key: "id",
+      },
     },
   },
   {
