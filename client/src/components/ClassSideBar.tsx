@@ -30,7 +30,7 @@ function ClassSideBar() {
   };
 
   return (
-    <Panel className="flex h-full w-80 flex-col bg-bg-alt">
+    <Panel className="flex h-full w-80 flex-col bg-bg-dark">
       <div className="h-16">
         <p className="h-full pl-5 pt-5 text-xl font-bold">Class</p>
         <div className="border-b-2" />

@@ -18,6 +18,7 @@ import EmailInput from "./components/EmailInput";
 import CreateClass from "./pages/CreateClass";
 import ForgetPasswordOtp from "./pages/ForgetPasswordOtp";
 import ForgetPasswordReset from "./pages/ForgetPasswordReset";
+import GradePage from "./pages/GradePage";
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/class/:classCode" element={<ClassLayout />}>
             <Route path="lecture" element={<LecturePage />} />
             <Route path="assignment" element={<AssignmentPage />} />
+            <Route path="grade" element={<GradePage />} />
             <Route path="discussion" element={<DiscussionPage />} />
           </Route>
         </Route>
