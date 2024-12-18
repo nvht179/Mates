@@ -7,7 +7,7 @@ module.exports = {
   "/posts/create": {
     ...createPost
   },
-  "/posts/classId={classId}": {
+  "/posts/classID/{classID}": {  
     ...postClass
   },
   "/posts/edit/{postId}": {
