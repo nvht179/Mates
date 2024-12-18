@@ -9,6 +9,8 @@ const { Class, TeacherClass, StudentClass } = require("./class.model");
 const Comment = require("./comment.model");
 const { Teacher, Student, Parent } = require("./user.model");
 const Lecture = require("./lecture.model");
+const Grade = require("./grade.model");
+const { Event, Event_Person } = require("./event.model");
 
 // Assignment and Attachment
 Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
@@ -49,33 +51,6 @@ sequelize
   .sync()
   .then(async () => {
     logger.info("Database connected and models synced.");
-
-    // Seed initial data for Person
-    const initialPersons = [
-      {
-        "role": "Student",
-        "password": "123",
-        "email": "mates@gmail.com",
-        "name": "Mates",
-        "username": "Mates",
-        "phone": "113",
-        "avatar": "",
-        "isVerified": true
-      },
-      {
-        "role": "Student",
-        "password": "123",
-        "email": "nvhthong22@apcs.fitus.edu.vn",
-        "name": "Thong",
-        "username": "Ho Tuan Thong",
-        "phone": "113",
-        "avatar": "",
-        "isVerified": true
-      }
-    ];
-
-    await Person.bulkCreate(initialPersons);
-    logger.info("Initial Person data has been added.");
   })
   .catch((err) => {
     logger.error("Error syncing models: ", err);
@@ -84,16 +59,19 @@ sequelize
 module.exports = {
   sequelize,
   Person,
+  Class,
+  TeacherClass,
+  StudentClass,
   Assignment,
   Attachment,
   Post,
   Reaction,
   Comment,
-  Class,
   Teacher,
   Student,
   Parent,
   Lecture,
-  TeacherClass,
-  StudentClass
+  Event,
+  Event_Person,
+  Grade
 };

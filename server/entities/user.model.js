@@ -71,4 +71,4 @@ const Parent = sequelize.define(
     },
 );
 
-module.exports = {Teacher, Student, Parent};
+module.exports = { Teacher, Student, Parent };

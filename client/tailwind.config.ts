@@ -16,7 +16,9 @@ export default {
         },
         bg: {
           default: "#FFFFFF",
-          alt: "#F5F5F5",
+          soft: "#FAFAFA",
+          dark: "#F5F5F5",
+          darker: "#EBEBEB",
         },
 
         // Primary colors

@@ -1,12 +1,12 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SelectorState } from "../store";
 import { useSelector } from "react-redux";
 import ReactDOM from "react-dom";
-import { useEffect } from "react";
-import Input from "./Input";
 import { useNavigate } from "react-router-dom";
 import DefaultAvatar from "../assets/default_ava.png";
+import Input from "./Input";
 import Button from "./Button";
+import { FaRegEdit } from "react-icons/fa";
 
 interface UserModalProps {
   onClose: () => void;
@@ -15,7 +15,7 @@ interface UserModalProps {
 function UserModal({ onClose }: UserModalProps) {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  // const user = useSelector((state: SelectorState) => state.user);
+  const hihi = useSelector((state: SelectorState) => state.user);
 
   const defaultAvatar = DefaultAvatar;
 
@@ -33,7 +33,6 @@ function UserModal({ onClose }: UserModalProps) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -44,49 +43,14 @@ function UserModal({ onClose }: UserModalProps) {
     navigate("/login");
   };
 
-  const handleEditingClick = () => {
-    setIsEditing(true);
-  };
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setter(e.target.value);
 
-  const viewAccount = (
-    <div>
-      <div className="flex flex-row justify-between">
-        <p className="font-semibold">{userName}</p>
-        <p
-          className="cursor-pointer text-fg-softer active:opacity-30"
-          onClick={handleSignOutClick}
-        >
-          Sign out
-        </p>
-      </div>
-      <div className="mt-2 flex flex-row items-center">
-        <img
-          src={user?.picture ?? defaultAvatar}
-          alt="user"
-          className="h-14 w-14 rounded-full"
-        />
-        <div className="ml-2 flex flex-col">
-          <div className="text-lg font-bold">{userFullName}</div>
-          <p className="">{userEmail}</p>
-          <p>Role: {user.role}</p>
-        </div>
-      </div>
-      <Button primary className="mt-4" onClick={handleEditingClick}>
-        Edit account
-      </Button>
-    </div>
-  );
-
-  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
-  };
-
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserFullName(e.target.value);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserEmail(e.target.value);
+  const handleSaveClick = () => {
+    setIsEditing(false);
+    // dispatch(updateUser({ email: userEmail, userName, fullName: userFullName }));
   };
 
   const handleViewClick = () => {
@@ -96,65 +60,97 @@ function UserModal({ onClose }: UserModalProps) {
     setUserFullName(user.fullName);
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
-    // dispatch(updateUser({ email: userEmail, userName, fullName: userFullName }));
-  }
+  const UserInfo = () => (
+    <div className="flex items-center">
+      <img
+        src={user?.picture ?? defaultAvatar}
+        alt="user"
+        className="h-14 w-14 rounded-full object-cover"
+      />
+      <div className="ml-4 flex flex-col space-y-1">
+        <div className="text-lg font-bold">{userFullName}</div>
+        <p className="text-sm text-gray-600">{userEmail}</p>
+        <p className="text-sm text-gray-600">Role: {user.role}</p>
+      </div>
+    </div>
+  );
 
-  const EditAccount = (
-    <div>
-      <div className="flex flex-row items-center justify-between">
+  const EditableUserInfo = () => (
+    <div className="flex items-center">
+      <img
+        src={user?.picture ?? defaultAvatar}
+        alt="user"
+        className="h-14 w-14 rounded-full object-cover"
+      />
+      <div className="ml-4 flex flex-col space-y-2">
         <Input
-          className="w-64 font-semibold"
-          placeholder={"Enter your user name"}
-          value={userName || ""}
-          onChange={handleUserNameChange}
+          className="font-semibold"
+          placeholder="Enter your full name"
+          value={userFullName}
+          onChange={handleInputChange(setUserFullName)}
         />
-      </div>
-      <div className="mt-2 flex flex-row items-center">
-        <img
-          src={user?.picture ?? defaultAvatar}
-          alt="user"
-          className="h-14 w-14 rounded-full"
+        <Input
+          placeholder="Enter your email"
+          value={userEmail}
+          onChange={handleInputChange(setUserEmail)}
         />
-        <div className="ml-2 flex flex-col">
-          <Input
-            className="font-semibold"
-            placeholder={"Enter your full name"}
-            value={userFullName || ""}
-            onChange={handleFullNameChange}
-          />
-          <Input
-            className="mt-2"
-            placeholder={"Enter your email"}
-            value={userEmail || ""}
-            onChange={handleEmailChange}
-          />
-          <p className="mt-2">Role: {user.role}</p>
-        </div>
-      </div>
-      <div className="mt-2 flex flex-row justify-end">
-        <Button primary className="w-24" onClick={handleSaveClick}>
-          Save
-        </Button>
-        <Button secondary onClick={handleViewClick} className="ml-2 w-24">
-          Cancel
-        </Button>
+        <p className="text-sm text-gray-600">Role: {user.role}</p>
       </div>
     </div>
   );
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex justify-end">
+    <div className="fixed inset-0 z-50 flex items-start justify-end">
       <div
-        className="absolute inset-0 bg-fg-disabled opacity-50"
+        className="absolute inset-0 bg-black bg-opacity-0 shadow transition-opacity"
         onClick={onClose}
-      ></div>
+      />
       <div
-        className="relative mt-12 h-fit w-96 bg-bg-alt p-4"
+        className="relative mt-12 w-96 transform rounded bg-white p-6 shadow-xl transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        {isEditing ? EditAccount : viewAccount}
+        <div className="flex items-center justify-between border-b">
+          {isEditing ? (
+            <Input
+              className="w-64 font-semibold"
+              placeholder="Enter your username"
+              value={userName}
+              onChange={handleInputChange(setUserName)}
+            />
+          ) : (
+            <p className="text-xl font-semibold">{userName}</p>
+          )}
+          {!isEditing && (
+            <button
+              onClick={handleSignOutClick}
+              className="text-sm text-gray-600 hover:text-gray-900"
+            >
+              Sign out
+            </button>
+          )}
+        </div>
+
+        <div className="mt-4">
+          {isEditing ? <EditableUserInfo /> : <UserInfo />}
+        </div>
+
+        <div className="mt-6 flex justify-end space-x-2">
+          {isEditing ? (
+            <>
+              <Button secondary onClick={handleViewClick}>
+                Cancel
+              </Button>
+              <Button primary onClick={handleSaveClick}>
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button primary onClick={() => setIsEditing(true)}>
+              <FaRegEdit className="mr-2"/>
+              Edit
+            </Button>
+          )}
+        </div>
       </div>
     </div>,
     document.querySelector(".modal-container") as Element,

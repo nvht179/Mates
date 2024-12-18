@@ -1,10 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi } from "../services/authApi.ts";
 import Cookies from "js-cookie";
+import { UserRole } from "../../interfaces/Misc";
 
 export interface AuthState {
   userId: number | null;
   email: string | null;
+  name: string | null;
+  phone: string | null;
+  avatar: string | null;
+  role: UserRole | null;
+  childEmail: string | null;
   isAuthenticated: boolean;
   token: string | null;
   tokenSavedTime: number | null;
@@ -13,6 +19,11 @@ export interface AuthState {
 const initialState: AuthState = {
   userId: null,
   email: null,
+  name: null,
+  phone: null,
+  avatar: null,
+  role: null,
+  childEmail: null,
   isAuthenticated: false,
   token: null,
   tokenSavedTime: null,
@@ -65,6 +76,19 @@ const userSlice = createSlice({
         state.token = payload.token;
         state.isAuthenticated = true;
         state.tokenSavedTime = Date.now();
+      },
+    );
+    builder.addMatcher(
+      authApi.endpoints.login.matchFulfilled,
+      (state, { payload }) => {
+        const user = payload.user;
+        state.userId = user.id;
+        state.email = user.email;
+        state.name = user.name;
+        state.phone = user.phone;
+        state.avatar = user.avatar;
+        state.role = user.role;
+        state.childEmail = user.childEmail;
       },
     );
   },

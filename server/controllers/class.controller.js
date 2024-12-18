@@ -3,14 +3,17 @@ const ClassService = require("../services/class.service");
 class ClassController {
   createNewClass = async (req, res) => {
     try {
-      const { className, code, description } = req.body;
-      const newClass = await ClassService.createNewClass({
+      const { className, code, description, events, userID, role } = req.body;
+      const { newClass, newEvents } = await ClassService.createNewClass({
         className,
         code,
         description,
+        events,
+        userID, 
+        role
       });
       const message = "Successful";
-      res.status(200).json({ message, newClass });
+      res.status(200).json({ message, newClass, newEvents });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
