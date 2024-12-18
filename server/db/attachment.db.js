@@ -78,7 +78,16 @@ class AttachmentDB {
       console.error("Error in AttachmentDB:", error);
       throw new Error(`Error fetching attachments by postId: ${error.message}`);
     }
-  }
+  };
+
+  removeAttachmentsByLectureId = async (lectureId) => {
+    const attachments = await Attachment.findAll({
+      where: {
+        lectureId: lectureId 
+      }
+    });
+    return attachments;
+  };
 
 }
 

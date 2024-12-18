@@ -1,6 +1,7 @@
 const { ErrorHandler } = require("../helpers/error");
 const LectureDB = require("../db/lecture.db")
 const AttachmentDB = require("../db/attachment.db");
+const { P } = require("pino");
 
 class LectureService {
   viewAllLecturesInClass = async (classID) => {
@@ -34,6 +35,14 @@ class LectureService {
         throw new ErrorHandler(403, "Can not create lecture");
       }
       return lecture;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  removeLecture = async (lectureId) => {
+    try {
+      const result = await LectureDB.removeLecture(lectureId);
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }

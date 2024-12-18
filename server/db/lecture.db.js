@@ -32,6 +32,11 @@ class LectureDB {
 
     return lecture;
   };
+
+  removeLecture = async (lectureId) => {
+    const lecture = await Lecture.findByPk(lectureId);
+    await AttachmentDB.removeAttachmentsByLectureId(lectureId);
+  };
 }
 
 module.exports = new LectureDB();

@@ -1,6 +1,6 @@
 const { ErrorHandler } = require("../helpers/error");
 const LectureService = require("../services/lecture.service")
-const supabase = require("../config/supabase")
+const supabase = require("../config/supabase");
 
 class LectureController {
   viewAllLecturesInClass = async (req, res) => {
@@ -48,6 +48,18 @@ class LectureController {
       const lecture = await LectureService.createLecture(title, content, classID, attachments);
       const message = "Successful";
       res.status(200).json({ message, lecture });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  removeLecture = async (lectureId) => {
+    try {
+      const { lectureId } = req.params;
+      await LectureService.removeLecture(lectureId);
+      const message = "Successful";
+      res.status(200).json({ message });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });

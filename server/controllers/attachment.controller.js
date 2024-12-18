@@ -100,7 +100,7 @@ class AttachmentController {
       res.status(403).json({ message: err.message });
     }
   };
-  
+
   async getAttachmentsByPostId(req, res) {
     try {
       const { postId } = req.body;
