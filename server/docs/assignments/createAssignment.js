@@ -22,6 +22,13 @@ module.exports =
             "type": "string"
           },
           {
+            "name": "classID",
+            "in": "formData",
+            "description": "Description of the assignment",
+            "required": true,
+            "type": "integer"
+          },
+          {
             "name": "startTime",
             "in": "formData",
             "description": "Start time of the assignment",

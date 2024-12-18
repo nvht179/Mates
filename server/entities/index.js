@@ -36,6 +36,11 @@ Attachment.belongsTo(Post, { foreignKey: "postId", as: "post" });
 Class.hasMany(Post, { foreignKey: "classID", as: "posts" });
 Post.belongsTo(Class, { foreignKey: "classID", as: "class" });
 
+// Class and Assignment
+Class.hasMany(Assignment, { foreignKey: "classID", as: "assignments" });
+Assignment.belongsTo(Class, { foreignKey: "classID", as: "class" });
+
+
 // Person and Comment
 Person.hasMany(Comment, { foreignKey: "personId", as: "comments" });
 Comment.belongsTo(Person, { foreignKey: "personId", as: "person" });

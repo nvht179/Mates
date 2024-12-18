@@ -5,7 +5,7 @@ class AssignmentController {
   // Add a new assignment
   addNewAssignment = async (req, res) => {
     try {
-      const { title, description, startTime, endTime } = req.body;
+      const { title, description, startTime, endTime,classID } = req.body;
 
       if (!title) {
         throw new Error("Title is required");
@@ -48,6 +48,7 @@ class AssignmentController {
         description,
         startTime,
         endTime,
+        classID,
         attachments,
       });
 

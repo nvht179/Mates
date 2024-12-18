@@ -52,6 +52,7 @@ export default function EnterPassword() {
       <h1 className="mx-1 mb-2 text-sm underline">{email}</h1>
       <form className="mb-4" onSubmit={handleSubmit}>
         <Input
+          type="password"
           placeholder="Enter your password"
           value={password}
           onChange={handlePasswordChange}
