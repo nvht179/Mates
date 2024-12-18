@@ -5,6 +5,7 @@ const sequelize = require("../config/db");
 
 class EventDB {
   createEvent = async (title, description, repeatTime, startTime, endTime, classID, personID) => {
+    console.log("EventDB:", title, description, repeatTime, startTime, endTime, classID, personID)
     const event = await Event.create({ title, description, repeatTime, startTime, endTime, classID });
     const eventID = event.eventID;
     const event_person = await Event_Person.create({ eventID, personID });

@@ -1,20 +1,42 @@
 const ClassDB = require("../db/class.db");
 const UserDB = require("../db/user.db");
-
+const EventDB = require("../db/event.db");
 const { ErrorHandler } = require("../helpers/error");
 
 class ClassService {
-  createNewClass = async ({ className, code, description }) => {
+  createNewClass = async ({ className, code, description, events, userID, role }) => {
     try {
+      const oldClass = await ClassDB.findClassByCode(code);
+      if (oldClass) {
+        throw new ErrorHandler(403, "There are exist classes");
+      }
+
       const newClass = await ClassDB.createNewClass({
         className,
         code,
         description,
       });
+
       if (!newClass) {
         throw new ErrorHandler(403, "Can not create class");
       }
-      return newClass;
+
+      const classID = newClass.classID;
+      const title = className;
+      const newEvents = [];
+
+      for (const eachEvent of events) {
+        const startTime = eachEvent.startTime;
+        const endTime = eachEvent.endTime;
+        const personID = userID;
+        const repeatTime = eachEvent.repeatTime;
+        const { event, event_person } = await EventDB.createEvent(title, description, repeatTime, startTime, endTime, classID, personID);
+        newEvents.push(event);
+      }
+
+      const teacherClass = await ClassDB.addTeachersToClass(userID, classID, role);
+
+      return { newClass, newEvents };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }

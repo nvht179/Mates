@@ -6,7 +6,7 @@ class EventService {
   createEvent = async (title, description, repeatTime, startTime, endTime, classID, personID) => {
     try {
       const { event, event_person } = await EventDB.createEvent(title, description, repeatTime, startTime, endTime, classID, personID);
-
+      console.log("EventService", title, description, repeatTime, startTime, endTime, classID, personID)
       if (!event || !event_person) {
         throw new ErrorHandler(403, "Can not create event");
       }
