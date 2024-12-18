@@ -5,6 +5,8 @@ const reactionComponent = require("./reaction");
 const userComponent = require("./user");
 const commentComponent = require("./comment");
 const attachmentComponent = require('./attachment')
+const eventComponent = require('./event')
+
 module.exports = {
   components: {
     schemas: {
@@ -14,6 +16,7 @@ module.exports = {
       ...reactionComponent.schemas,
       ...userComponent.schemas,
       ...commentComponent.schemas,
+      ...eventComponent.schemas,
       ...attachmentComponent.schemas
     }
   }
