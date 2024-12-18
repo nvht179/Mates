@@ -10,7 +10,7 @@ import { RxLoop } from "react-icons/rx";
 import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { useSelector } from "react-redux";
-import { SelectorState, useCreateClassMutation } from "../store";
+import { RootState, useCreateClassMutation } from "../store";
 import {getNextDate, parseHours} from "../utils/date";
 
 type ScheduleSlot = {
@@ -30,7 +30,7 @@ export default function CreateClass() {
   const [createClassMutation, { isSuccess }] = useCreateClassMutation();
 
   const navigate = useNavigate();
-  const { userId, role } = useSelector((state: SelectorState) => state.user);
+  const { id, role } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (isSuccess) {
@@ -80,7 +80,7 @@ export default function CreateClass() {
       code: classCode,
       description,
       events,
-      userID: String(userId),
+      userID: String(id),
       role: role ?? "student",
     });
   };
