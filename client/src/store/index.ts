@@ -27,4 +27,4 @@ export type AppDispatch = typeof store.dispatch;
 export * from "./services/authApi";
 export * from "./slices/userSlice";
 
-export { useViewAllClassesQuery } from "./services/classApi";
+export { useViewAllClassesQuery, useCreateClassMutation } from "./services/classApi";

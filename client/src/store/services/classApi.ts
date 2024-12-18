@@ -17,8 +17,17 @@ export const classApi = createApi({
         };
       }
     }),
+    createClass: builder.mutation({
+      query: (newClass) => {
+        return {
+          url: "/classes/create-class",
+          method: "POST",
+          body: newClass,
+        };
+      }
+    }),
   }),
 });
 
-export const { useViewAllClassesQuery } = classApi;
+export const { useViewAllClassesQuery, useCreateClassMutation } = classApi;
 export default classApi;
