@@ -13,7 +13,7 @@ module.exports = {
   "/lectures/edit": {
     ...editLecture
   },
-  "/lectures/{lectureId}": {
+  "/lectures/remove-lecture/{lectureId}": {
     ...removeLecture
   }
 };

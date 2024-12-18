@@ -11,9 +11,7 @@ module.exports = {
         "in": "path",
         "required": true,
         "description": "Lecture's ID",
-        "schema": {
-          "type": "string"
-        }
+        "type": "integer",
       }
     ],
     "responses": {

@@ -101,14 +101,13 @@ class AttachmentDB {
   };
 
   removeAttachmentsByLectureId = async (lectureId) => {
-    const attachments = await Attachment.findAll({
+    const deletedAttachments = await Attachment.destroy({
       where: {
         lectureId: lectureId 
       }
     });
-    return attachments;
+    return deletedAttachments;
   };
-
 }
 
 module.exports = new AttachmentDB();

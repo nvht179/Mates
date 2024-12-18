@@ -57,7 +57,6 @@ class LectureController {
   removeLecture = async (req, res) => {
     try {
       const { lectureId } = req.params;
-      console.log("LectureController:", lectureId);
       await LectureService.removeLecture(lectureId);
       const message = "Successful";
       res.status(200).json({ message });

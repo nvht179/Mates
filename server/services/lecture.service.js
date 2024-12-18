@@ -81,8 +81,6 @@ class LectureService {
           );
         }
       }
-
-      console.log("LectureService:", updatedLecture);
       return updatedLecture;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);

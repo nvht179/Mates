@@ -37,6 +37,8 @@ class LectureDB {
   removeLecture = async (lectureId) => {
     const lecture = await Lecture.findByPk(lectureId);
     await AttachmentDB.removeAttachmentsByLectureId(lectureId);
+
+    await lecture.destroy();
   };
 
   getLectureByID = async (lectureId) => {
