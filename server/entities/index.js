@@ -42,8 +42,35 @@ Comment.belongsTo(Person, { foreignKey: "personId", as: "person" });
 // Sync all models with the database
 sequelize
   .sync()
-  .then(() => {
+  .then(async () => {
     logger.info("Database connected and models synced.");
+
+    // Seed initial data for Person
+    const initialPersons = [
+      {
+        "role": "Student",
+        "password": "123",
+        "email": "mates@gmail.com",
+        "name": "Mates",
+        "username": "Mates",
+        "phone": "113",
+        "avatar": "",
+        "isVerified": true
+      },
+      {
+        "role": "Student",
+        "password": "123",
+        "email": "nvhthong22@apcs.fitus.edu.vn",
+        "name": "Thong",
+        "username": "Ho Tuan Thong",
+        "phone": "113",
+        "avatar": "",
+        "isVerified": true
+      }
+    ];
+
+    await Person.bulkCreate(initialPersons);
+    logger.info("Initial Person data has been added.");
   })
   .catch((err) => {
     logger.error("Error syncing models: ", err);

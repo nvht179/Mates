@@ -24,5 +24,13 @@ module.exports = {
       "name": "Attachments",
       "description": "API for attachments"
     },
+    {
+      "name": "Classes",
+      "description": "API for classes"
+    },
+    {
+      "name": "Lectures",
+      "description": "API for lectures"
+    },
   ],
 }
