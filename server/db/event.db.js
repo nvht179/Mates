@@ -5,15 +5,24 @@ const sequelize = require("../config/db");
 
 class EventDB {
   createEvent = async (title, description, repeatTime, startTime, endTime, classID, personID) => {
-    const event = Event.create({ title, description, repeatTime, startTime, endTime, classID });
+    const event = await Event.create({ title, description, repeatTime, startTime, endTime, classID });
     const eventID = event.eventID;
-    const event_person = Event_Person.create({ eventID, personID });
+    const event_person = await Event_Person.create({ eventID, personID });
     return { event, event_person };
   };
 
   viewEventByID = async (eventID) => {
-    const event = Event.findByPk(eventID);
+    const event = await Event.findByPk(eventID);
     return event;
+  };
+
+  getAllEventByUserID = async (userID) => {
+    const eventsUser = await Event_Person.findAll({
+      where: {
+        userID: userID
+      }
+    });
+    return eventsUser;
   };
 }
 
