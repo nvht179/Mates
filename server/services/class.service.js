@@ -118,6 +118,9 @@ class ClassService {
   addTeachersToClass = async (classID, newTeachers) => {
     try {
       const teachersClass = []
+      const events = await EventDB.getAllEventByClassID(classID);
+      const totalEvents = [];
+
       for (const newTeacher of newTeachers) {
         const { teacherEmail, role } = newTeacher;
         const teacher = await UserDB.getUserByEmailDB(teacherEmail)
@@ -126,6 +129,17 @@ class ClassService {
         }
         const teacherClass = await ClassDB.addTeachersToClass(teacher.id, classID, role);
         teachersClass.push(teacherClass);
+
+        // Add to Event_Person table
+        const newEvents = [];
+
+        for (const eachEvent of events) {
+          const personID = teacher.id;
+          const eventID = eachEvent.eventID;
+          const event_person = await EventDB.addPersonToEvent(eventID, personID);
+          newEvents.push(event_person);
+        }
+        totalEvents.push(newEvents);
       }
       return teachersClass;
     } catch (err) {
