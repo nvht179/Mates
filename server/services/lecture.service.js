@@ -47,6 +47,47 @@ class LectureService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  getLectureByID = async (lectureId) => {
+    try {
+      const currentLecture = await LectureDB.getLectureByID(lectureId);
+      if (!currentLecture) {
+        throw new ErrorHandler(403, "There are not any lectures");
+      }
+      return currentLecture;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  editLecture = async (currentLecture, title, content, classID, attachments) => {
+    try {
+      const lectureId = currentLecture.id;
+      const updatedLecture = await LectureDB.updatedLecture(lectureId, title, content, classID);
+
+      if (attachments && attachments.length > 0) {
+        // First, remove existing attachments for the lecture
+        await AttachmentDB.removeAttachmentsByLectureId(lectureId);
+
+        // Then, add the new attachments
+        for (let attachment of attachments) {
+          await AttachmentDB.addAttachment(
+            {
+              link: attachment.link,
+              linkTitle: attachment.linkTitle,
+              assignmentId: attachment.assignmentId,
+              lectureId: lectureId,
+            }
+          );
+        }
+      }
+
+      console.log("LectureService:", updatedLecture);
+      return updatedLecture;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new LectureService();

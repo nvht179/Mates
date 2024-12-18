@@ -5,7 +5,7 @@ const upload = require("../middleware/upload.middleware");
 
 router.post("/create", upload, LectureController.createLectureWithAttachments);
 router.get("/view-all-lectures-in-class/:classID", LectureController.viewAllLecturesInClass);
-// router.get("/", AttachmentController.getAttachmentsByPostId);
-// router.put("/edit", AttachmentController.editAttachments);
+router.delete("/{:lectureId}", LectureController.removeLecture);
+router.put("/edit", upload, LectureController.editLecture);
 
 module.exports = router;

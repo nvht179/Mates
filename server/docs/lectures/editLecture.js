@@ -1,14 +1,21 @@
 module.exports = {
-  "post": {
+  "put": {
     "tags": [
       "Lectures"
     ],
-    "description": "Create a lecture with mutiple attachments file",
-    "summary": "Create lecture with mutiple attachments",
+    "description": "Edit lectures with mutiple attachments",
+    "summary": "Edit lectures with mutiple attachments",
     "consumes": [
       "multipart/form-data"
     ],
     "parameters": [
+      {
+        "name": "lectureId",
+        "in": "formData",
+        "required": true,
+        "description": "Lecture's ID",
+        "type": "string"
+      },
       {
         "name": "title",
         "in": "formData",
@@ -40,7 +47,7 @@ module.exports = {
     ],
     "responses": {
       "200": {
-        "description": "Lecture created successfully with attachments",
+        "description": "Lecture edits successfully with attachments",
       },
       "400": {
         "description": "Bad request. Missing required fields or invalid file."
