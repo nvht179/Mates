@@ -18,10 +18,10 @@ class ClassDB {
   findClassByCode = async (code) => {
     const classInfo = await Class.findAll({
       where: {
-        code: code 
+        code: code
       }
     });
-    return classInfo;
+    return classInfo[0];
   };
 
   viewAllClasses = async () => {
@@ -49,9 +49,7 @@ class ClassDB {
 
   viewAllClassesParent = async (parentID) => {
     const studentID = await this.findChildID(parentID);
-    console.log("ClassDB:", studentID)
     const allClasses = await this.viewAllClassesStudent(studentID);
-    console.log("ClassDB:", allClasses)
     return allClasses;
   };
 
