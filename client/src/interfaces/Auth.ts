@@ -16,12 +16,12 @@ interface LoginResponse {
   token: string;
   user: {
     id: number;
-    name: string;
     email: string;
-    password: string;
+    name: string;
     phone: string;
     avatar: string;
     role: UserRole;
+    childEmail: string;
   };
 }
 
