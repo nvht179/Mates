@@ -86,14 +86,28 @@ class ClassService {
 
   addStudentsToClass = async (classID, emailStudents) => {
     try {
+      const events = await EventDB.getAllEventByClassID(classID);
       const studentsClass = []
+      const totalEvents = [];
       for (const email of emailStudents) {
         const student = await UserDB.getUserByEmailDB(email)
         if (!student) {
           throw new ErrorHandler(403, "There is not exist student");
         }
+        console.log("ClassService:", student.id, classID)
         const studentClass = await ClassDB.addStudentsToClass(student.id, classID);
         studentsClass.push(studentClass);
+
+        // Add to Event_Person table
+        const newEvents = [];
+
+        for (const eachEvent of events) {
+          const personID = student.id;
+          const eventID = eachEvent.eventID;
+          const event_person = await EventDB.addPersonToEvent(eventID, personID);
+          newEvents.push(event_person);
+        }
+        totalEvents.push(newEvents);
       }
       return studentsClass;
     } catch (err) {
