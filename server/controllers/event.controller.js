@@ -27,7 +27,9 @@ class EventController {
 
   viewEventByUserID = async (req, res) => {
     try {
-      const { userID } = req.body;
+      const { userID } = req.params;
+
+      console.log("EventController:",  userID);
       const events = await EventService.viewEventByUserID(userID);
       const message = "Successful";
       res.status(200).json({ message, events });
