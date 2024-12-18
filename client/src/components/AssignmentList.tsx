@@ -7,7 +7,11 @@ interface AssignmentListProps {
   assignments: Assignment[];
 }
 
+type Role = "student" | "teacher" | "parent";
+
 function AssignmentList({ assignments }: AssignmentListProps) {
+  const role: Role = "student" as Role; // Change this value to test different roles
+
   const renderedAssignment = assignments.map((assignment) => {
     return (
       <Panel key={assignment.id} className="my-6 p-4">
@@ -25,8 +29,7 @@ function AssignmentList({ assignments }: AssignmentListProps) {
         <div className="mt-2 flex flex-row">
           <div className="flex-2">
             <p className="mr-2 inline font-bold text-sm">Description:</p>
-            <span className="text-fg-softer">{assignment.description}
-            </span>
+            <span className="text-fg-softer">{assignment.description}</span>
             {/* submission */}
             {assignment.isSubmitted && (
               <div className="mt-10">
@@ -34,10 +37,12 @@ function AssignmentList({ assignments }: AssignmentListProps) {
                 <span className="text-fg-softer">{assignment.submission}</span>
               </div>
             )}
-            <Button disabled={!assignment.isSubmitted} className="mt-4">
-              Submit
-            </Button>
 
+            {role === 'student' && (
+              <Button className="mt-4">
+                Submit
+              </Button>
+            )}
 
           </div>
           <div className="flex-1 pr-8 pl-16">

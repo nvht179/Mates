@@ -1,4 +1,5 @@
 import AssignmentList from "../components/AssignmentList";
+import Button from "../components/Button";
 // import Button from "../components/Button";
 
 function AssignmentPage() {
@@ -33,6 +34,9 @@ function AssignmentPage() {
   ];
   return (
     <div className="mx-20">
+      <Button className="mt-6">
+        Create Assignment
+      </Button>
       <AssignmentList assignments={assignmets} />
       
     </div>
