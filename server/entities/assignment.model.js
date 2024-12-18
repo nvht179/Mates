@@ -27,12 +27,12 @@ const Assignment = sequelize.define(
         type: DataTypes.DATE,
     },
     classID: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-              model: Class,
-              key: "classID",
-            },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Class,
+        key: "classID",
+      },
     },
   },
   

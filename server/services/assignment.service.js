@@ -3,7 +3,7 @@ const { ErrorHandler } = require("../helpers/error");
 
 class AssignmentService {
   // Add a new assignment with attachments
-  addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments }) => {
+  addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments,classID }) => {
     try {
       // Call DB layer to create assignment with attachments
       const newAssignment = await AssignmentDB.addNewAssignmentWithAttachments({
@@ -11,6 +11,7 @@ class AssignmentService {
         description,
         startTime,
         endTime,
+        classID,
         attachments,
       });
 
