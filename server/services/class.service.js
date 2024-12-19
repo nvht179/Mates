@@ -1,42 +1,20 @@
 const ClassDB = require("../db/class.db");
 const UserDB = require("../db/user.db");
-const EventDB = require("../db/event.db");
+
 const { ErrorHandler } = require("../helpers/error");
 
 class ClassService {
-  createNewClass = async ({ className, code, description, events, userID, role }) => {
+  createNewClass = async ({ className, code, description }) => {
     try {
-      const oldClass = await ClassDB.findClassByCode(code);
-      if (oldClass) {
-        throw new ErrorHandler(403, "There are exist classes");
-      }
-
       const newClass = await ClassDB.createNewClass({
         className,
         code,
         description,
       });
-
       if (!newClass) {
         throw new ErrorHandler(403, "Can not create class");
       }
-
-      const classID = newClass.classID;
-      const title = className;
-      const newEvents = [];
-
-      for (const eachEvent of events) {
-        const startTime = eachEvent.startTime;
-        const endTime = eachEvent.endTime;
-        const personID = userID;
-        const repeatTime = eachEvent.repeatTime;
-        const { event, event_person } = await EventDB.createEvent(title, description, repeatTime, startTime, endTime, classID, personID);
-        newEvents.push(event);
-      }
-
-      const teacherClass = await ClassDB.addTeachersToClass(userID, classID, role);
-
-      return { newClass, newEvents };
+      return newClass;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
@@ -86,28 +64,14 @@ class ClassService {
 
   addStudentsToClass = async (classID, emailStudents) => {
     try {
-      const events = await EventDB.getAllEventByClassID(classID);
       const studentsClass = []
-      const totalEvents = [];
       for (const email of emailStudents) {
         const student = await UserDB.getUserByEmailDB(email)
         if (!student) {
           throw new ErrorHandler(403, "There is not exist student");
         }
-        console.log("ClassService:", student.id, classID)
         const studentClass = await ClassDB.addStudentsToClass(student.id, classID);
         studentsClass.push(studentClass);
-
-        // Add to Event_Person table
-        const newEvents = [];
-
-        for (const eachEvent of events) {
-          const personID = student.id;
-          const eventID = eachEvent.eventID;
-          const event_person = await EventDB.addPersonToEvent(eventID, personID);
-          newEvents.push(event_person);
-        }
-        totalEvents.push(newEvents);
       }
       return studentsClass;
     } catch (err) {
@@ -118,9 +82,6 @@ class ClassService {
   addTeachersToClass = async (classID, newTeachers) => {
     try {
       const teachersClass = []
-      const events = await EventDB.getAllEventByClassID(classID);
-      const totalEvents = [];
-
       for (const newTeacher of newTeachers) {
         const { teacherEmail, role } = newTeacher;
         const teacher = await UserDB.getUserByEmailDB(teacherEmail)
@@ -129,17 +90,6 @@ class ClassService {
         }
         const teacherClass = await ClassDB.addTeachersToClass(teacher.id, classID, role);
         teachersClass.push(teacherClass);
-
-        // Add to Event_Person table
-        const newEvents = [];
-
-        for (const eachEvent of events) {
-          const personID = teacher.id;
-          const eventID = eachEvent.eventID;
-          const event_person = await EventDB.addPersonToEvent(eventID, personID);
-          newEvents.push(event_person);
-        }
-        totalEvents.push(newEvents);
       }
       return teachersClass;
     } catch (err) {

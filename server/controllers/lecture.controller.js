@@ -6,9 +6,9 @@ class LectureController {
   viewAllLecturesInClass = async (req, res) => {
     try {
       const { classID } = req.params;
-      const allLecturesAttachments = await LectureService.viewAllLecturesInClass(classID);
+      const { allLecturesAttachments, allLectures } = await LectureService.viewAllLecturesInClass(classID);
       const message = "Successful";
-      res.status(200).json({ message, allLecturesAttachments });
+      res.status(200).json({ message, allLecturesAttachments, allLectures });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
@@ -40,7 +40,7 @@ class LectureController {
 
           attachments.push({
             link: publicURL,
-            linkTitle: file.originalname, 
+            linkTitle: file.originalname,
           });
         }
       }

@@ -21,7 +21,7 @@ class LectureService {
         }
       }
 
-      return allLecturesAttachments;
+      return { allLecturesAttachments, allLectures };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
