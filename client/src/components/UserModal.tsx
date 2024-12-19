@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import DefaultAvatar from "../assets/default-avatar.png";
 import Input from "./Input";
-import { useLazyLogoutQuery } from "../store";
+import { useLazyLogoutQuery, useUpdateUserIntoMutation } from "../store";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
@@ -13,24 +13,27 @@ interface UserModalProps {
   onClose: () => void;
 }
 
-function getUsername(email: string | null) {
-  if (!email) return "";
-  return email.split("@")[0];
+interface UserInfoProps {
+  userFullName: string;
+  userEmail: string;
+  defaultAvatar: string;
+  onEdit: () => void;
 }
 
-// Move components outside
+interface EditableUserInfoProps extends Omit<UserInfoProps, "onEdit"> {
+  onFullNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  onAvatarChange: (file: File) => void;
+}
+
+const getUsername = (email: string | null): string => {
+  return email ? email.split("@")[0] : "";
+};
+
 const UserInfo = React.memo(
-  ({
-    userFullName,
-    userEmail,
-    defaultAvatar,
-    onEdit,
-  }: {
-    userFullName: string;
-    userEmail: string;
-    defaultAvatar: string;
-    onEdit: () => void;
-  }) => (
+  ({ userFullName, userEmail, defaultAvatar, onEdit }: UserInfoProps) => (
     <div className="flex min-h-10 min-w-64 items-center">
       <img
         src={defaultAvatar}
@@ -60,32 +63,22 @@ const EditableUserInfo = React.memo(
     onEmailChange,
     onSave,
     onCancel,
-  }: {
-    userFullName: string;
-    userEmail: string;
-    defaultAvatar: string;
-    onFullNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onSave: () => void;
-    onCancel: () => void;
-  }) => (
+    onAvatarChange,
+  }: EditableUserInfoProps) => (
     <div className="flex min-h-24 min-w-64 flex-col items-center">
       <div className="flex flex-row items-center">
-        <img
-          src={defaultAvatar}
-          alt="user"
-          className="h-12 w-12 rounded-full object-cover"
+        <AvatarUpload
+          defaultAvatar={defaultAvatar}
+          onAvatarChange={onAvatarChange}
         />
         <div className="ml-4 flex flex-col">
           <Input
-            key="fullname-input"
             className="mb-1 h-8 text-sm"
             placeholder="Enter your full name"
             value={userFullName}
             onChange={onFullNameChange}
           />
           <Input
-            key="email-input"
             className="mb-1 h-8 text-sm"
             placeholder="Enter your email"
             value={userEmail}
@@ -93,56 +86,81 @@ const EditableUserInfo = React.memo(
           />
         </div>
       </div>
-      <div className="mt-1 flex w-full select-none flex-row items-center justify-end">
-        <a
-          className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
-          onClick={onCancel}
-        >
-          Cancel
-        </a>
-        <a
-          className="ml-4 mr-2 cursor-pointer text-xs text-fg-softer hover:text-primary-default"
-          onClick={onSave}
-        >
-          Save
-        </a>
-      </div>
+      <ActionButtons onSave={onSave} onCancel={onCancel} />
+    </div>
+  ),
+);
+
+const AvatarUpload = React.memo(
+  ({
+    defaultAvatar,
+    onAvatarChange,
+  }: {
+    defaultAvatar: string;
+    onAvatarChange: (file: File) => void;
+  }) => (
+    <label htmlFor="avatarInput" className="cursor-pointer">
+      <img
+        src={defaultAvatar}
+        alt="user"
+        className="h-12 w-12 rounded-full object-cover active:opacity-50"
+      />
+      <input
+        type="file"
+        id="avatarInput"
+        className="hidden"
+        accept="image/*"
+        onChange={(e) => {
+          if (e.target.files?.[0]) {
+            onAvatarChange(e.target.files[0]);
+          }
+        }}
+      />
+    </label>
+  ),
+);
+
+const ActionButtons = React.memo(
+  ({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) => (
+    <div className="mt-1 flex w-full select-none flex-row items-center justify-end">
+      <a
+        className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+        onClick={onCancel}
+      >
+        Cancel
+      </a>
+      <a
+        className="ml-4 mr-2 cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+        onClick={onSave}
+      >
+        Save
+      </a>
     </div>
   ),
 );
 
 function UserModal({ onClose }: UserModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const { role, email, avatar, name, phone } = useSelector(
+  const [userAvatar, setUserAvatar] = useState<File | null>(null);
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userFullName, setUserFullName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { id, role, email, avatar, name, phone } = useSelector(
     (state: RootState) => state.user,
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [userEmail, setUserEmail] = useState(email ?? "");
-  const [userName, setUserName] = useState("");
-  const [userFullName, setUserFullName] = useState(name ?? "");
-  const defaultAvatar = DefaultAvatar;
   const [logout, { isSuccess, isError, error }] = useLazyLogoutQuery();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [updateUserInto] = useUpdateUserIntoMutation();
 
   useEffect(() => {
-    responseErrorHandler(
-      isError,
-      error as FetchBaseQueryError,
-      setErrorMessage,
-    );
-    if (isSuccess) {
-      navigate("/")
-    }
-    if (isError) {
-      console.error(errorMessage)
-    }
-  }, [error, errorMessage, isError, isSuccess, navigate]);
-
-  useEffect(() => {
+    setUserEmail(email ?? "");
     setUserName(getUsername(email));
-  }, [email]);
+    setUserFullName(name ?? "");
+  }, [email, name]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -151,45 +169,64 @@ function UserModal({ onClose }: UserModalProps) {
     };
   }, []);
 
-  const handleSignOutClick = useCallback( async () => {
+  useEffect(() => {
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+    if (isSuccess) {
+      navigate("/");
+    }
+    if (isError) {
+      console.error(errorMessage);
+    }
+  }, [error, errorMessage, isError, isSuccess, navigate]);
+
+  const handleLogout = useCallback(async () => {
     onClose();
     await logout();
-  }, [onClose, navigate]);
+  }, [onClose, logout]);
 
-  const handleFullNameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setUserFullName(e.target.value),
-    [],
-  );
-
-  const handleEmailChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setUserEmail(e.target.value),
-    [],
-  );
-
-  const handleSaveClick = useCallback(() => {
+  const handleUpdateUser = useCallback(async () => {
     setIsEditing(false);
+    await updateUserInto({
+      id: String(id),
+      email: userEmail,
+      name: userFullName,
+      phone: String(phone),
+      avatar: userAvatar,
+    }).unwrap();
+
     dispatch(
       setUserInfo({
         email: userEmail,
         name: userFullName,
         childEmail: "",
-        role: role,
-        avatar,
+        role,
+        avatar: userAvatar ? URL.createObjectURL(userAvatar) : avatar,
         phone,
       }),
     );
-  }, [userEmail, userFullName, role, avatar, phone, dispatch]);
+  }, [
+    updateUserInto,
+    userEmail,
+    userFullName,
+    userAvatar,
+    dispatch,
+    id,
+    role,
+    avatar,
+    phone,
+  ]);
 
-  const handleViewClick = useCallback(() => {
+  const handleCancel = useCallback(() => {
     setIsEditing(false);
     setUserEmail(email || "");
-    setUserName(userName || "");
     setUserFullName(name || "");
-  }, [email, userName, name]);
+  }, [email, name]);
 
-  const handleEdit = useCallback(() => setIsEditing(true), []);
-
-  return ReactDOM.createPortal(
+  const modal = (
     <div className="fixed inset-0 z-50 flex items-start justify-end">
       <div
         className="absolute inset-0 bg-black bg-opacity-0 transition-opacity"
@@ -207,7 +244,7 @@ function UserModal({ onClose }: UserModalProps) {
             </div>
             {!isEditing && (
               <a
-                onClick={handleSignOutClick}
+                onClick={handleLogout}
                 className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
               >
                 Log out
@@ -215,29 +252,35 @@ function UserModal({ onClose }: UserModalProps) {
             )}
           </div>
         </div>
-
         <div className="mt-2">
           {isEditing ? (
             <EditableUserInfo
               userFullName={userFullName}
               userEmail={userEmail}
-              defaultAvatar={defaultAvatar}
-              onFullNameChange={handleFullNameChange}
-              onEmailChange={handleEmailChange}
-              onSave={handleSaveClick}
-              onCancel={handleViewClick}
+              defaultAvatar={
+                userAvatar ? URL.createObjectURL(userAvatar) : DefaultAvatar
+              }
+              onFullNameChange={(e) => setUserFullName(e.target.value)}
+              onEmailChange={(e) => setUserEmail(e.target.value)}
+              onSave={handleUpdateUser}
+              onCancel={handleCancel}
+              onAvatarChange={setUserAvatar}
             />
           ) : (
             <UserInfo
               userFullName={userFullName}
               userEmail={userEmail}
-              defaultAvatar={defaultAvatar}
-              onEdit={handleEdit}
+              defaultAvatar={avatar ?? DefaultAvatar}
+              onEdit={() => setIsEditing(true)}
             />
           )}
         </div>
       </div>
-    </div>,
+    </div>
+  );
+
+  return ReactDOM.createPortal(
+    modal,
     document.querySelector(".modal-container") as Element,
   );
 }
