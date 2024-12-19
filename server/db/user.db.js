@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const { Person } = require("../entities");
 const { Teacher, Student, Parent } = require("../entities/user.model");
+const { ErrorHandler } = require("../helpers/error");
 
 class UserDB {
   getAllUsersDB = async () => {
@@ -21,21 +22,21 @@ class UserDB {
     return newUser;
   };
 
-  createStudentDB = async(studentID) => {
+  createStudentDB = async (studentID) => {
     const student = await Student.create({
-      studentID 
+      studentID
     });
     return student;
   };
 
-  createTeacherDB = async(teacherID) => {
+  createTeacherDB = async (teacherID) => {
     const teacher = await Teacher.create({
-      teacherID 
+      teacherID
     });
     return teacher;
   };
 
-  createParentDB = async(parentID, studentID) => {
+  createParentDB = async (parentID, studentID) => {
     const parent = await Parent.create({
       parentID,
       studentID
@@ -66,21 +67,39 @@ class UserDB {
     user.password = newPassword;
     await user.save();
     return user;
-  }
+  };
 
   verifyUserDB = async (id) => {
     const user = await Person.findByPk(id);
     user.isVerified = true;
     await user.save();
     return user;
-  }
+  };
 
   updatedResetTokenDB = async (id, OTP) => {
     const user = await Person.findByPk(id);
     user.resetToken = OTP;
     await user.save();
     return user;
-  }
+  };
+
+  updateUserInfo = async (id, email, name, phone, publicURL) => {
+    try {
+      const checkUser = await this.getUserByEmailDB(email);
+      if (checkUser) {
+        throw new ErrorHandler(403, "The email is exist");
+      }
+      const updatedUser = await Person.findByPk(id);
+      updatedUser.name = name;
+      updatedUser.email = email;
+      updatedUser.phone = phone;
+      updatedUser.avatar = publicURL;
+      updatedUser.save();
+      return updatedUser;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new UserDB();

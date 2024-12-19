@@ -28,6 +28,13 @@ module.exports={
             "type": "string"
           },
           {
+            "name": "weight",
+            "in": "formData",
+            "description": "update weight",
+            "required": false,
+            "type": "integer"
+          },
+          {
             "name": "startTime",
             "in": "formData",
             "description": "Updated start time of the assignment",

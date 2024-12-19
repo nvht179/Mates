@@ -24,7 +24,14 @@ module.exports =
           {
             "name": "classID",
             "in": "formData",
-            "description": "Description of the assignment",
+            "description": "class id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "weight",
+            "in": "formData",
+            "description": "weight",
             "required": true,
             "type": "integer"
           },
