@@ -86,13 +86,13 @@ class UserDB {
   updateUserInfo = async (id, email, name, phone, publicURL, linkTitle) => {
     try {
       let checkUser;
+      const updatedUser = await Person.findByPk(id);
       if (email) {
         checkUser = await this.getUserByEmailDB(email);
-        if (checkUser) {
+        if (checkUser && email != updatedUser.email) {
           throw new ErrorHandler(403, "The email is exist");
         }
       }
-      const updatedUser = await Person.findByPk(id);
       if (!name) {
         updatedUser.name = name;
       }
