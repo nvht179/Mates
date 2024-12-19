@@ -1,28 +1,28 @@
 import { UserRole } from "./Misc";
 
-// interface ResponseFail {
-//   status: number | string;
-//   data?: LoginResponseFail | CheckUserByEmailResponseFail;
-//   error?: string;
-// }
-
 interface LoginRequest {
   email: string;
   password: string;
 }
 
+interface UserInfo {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  avatar: string;
+  role: UserRole;
+  childEmail: string;
+}
+
 interface LoginResponse {
   message: string;
   token: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    avatar: string;
-    role: UserRole;
-  };
+  user: UserInfo;
+}
+
+interface LogoutResponse {
+  message: string;
 }
 
 interface SignupRequest {
@@ -39,16 +39,7 @@ interface SignupRequest {
 interface SignupResponse {
   message: string;
   token: string;
-  newUser: {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    avatar: string;
-    role: UserRole;
-    isVerified: boolean;
-    resetToken: string | null;
-  };
+  newUser: UserInfo;
 }
 
 interface ResendVerificationEmailRequest {
@@ -59,29 +50,12 @@ interface ResendVerificationEmailResponse {
   message: string;
 }
 
-interface CheckUserByEmailResponse {
-  message: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    avatar: string;
-    role: UserRole;
-  };
-}
-
 interface CheckEmailOtpRequest {
   email: string;
 }
 
 interface CheckEmailOtpResponse {
   message: string;
-}
-
-interface CheckUserByEmailRequest {
-  email: string;
 }
 
 interface RefreshTokenResponse {
@@ -107,10 +81,9 @@ interface ForgetPasswordRequest {
 export type {
   LoginRequest,
   LoginResponse,
+  LogoutResponse,
   SignupRequest,
   SignupResponse,
-  CheckUserByEmailRequest,
-  CheckUserByEmailResponse,
   CheckEmailOtpRequest,
   CheckEmailOtpResponse,
   ResendVerificationEmailRequest,
@@ -119,4 +92,5 @@ export type {
   CheckOtpRequest,
   CheckOtpResponse,
   ForgetPasswordRequest,
+  UserInfo,
 };

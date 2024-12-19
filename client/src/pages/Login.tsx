@@ -6,7 +6,6 @@ import MatesLogo from "../assets/mates.svg";
 import useEmailCheck from "../utils/useEmailCheck";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
-import { getAuthToken } from "../utils/getAuthToken";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,8 +20,6 @@ export default function Login() {
     isError,
     isSuccess,
   } = useEmailCheck();
-
-  console.log(getAuthToken());
 
   useEffect(() => {
     responseErrorHandler(

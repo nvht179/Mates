@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
-import { useLoginMutation } from "../store";
+import { useLazyLoginQuery } from "../store";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MatesLogo from "../assets/mates.svg";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
@@ -10,7 +10,7 @@ import { responseErrorHandler } from "../utils/responseErrorHandler";
 export default function EnterPassword() {
   const [password, setPassword] = useState<string>("");
   const [login, { isLoading, data, isError, error, isSuccess }] =
-    useLoginMutation();
+    useLazyLoginQuery();
   const location = useLocation();
   const email = (location.state as string | null) || null;
   const [errorMessage, setErrorMessage] = useState<string | undefined>();

@@ -9,7 +9,7 @@ interface ReactionProps {
   initActive: boolean;
 }
 
-interface State {
+interface ReactionState {
   number: number;
   active: boolean;
 }
@@ -21,7 +21,7 @@ interface Action {
 const INCREMENT = "increment";
 const DECREMENT = "decrement";
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: ReactionState, action: Action): ReactionState => {
   switch (action.type) {
     case INCREMENT:
       return { number: state.number + 1, active: true };

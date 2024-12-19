@@ -2,35 +2,15 @@ import Panel from "./Panel";
 import CommentList from "./CommentList";
 import ReactionList from "./ReactionList";
 import Input from "./Input";
+import { Post } from "../interfaces/Post";
+import PostUserProfile from "./PostUserProfile";
 
 interface PostListProps {
   posts: Post[];
 }
 
-interface Post {
-  id: number;
-  user: string;
-  image: string;
-  title: string;
-  content: string;
-  time: string;
-  comment: Comment[];
-  reaction: Reaction[];
-}
-
-interface Comment {
-  user: string;
-  image: string;
-  content: string;
-  time: string;
-}
-
-interface Reaction {
-  user: string;
-  reaction: number;
-}
-
 function PostList({ posts }: PostListProps) {
+
   const renderedAddComment = () => {
     return (
       <div className="px-4 pb-4">
@@ -48,8 +28,7 @@ function PostList({ posts }: PostListProps) {
         </div>
       </div>
     );
-  }
-
+  };
 
   const renderedPostList = posts.map((post) => {
     return (
@@ -57,12 +36,7 @@ function PostList({ posts }: PostListProps) {
         <Panel>
           <div className="p-4">
             <div className="flex flex-row items-center">
-              <img
-                className="h-12 w-12 rounded-full object-cover"
-                src={post.image}
-                alt={post.user}
-              />
-              <p className="ml-4">{post.user}</p>
+              <PostUserProfile post={post} />
               <p className="ml-4 font-light">{post.time}</p>
             </div>
             <div className="mt-4">
@@ -70,13 +44,11 @@ function PostList({ posts }: PostListProps) {
               <p className="mt-2">{post.content}</p>
             </div>
             {/* display reaction */}
-            <div className="mt-4">
-              <ReactionList post={post} />
-            </div>
+            <div className="mt-4"><ReactionList post={post} /></div>
           </div>
           <div className="border-b-2" />
           {/* display Comment */}
-          <CommentList post={post} />
+          {/* <CommentList post={post} /> */}
           {/* display Add comment */}
           {renderedAddComment()}
         </Panel>
