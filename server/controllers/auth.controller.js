@@ -20,6 +20,19 @@ class AuthController {
     }
   };
 
+  logout = async (req, res) => {
+    try {
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+      });
+      const message = "Successful";
+      res.status(200).json({ message });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
   signUp = async (req, res) => {
     try {
       const { role, name, email, password, phone, avatar, childEmail } = req.body;
