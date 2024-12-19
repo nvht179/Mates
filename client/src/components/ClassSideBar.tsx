@@ -3,13 +3,14 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import Panel from "./Panel";
 import ClassSideBarTab from "./ClassSideBarTab";
+import { ClassState } from "../interfaces/Class";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
 function ClassSideBar() {
   const { state } = useLocation();
-  const { cla } = state;
-  const { name, image, classCode } = cla;
+  const { cla , image} = state as { cla: ClassState; image: string };
+  const { className, code } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
 
   const navigate = useNavigate();
@@ -17,15 +18,15 @@ function ClassSideBar() {
     navigate("/");
   };
   const handleClickLecture = () => {
-    navigate(`/class/${classCode}/lecture`, { state: { ...state, title: "Lecture" } });
+    navigate(`/class/${code}/lecture`, { state: { ...state, title: "Lecture" } });
     setButtonClicked("lecture");
   };
   const handleClickAssignment = () => {
-    navigate(`/class/${classCode}/assignment`, { state: { ...state, title: "Assignment" } });
+    navigate(`/class/${code}/assignment`, { state: { ...state, title: "Assignment" } });
     setButtonClicked("assignment");
   };
   const handleClickDiscussion = () => {
-    navigate(`/class/${classCode}/discussion`, { state: { ...state, title: "Discussion" } });
+    navigate(`/class/${code}/discussion`, { state: { ...state, title: "Discussion" } });
     setButtonClicked("discussion");
   };
 
@@ -47,11 +48,11 @@ function ClassSideBar() {
           <img
             className="h-12 w-12 rounded object-cover"
             src={image}
-            alt={name}
+            alt={className}
           />
           <div className="w-48">
-            <p className="ml-2 font-bold">{classCode}</p>
-            <p className="ml-2 mt-1 truncate text-sm">{name}</p>
+            <p className="ml-2 font-bold">{code}</p>
+            <p className="ml-2 mt-1 truncate text-sm">{className}</p>
           </div>
         </div>
         <div className="mt-4 flex flex-col">

@@ -1,4 +1,4 @@
-interface ClassType {
+interface ClassState {
   classID: number;
   className: string;
   code: string;
@@ -45,7 +45,7 @@ interface CreateClassResponse {
 }
 
 export type {
-  ClassType,
+  ClassState,
   ViewAllClassesResponse,
   ViewAllClassesRequest,
   CreateClassRequest,

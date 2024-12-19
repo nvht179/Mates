@@ -40,9 +40,9 @@ function Dashboard() {
       </div>
       <div className="border-b-2"></div>
       {isLoading ? (
-        <p className="text-xl font-bold">Loading</p>
+        <p className="text-xl font-bold p-3">Loading...</p>
       ) : isError ? (
-        <p className="text-xl font-bold">{errorMessage}</p>
+        <p className="text-xl font-bold p-3">{errorMessage}</p>
       ) : (
         <ClassCardList classes={classes} />
       )}

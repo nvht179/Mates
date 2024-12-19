@@ -2,26 +2,28 @@ import Panel from "./Panel";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import {ClassType} from "../interfaces/Class";
+import { ClassState } from "../interfaces/Class";
 
 interface ClassCardListProps {
-  classes: ClassType[];
+  classes: ClassState[];
 }
 
 function ClassCardList({ classes }: ClassCardListProps) {
   const navigate = useNavigate();
-  const handleClick = (cla: ClassType) => {
-    navigate("/class/" + cla.code + "/lecture", { state: {cla, title: "Lecture"} });
+  const handleClick = (cla: ClassState, image: string) => {
+    navigate("/class/" + cla.code + "/lecture", {
+      state: { cla, title: "Lecture", image },
+    });
   };
 
-  const renderedClassCard = classes.map((cla: ClassType) => {
+  const renderedClassCard = classes.map((cla: ClassState) => {
     const randomSeed = Math.floor(Math.random() * 10000);
     const randomImage = `https://picsum.photos/seed/${randomSeed}/200/300`;
 
     return (
       <Panel key={cla.classID} className="p-3">
         <div
-          onClick={() => handleClick(cla)}
+          onClick={() => handleClick(cla, randomImage)}
           className="flex cursor-pointer flex-row items-center justify-start active:opacity-30"
         >
           <img
@@ -43,7 +45,9 @@ function ClassCardList({ classes }: ClassCardListProps) {
     );
   });
 
-  return <div className="m-12 grid grid-cols-3 gap-8 pr-48">{renderedClassCard}</div>;
+  return (
+    <div className="m-12 grid grid-cols-3 gap-8 pr-48">{renderedClassCard}</div>
+  );
 }
 
 export default ClassCardList;
