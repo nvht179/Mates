@@ -1,6 +1,6 @@
 import { useGetUserByIdQuery } from "../store";
 import { Post } from "./PostList";
-import defaultAvatar from "../assets/default_ava.png";
+import defaultAvatar from "../assets/default-avatar.png";
 
 interface PostUserProfileProps {
   post: Post;

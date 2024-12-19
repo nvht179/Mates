@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getAuthToken } from "../../utils/getAuthToken";
 import { CreateReactionResponse, ViewReactionRequest, ViewReactionResponse } from "../../interfaces/Reaction";
 
-export const reactionApi = createApi({
+const reactionApi = createApi({
   reducerPath: "reaction",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",

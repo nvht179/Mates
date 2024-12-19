@@ -3,8 +3,11 @@ import { RootState, setUserInfo } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
-import DefaultAvatar from "../assets/default_ava.png";
+import DefaultAvatar from "../assets/default-avatar.png";
 import Input from "./Input";
+import { useLazyLogoutQuery } from "../store";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 interface UserModalProps {
   onClose: () => void;
@@ -120,6 +123,22 @@ function UserModal({ onClose }: UserModalProps) {
   const [userName, setUserName] = useState("");
   const [userFullName, setUserFullName] = useState(name ?? "");
   const defaultAvatar = DefaultAvatar;
+  const [logout, { isSuccess, isError, error }] = useLazyLogoutQuery();
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+    if (isSuccess) {
+      navigate("/")
+    }
+    if (isError) {
+      console.error(errorMessage)
+    }
+  }, [error, errorMessage, isError, isSuccess, navigate]);
 
   useEffect(() => {
     setUserName(getUsername(email));
@@ -132,9 +151,9 @@ function UserModal({ onClose }: UserModalProps) {
     };
   }, []);
 
-  const handleSignOutClick = useCallback(() => {
+  const handleSignOutClick = useCallback( async () => {
     onClose();
-    navigate("/login");
+    await logout();
   }, [onClose, navigate]);
 
   const handleFullNameChange = useCallback(
@@ -191,7 +210,7 @@ function UserModal({ onClose }: UserModalProps) {
                 onClick={handleSignOutClick}
                 className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
               >
-                Sign out
+                Log out
               </a>
             )}
           </div>

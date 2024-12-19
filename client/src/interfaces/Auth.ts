@@ -1,11 +1,5 @@
 import { UserRole } from "./Misc";
 
-// interface ResponseFail {
-//   status: number | string;
-//   data?: LoginResponseFail | CheckUserByEmailResponseFail;
-//   error?: string;
-// }
-
 interface LoginRequest {
   email: string;
   password: string;
@@ -21,15 +15,14 @@ interface UserInfo {
   childEmail: string;
 }
 
-interface GetUsesrInfoResponse {
-  message: string;
-  user: UserInfo;
-}
-
 interface LoginResponse {
   message: string;
   token: string;
   user: UserInfo;
+}
+
+interface LogoutResponse {
+  message: string;
 }
 
 interface SignupRequest {
@@ -57,21 +50,12 @@ interface ResendVerificationEmailResponse {
   message: string;
 }
 
-interface CheckUserByEmailResponse {
-  message: string;
-  user: UserInfo;
-}
-
 interface CheckEmailOtpRequest {
   email: string;
 }
 
 interface CheckEmailOtpResponse {
   message: string;
-}
-
-interface CheckUserByEmailRequest {
-  email: string;
 }
 
 interface RefreshTokenResponse {
@@ -97,10 +81,9 @@ interface ForgetPasswordRequest {
 export type {
   LoginRequest,
   LoginResponse,
+  LogoutResponse,
   SignupRequest,
   SignupResponse,
-  CheckUserByEmailRequest,
-  CheckUserByEmailResponse,
   CheckEmailOtpRequest,
   CheckEmailOtpResponse,
   ResendVerificationEmailRequest,
@@ -109,6 +92,5 @@ export type {
   CheckOtpRequest,
   CheckOtpResponse,
   ForgetPasswordRequest,
-  GetUsesrInfoResponse,
   UserInfo,
 };

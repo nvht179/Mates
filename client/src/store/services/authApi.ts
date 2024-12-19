@@ -4,8 +4,6 @@ import {
   CheckEmailOtpResponse,
   CheckOtpRequest,
   CheckOtpResponse,
-  CheckUserByEmailRequest,
-  CheckUserByEmailResponse,
   LoginRequest,
   LoginResponse,
   RefreshTokenResponse,
@@ -14,46 +12,37 @@ import {
   SignupRequest,
   SignupResponse,
   ForgetPasswordRequest,
-  GetUsesrInfoResponse,
+  LogoutResponse
 } from "../../interfaces/Auth";
 
-// interface CheckOTPRequest {
-//   email: string;
-//   otp: string;
-// }
-
-export const authApi = createApi({
+const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
-    credentials: "include",
+    credentials: "include"
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.query<LoginResponse, LoginRequest>({
       query: (credentials: LoginRequest) => ({
         url: "/auth/login",
         method: "POST",
-        body: credentials,
-      }),
+        body: credentials
+      })
     }),
 
     signup: builder.mutation<SignupResponse, SignupRequest>({
       query: (credentials: SignupRequest) => ({
         url: "/auth/signUp",
         method: "POST",
-        body: credentials,
-      }),
+        body: credentials
+      })
     }),
 
-    checkUserByEmail: builder.query<
-      CheckUserByEmailResponse,
-      CheckUserByEmailRequest
-    >({
-      query: (checkUserByEmailRequest: CheckUserByEmailRequest) => ({
-        url: "/users/checkUserByEmail",
-        method: "POST",
-        body: checkUserByEmailRequest,
-      }),
+    logout: builder.query<LogoutResponse, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST"
+      })
     }),
 
     resendVerificationEmail: builder.mutation<
@@ -63,59 +52,51 @@ export const authApi = createApi({
       query: (emailRequest: ResendVerificationEmailRequest) => ({
         url: "/auth/resend-verification-link",
         method: "POST",
-        body: emailRequest,
-      }),
+        body: emailRequest
+      })
     }),
 
     sendEmailOtp: builder.query<CheckEmailOtpResponse, CheckEmailOtpRequest>({
       query: (checkEmailOtpRequest: CheckEmailOtpRequest) => ({
         url: "/auth/send-email-otp",
         method: "POST",
-        body: checkEmailOtpRequest,
-      }),
+        body: checkEmailOtpRequest
+      })
     }),
 
     checkOtp: builder.query<CheckOtpResponse, CheckOtpRequest>({
       query: (checkOtpRequest: CheckOtpRequest) => ({
         url: "/auth/checkOTP",
         method: "POST",
-        body: checkOtpRequest,
-      }),
+        body: checkOtpRequest
+      })
     }),
 
     forgetPassword: builder.mutation<void, ForgetPasswordRequest>({
       query: (forgetPasswordRequest: ForgetPasswordRequest) => ({
         url: "/auth/forgetPassword",
         method: "PUT",
-        body: forgetPasswordRequest,
-      }),
+        body: forgetPasswordRequest
+      })
     }),
 
     refreshToken: builder.query<RefreshTokenResponse, void>({
       query: () => ({
         url: "/auth/refresh-token",
-        method: "POST",
-      }),
-    }),
-
-    getUserById: builder.query<GetUsesrInfoResponse, number>({
-      query: (id: number) => ({
-        url: `/users/getUserByID/${id}`,
-        method: "GET",
-      }),
-    }),
-  }),
+        method: "POST"
+      })
+    })
+  })
 });
 
 export const {
   useResendVerificationEmailMutation,
-  useLoginMutation,
+  useLazyLoginQuery,
+  useLazyLogoutQuery,
   useSignupMutation,
-  useLazyCheckUserByEmailQuery,
   useLazySendEmailOtpQuery,
   useLazyCheckOtpQuery,
   useForgetPasswordMutation,
-  useLazyRefreshTokenQuery,
-  useLazyGetUserByIdQuery,
-  useGetUserByIdQuery,
+  useLazyRefreshTokenQuery
 } = authApi;
+export default authApi;

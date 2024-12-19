@@ -7,7 +7,7 @@ import {
   ViewAllClassesResponse,
 } from "../../interfaces/Class";
 
-export const classApi = createApi({
+const classApi = createApi({
   reducerPath: "class",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",

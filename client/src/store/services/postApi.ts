@@ -7,7 +7,7 @@ import {
   ViewPostsResponse,
 } from "../../interfaces/Post";
 
-export const postApi = createApi({
+const postApi = createApi({
   reducerPath: "post",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",

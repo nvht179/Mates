@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authApi } from "../services/authApi.ts";
+import authApi from "../services/authApi.ts";
 import { UserRole } from "../../interfaces/Misc";
 
 interface UserState {
@@ -98,6 +98,12 @@ const userSlice = createSlice({
         }
       },
     );
+    builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state) => {
+      state.token = null;
+      state.tokenSavedTime = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem("userId");
+    });
   },
 });
 
