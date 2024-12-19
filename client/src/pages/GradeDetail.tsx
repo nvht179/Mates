@@ -7,7 +7,8 @@ import Assignment from "../interfaces/Assignment";
 
 export default function GradeDetail() {
     const grade: Grade = {
-        name: "Meow Meow",
+        name: "Dao Xuan Thanh",
+        assignment: "Meow Meow",
         status: "Submitted",
         submittedOn: "23:00, 14/12/2024",
         feedback: "So bad",

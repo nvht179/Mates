@@ -1,7 +1,7 @@
-import GradeList from "../components/GradeList";
+import ToGradeList from "../components/ToGradeList";
 import Grade from "../interfaces/Grade";
 
-function GradePage() {
+function ToGradePage() {
 
     const grades: Grade[] = [
         {
@@ -26,10 +26,10 @@ function GradePage() {
 
     return (
         <div className="mx-10">
-            <GradeList grades={grades} />
+            <ToGradeList grades={grades} />
 
         </div>
     )
 }
 
-export default GradePage;
+export default ToGradePage;
