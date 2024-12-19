@@ -3,11 +3,7 @@ const { ErrorHandler } = require("../helpers/error");
 
 class AssignmentService {
   // Add a new assignment with attachments
-<<<<<<< Updated upstream
-  addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments }) => {
-=======
-  addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments,classID,weight }) => {
->>>>>>> Stashed changes
+  addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments, classID, weight }) => {
     try {
       // Call DB layer to create assignment with attachments
       const newAssignment = await AssignmentDB.addNewAssignmentWithAttachments({
@@ -59,7 +55,7 @@ class AssignmentService {
   }
 
   // Edit an assignment
-  async editAssignment({ assignmentId, title, description, startTime, endTime, attachments,weight }) {
+  async editAssignment({ assignmentId, title, description, startTime, endTime, attachments, weight }) {
     try {
       // Call DB layer to edit assignment and replace attachments
       const updatedAssignment = await AssignmentDB.editAssignment({
@@ -93,7 +89,7 @@ class AssignmentService {
       );
     }
   }
-   
+
   async viewAllAssignmentsInClass(classID) {
     try {
       // Gọi DB để lấy tất cả assignment của lớp học với classID

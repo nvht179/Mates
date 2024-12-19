@@ -6,6 +6,7 @@ const forgetPassword = require("./forgetPassword");
 const verifyEmail = require("./verifyEmail");
 const checkOTP = require("./checkOTP");
 const resendVerificationLink = require("./resendVerificatonLink");
+const logout = require("./logout");
 
 module.exports = {
   "/auth/login": {
@@ -13,6 +14,9 @@ module.exports = {
   },
   "/auth/signUp": {
     ...signup
+  },
+  "/auth/logout": {
+    ...logout
   },
   "/auth/resend-verification-link": {
     ...resendVerificationLink
