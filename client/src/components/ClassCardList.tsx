@@ -1,8 +1,9 @@
 import Panel from "./Panel";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { FaRegEdit } from "react-icons/fa";
+import { MdInfo, MdInfoOutline } from "react-icons/md";
+import { RiEditBoxFill, RiEditBoxLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
+import { useState, useEffect } from "react";
 
 interface ClassCardListProps {
   classes: ClassState[];
@@ -10,6 +11,18 @@ interface ClassCardListProps {
 
 function ClassCardList({ classes }: ClassCardListProps) {
   const navigate = useNavigate();
+  const [hoveredIcon, setHoveredIcon] = useState<string>("");
+  const [classImages, setClassImages] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const images: { [key: string]: string } = {};
+    classes.forEach((cla) => {
+      const randomSeed = Math.floor(Math.random() * 10000);
+      images[cla.classID] = `https://picsum.photos/seed/${randomSeed}/200/300`;
+    });
+    setClassImages(images);
+  }, [classes]);
+
   const handleClick = (cla: ClassState, image: string) => {
     navigate("/class/" + cla.code + "/lecture", {
       state: { cla, title: "Lecture", image },
@@ -17,28 +30,46 @@ function ClassCardList({ classes }: ClassCardListProps) {
   };
 
   const renderedClassCard = classes.map((cla: ClassState) => {
-    const randomSeed = Math.floor(Math.random() * 10000);
-    const randomImage = `https://picsum.photos/seed/${randomSeed}/200/300`;
+    const randomImage = classImages[cla.classID];
 
     return (
-      <Panel key={cla.classID} className="p-3">
-        <div
-          onClick={() => handleClick(cla, randomImage)}
-          className="flex cursor-pointer flex-row items-center justify-start active:opacity-30"
-        >
+      <Panel
+        key={cla.classID}
+        className="rounded p-3 shadow hover:bg-bg-dark active:bg-bg-darker select-none"
+        onClick={() => handleClick(cla, randomImage)}
+      >
+        <div className="flex cursor-pointer flex-row items-center justify-start">
           <img
-            className="h-20 w-20 rounded object-cover"
+            className="h-[72px] w-[72px] rounded object-cover"
             src={randomImage}
             alt={cla.className}
           />
-          <div className="ml-4 truncate">{cla.className}</div>
+          <p className="text-fg-default hover:text-primary-default ml-4 truncate text-sm">
+            {cla.className}
+          </p>
         </div>
-        <div className="flex flex-row items-center">
-          <div className="mt-3 cursor-pointer pr-2 pt-1 text-xl active:opacity-30">
-            <AiOutlineInfoCircle />
+        <div className="text flex flex-row items-center">
+          <div
+            className="ml-0.5 mr-4 mt-4 cursor-pointer text-2xl font-light text-fg-soft hover:text-primary-default"
+            onMouseEnter={() => setHoveredIcon(`${cla.classID}_info`)}
+            onMouseLeave={() => setHoveredIcon("")}
+          >
+            {hoveredIcon === `${cla.classID}_info` ? (
+              <MdInfo />
+            ) : (
+              <MdInfoOutline />
+            )}
           </div>
-          <div className="mt-3 cursor-pointer px-1.5 pt-1 text-xl active:opacity-30">
-            <FaRegEdit />
+          <div
+            className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl text-fg-soft hover:text-primary-default"
+            onMouseEnter={() => setHoveredIcon(`${cla.classID}_edit`)}
+            onMouseLeave={() => setHoveredIcon("")}
+          >
+            {hoveredIcon === `${cla.classID}_edit` ? (
+              <RiEditBoxFill />
+            ) : (
+              <RiEditBoxLine />
+            )}
           </div>
         </div>
       </Panel>
@@ -46,7 +77,9 @@ function ClassCardList({ classes }: ClassCardListProps) {
   });
 
   return (
-    <div className="m-12 grid grid-cols-3 gap-8 pr-48">{renderedClassCard}</div>
+    <div className="m-12 grid min-w-96 grid-cols-4 gap-8">
+      {renderedClassCard}
+    </div>
   );
 }
 

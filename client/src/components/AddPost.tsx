@@ -24,7 +24,7 @@ function AddPost() {
           <div className="flex flex-row items-center p-4">
             <img
               className="h-8 w-8 rounded-full object-cover"
-              src="../../public/vite.svg"
+              src="../../public/mates.svg"
               alt="user"
             />
             <p className="ml-4 font-bold">Jane Doe</p>

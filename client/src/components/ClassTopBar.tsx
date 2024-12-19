@@ -26,7 +26,7 @@ function ClassTopBar() {
 
 
   return (
-    <Panel className="flex h-16 flex-row items-center bg-bg-dark py-4">
+    <Panel className="flex h-[60px] flex-row items-center bg-bg-soft py-4">
       <img
         src={image}
         alt={className}

@@ -5,7 +5,7 @@ export default function Input({
   ...rest
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   const style = className(
-    "w-full rounded border-2 border-fg-border p-2 px-3 focus:border-b-primary-default focus:outline-none transition",
+    "rounded border-2 border-fg-border py-1 px-2 focus:border-b-primary-default focus:outline-none transition",
     rest.className,
   );
 

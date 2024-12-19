@@ -5,13 +5,13 @@ interface SidebarTabProps extends React.HTMLAttributes<HTMLDivElement> {
   active?: boolean;
 }
 
-export default function SidebarTab({
+export default function SideBarTab({
   children,
   active,
   ...rest
 }: SidebarTabProps) {
   const style = className(
-    "mt-2 flex cursor-pointer border-l-2 flex-col items-center justify-center active:opacity-30 w-16 h-16",
+    "mt-2 flex cursor-pointer border-l-2 flex-col active:opacity-30 w-16 h-16 text-fg-soft",
     {
       "text-primary-default border-primary-default": active, // Active style
     },
@@ -20,7 +20,9 @@ export default function SidebarTab({
 
   return (
     <div {...rest} className={style}>
-      {children}
+      <button className="hover:bg-bg-soft rounded w-full h-full flex flex-col items-center pt-2 justify-center hover:text-primary-default">
+        {children}
+      </button>
     </div>
   );
 }

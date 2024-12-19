@@ -22,12 +22,12 @@ export default function Button({
   const isSecondary = !disabled && secondary;
 
   const buttonClassName = classNames(
-    "select-none font-semibold flex rounded px-5 py-2 justify-center items-center",
+    "select-none font-semibold flex rounded px-4 py-2 justify-center items-center",
     {
       "cursor-not-allowed bg-bg-alt text-fg-disabled": disabled,
-      "cursor-pointer bg-primary-default text-bg-default active:bg-primary-dark active: text-bg-alt":
+      "cursor-pointer bg-primary-default text-bg-default active:bg-primary-dark active:text-bg-alt":
         isPrimary,
-      "cursor-pointer bg-bg-disabled text-fg-softer border border-fg-softer active:bg-fg-disabled":
+      "cursor-pointer bg-bg-disabled text-fg-softer border border-fg-softer active:bg-fg-disabled active:text-bg-alt hover:bg-bg-dark":
         isSecondary,
     },
     additionalClassName,

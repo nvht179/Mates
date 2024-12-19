@@ -12,9 +12,9 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.user);
-  const { data, isError, isLoading, error } = useViewAllClassesQuery(
-    { email: user.email ?? "" },
-  );
+  const { data, isError, isLoading, error } = useViewAllClassesQuery({
+    email: user.email ?? "",
+  });
 
   useEffect(() => {
     responseErrorHandler(
@@ -32,17 +32,21 @@ function Dashboard() {
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between">
-        <p className="ml-8 text-xl font-bold">My classes</p>
-        <Button onClick={handleCreateClass} className="m-4">
+      <div className="flex h-[60px] flex-row items-center justify-between">
+        <p className="ml-8 text-lg font-bold text-fg-default">My classes</p>
+        <Button
+          secondary
+          onClick={handleCreateClass}
+          className="mx-4 my-2 text-sm font-semibold text-fg-default"
+        >
           Create Class
         </Button>
       </div>
       <div className="border-b-2"></div>
       {isLoading ? (
-        <p className="text-xl font-bold p-3">Loading...</p>
+        <p className="p-3 text-xl font-bold">Loading...</p>
       ) : isError ? (
-        <p className="text-xl font-bold p-3">{errorMessage}</p>
+        <p className="p-3 text-xl font-bold">{errorMessage}</p>
       ) : (
         <ClassCardList classes={classes} />
       )}

@@ -17,7 +17,7 @@ function PostList({ posts }: PostListProps) {
         <div className="flex flex-row items-center">
           <img
             className="h-8 w-8 rounded-full object-cover"
-            src="../../public/vite.svg"
+            src="../../public/mates.svg"
             alt="user"
           />
           <Input

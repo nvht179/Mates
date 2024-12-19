@@ -7,19 +7,15 @@ import Input from "./Input";
 export default function TopBar() {
   const [showModal, setShowModal] = useState(false);
 
-  const userModal = (
-    <UserModal onClose={() => setShowModal(false)} />
-  );
+  const userModal = <UserModal onClose={() => setShowModal(false)} />;
 
   return (
-    <div className="sticky top-0 flex h-12 items-center justify-between border bg-primary-bg p-1 px-4 shadow-md">
+    <div className="sticky top-0 flex h-12 items-center justify-between border bg-bg-darker p-1 px-4">
       {/* Logo */}
       <img src={MatesLogo} alt="Logo" className="h-6 w-6" />
 
       {/* Search Bar */}
-      <div className="w-2/5 items-center p-2">
-        <Input type="text" placeholder="Search" />
-      </div>
+      <Input type="text" placeholder="Search..." className="w-1/3 text-sm" />
 
       {/* Icons */}
       <div className="mr-2 flex items-center space-x-4">
@@ -31,13 +27,13 @@ export default function TopBar() {
 
         {/* Profile Image */}
         <img
-          src="../../public/vite.svg"
+          src="../../public/mates.svg"
           alt="User Profile"
-          className="h-6 w-6 rounded-full cursor-pointer active:opacity-30"
+          className="h-6 w-6 cursor-pointer rounded-full active:opacity-30"
           onClick={() => setShowModal(true)}
         />
       </div>
-      
+
       {/* User Modal */}
       {showModal && userModal}
     </div>

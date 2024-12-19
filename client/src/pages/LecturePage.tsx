@@ -18,7 +18,7 @@ function LecturePage() {
   }));
 
   return (
-    <div className="mx-20">
+    <div className="mx-20 bg-bg-soft">
       <LectureList lectures={lecturesWithAttachment} />
       <Button className="mt-4 mb-8">
         Create Lecture
