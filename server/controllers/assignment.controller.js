@@ -5,7 +5,11 @@ class AssignmentController {
   // Add a new assignment
   addNewAssignment = async (req, res) => {
     try {
-      const { title, description, startTime, endTime,classID } = req.body;
+<<<<<<< Updated upstream
+      const { title, description, startTime, endTime } = req.body;
+=======
+      const { title, description, startTime, endTime,classID,weight } = req.body;
+>>>>>>> Stashed changes
 
       if (!title) {
         throw new Error("Title is required");
@@ -48,8 +52,8 @@ class AssignmentController {
         description,
         startTime,
         endTime,
-        classID,
         attachments,
+        weight
       });
 
       res.status(200).json({
@@ -65,7 +69,7 @@ class AssignmentController {
   editAssignment = async (req, res) => {
     try {
       const { assignmentId } = req.params;
-      const { title, description, startTime, endTime } = req.body;
+      const { title, description, startTime, endTime, weight } = req.body;
 
       // Get the current assignment
       const currentAssignment = await AssignmentService.getAssignmentById(assignmentId);
@@ -109,7 +113,8 @@ class AssignmentController {
         description: description || currentAssignment.description,
         startTime: startTime || currentAssignment.startTime,
         endTime: endTime || currentAssignment.endTime,
-        attachments,
+        weight: weight || currentAssignment.weight,
+        attachments: attachments || currentAssignment.attachments
       });
 
       res.status(200).json({

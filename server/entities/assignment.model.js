@@ -26,6 +26,10 @@ const Assignment = sequelize.define(
     endTime: {
       type: DataTypes.DATE,
     },
+    weight: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     classID: {
       type: DataTypes.INTEGER,
       allowNull: false,
