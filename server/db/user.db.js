@@ -93,16 +93,16 @@ class UserDB {
           throw new ErrorHandler(403, "The email is exist");
         }
       }
-      if (!name) {
+      if (name) {
         updatedUser.name = name;
       }
-      if (!email) {
+      if (email) {
         updatedUser.email = email;
       }
-      if (!phone) {
+      if (phone) {
         updatedUser.phone = phone;
       }
-      if (!publicURL) {
+      if (publicURL) {
         updatedUser.avatar = publicURL;
       }
       updatedUser.save();
