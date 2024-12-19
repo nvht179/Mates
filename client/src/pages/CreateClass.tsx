@@ -11,7 +11,9 @@ import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { useSelector } from "react-redux";
 import { RootState, useCreateClassMutation } from "../store";
-import {getNextDate, parseHours} from "../utils/date";
+import { getNextDate, parseHours } from "../utils/date";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 type ScheduleSlot = {
   day: string;
@@ -27,10 +29,21 @@ export default function CreateClass() {
     { day: "Monday", startTime: "13:30", endTime: "15:10" },
   ]);
   const [frequency, setFrequency] = useState("Weekly");
-  const [createClassMutation, { isSuccess }] = useCreateClassMutation();
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [createClassMutation, { isLoading, isSuccess, isError, error }] =
+    useCreateClassMutation();
 
   const navigate = useNavigate();
   const { id, role } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+  }, [isError, error]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -59,10 +72,16 @@ export default function CreateClass() {
   // };
 
   const events = schedule.map((slot) => {
-    const startTime = getNextDate(slot.day)
-    startTime.setHours(parseHours(slot.startTime).hour, parseHours(slot.startTime).minute);
-    const endTime = getNextDate(slot.day)
-    endTime.setHours(parseHours(slot.endTime).hour, parseHours(slot.endTime).minute);
+    const startTime = getNextDate(slot.day);
+    startTime.setHours(
+      parseHours(slot.startTime).hour,
+      parseHours(slot.startTime).minute,
+    );
+    const endTime = getNextDate(slot.day);
+    endTime.setHours(
+      parseHours(slot.endTime).hour,
+      parseHours(slot.endTime).minute,
+    );
     return {
       startTime: startTime.toISOString(),
       endTime: endTime.toISOString(),
@@ -94,7 +113,15 @@ export default function CreateClass() {
           <Button secondary onClick={() => navigate("/")}>
             Close
           </Button>
-          <Button onClick={handleSubmit}>Create</Button>
+          {isLoading ? (
+            <Button primary> Creating...</Button>
+          ) : isError ? (
+            <Button disabled className="text-red-default">
+              {errorMessage}
+            </Button>
+          ) : (
+            <Button onClick={handleSubmit}>Create</Button>
+          )}
         </div>
       </div>
       <div className="mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
@@ -136,7 +163,7 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "day", e.target.value)
                 }
-                className="w-2/5 rounded border-2 border-bg-alt border-fg-border bg-bg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="border-bg-alt bg-bg-alt w-2/5 rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
               >
                 {[
                   "Monday",
@@ -159,7 +186,7 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "startTime", e.target.value)
                 }
-                className="w-full rounded border-2 border-bg-alt border-fg-border bg-bg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
               <HiArrowLongRight className="h-auto text-8xl" />
 
@@ -170,7 +197,7 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "endTime", e.target.value)
                 }
-                className="w-full rounded border-2 border-bg-alt border-fg-border bg-bg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
 
               {/* Remove Time Slot */}
@@ -226,7 +253,7 @@ export default function CreateClass() {
           <select
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
-            className="w-full rounded border-2 border-bg-alt border-fg-border bg-bg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+            className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
           >
             <option value="Weekly">Weekly</option>
             <option value="Bi-Weekly">Bi-Weekly</option>
@@ -240,7 +267,7 @@ export default function CreateClass() {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded border-2 border-bg-alt border-fg-border bg-bg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+            className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
             placeholder="Enter class description"
             rows={4}
           />

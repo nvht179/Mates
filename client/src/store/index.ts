@@ -3,17 +3,23 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import userReducer from "./slices/userSlice";
 import { authApi } from "./services/authApi";
 import { classApi } from "./services/classApi";
+import postApi from "./services/postApi";
+import reactionApi from "./services/reactionApi";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     [authApi.reducerPath]: authApi.reducer,
     [classApi.reducerPath]: classApi.reducer,
+    [postApi.reducerPath]: postApi.reducer,
+    [reactionApi.reducerPath]: reactionApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
-      .concat(classApi.middleware),
+      .concat(classApi.middleware)
+      .concat(postApi.middleware)
+      .concat(reactionApi.middleware),
 });
 
 setupListeners(store.dispatch);
@@ -21,6 +27,7 @@ setupListeners(store.dispatch);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export * from "./services/authApi";
+export * from "./services/classApi";
+export * from "./services/postApi";
 export * from "./slices/userSlice";
-
-export { useViewAllClassesQuery, useCreateClassMutation } from "./services/classApi";
+export * from "./services/reactionApi";

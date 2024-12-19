@@ -5,4 +5,12 @@ interface Lecture {
   href: string,
 }
 
+interface ViewAllLecturesRequest {
+  classID: number,
+}
+
+interface ViewAllLecturesResponse {
+  lectures: Lecture[],
+}
+
 export default Lecture

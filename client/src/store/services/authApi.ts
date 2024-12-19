@@ -117,4 +117,5 @@ export const {
   useForgetPasswordMutation,
   useLazyRefreshTokenQuery,
   useLazyGetUserByIdQuery,
+  useGetUserByIdQuery,
 } = authApi;
