@@ -6,6 +6,7 @@ import userApi from "./services/userApi";
 import classApi from "./services/classApi";
 import postApi from "./services/postApi";
 import reactionApi from "./services/reactionApi";
+import lectureApi from "./services/lectureApi";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     [classApi.reducerPath]: classApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [reactionApi.reducerPath]: reactionApi.reducer,
+    [lectureApi.reducerPath]: lectureApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -22,7 +24,8 @@ export const store = configureStore({
       .concat(userApi.middleware)
       .concat(classApi.middleware)
       .concat(postApi.middleware)
-      .concat(reactionApi.middleware),
+      .concat(reactionApi.middleware)
+      .concat(lectureApi.middleware),
 });
 
 setupListeners(store.dispatch);
@@ -36,3 +39,4 @@ export * from "./services/classApi";
 export * from "./services/postApi";
 export * from "./slices/userSlice";
 export * from "./services/reactionApi";
+export * from "./services/lectureApi";

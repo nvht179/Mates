@@ -50,7 +50,7 @@ function PostList({ posts }: PostListProps) {
           {/* display Comment */}
           {/* <CommentList post={post} /> */}
           {/* display Add comment */}
-          {/* {renderedAddComment()} */}
+          {renderedAddComment()}
         </Panel>
       </div>
     );
