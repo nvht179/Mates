@@ -5,11 +5,7 @@ const sequelize = require("../config/db");
 
 class AssignmentDB {
   // Add new assignment with attachments
-<<<<<<< Updated upstream
-  addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments }) => {
-=======
   addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments,classID,weight }) => {
->>>>>>> Stashed changes
     let transaction;
     try {
       transaction = await sequelize.transaction();
@@ -21,11 +17,8 @@ class AssignmentDB {
           description,
           startTime,
           endTime,
-<<<<<<< Updated upstream
-=======
           classID,
           weight
->>>>>>> Stashed changes
         },
         { transaction }
       );

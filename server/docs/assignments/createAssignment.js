@@ -22,8 +22,6 @@ module.exports =
             "type": "string"
           },
           {
-<<<<<<< Updated upstream
-=======
             "name": "classID",
             "in": "formData",
             "description": "class id",
@@ -38,7 +36,6 @@ module.exports =
             "type": "integer"
           },
           {
->>>>>>> Stashed changes
             "name": "startTime",
             "in": "formData",
             "description": "Start time of the assignment",

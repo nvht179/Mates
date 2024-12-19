@@ -5,11 +5,7 @@ class AssignmentController {
   // Add a new assignment
   addNewAssignment = async (req, res) => {
     try {
-<<<<<<< Updated upstream
-      const { title, description, startTime, endTime } = req.body;
-=======
       const { title, description, startTime, endTime,classID,weight } = req.body;
->>>>>>> Stashed changes
 
       if (!title) {
         throw new Error("Title is required");
