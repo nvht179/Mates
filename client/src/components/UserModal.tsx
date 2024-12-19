@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { RootState, setUserInfo } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import DefaultAvatar from "../assets/default_ava.png";
 import Input from "./Input";
-import Button from "./Button";
 
 interface UserModalProps {
   onClose: () => void;
@@ -16,21 +15,115 @@ function getUsername(email: string | null) {
   return email.split("@")[0];
 }
 
+// Move components outside
+const UserInfo = React.memo(
+  ({
+    userFullName,
+    userEmail,
+    defaultAvatar,
+    onEdit,
+  }: {
+    userFullName: string;
+    userEmail: string;
+    defaultAvatar: string;
+    onEdit: () => void;
+  }) => (
+    <div className="flex min-h-10 min-w-64 items-center">
+      <img
+        src={defaultAvatar}
+        alt="user"
+        className="h-12 w-12 rounded-full object-cover"
+      />
+      <div className="ml-4 flex flex-col">
+        <p className="text-sm font-bold uppercase">{userFullName}</p>
+        <p className="text-xs text-fg-soft">{userEmail}</p>
+        <a
+          className="mt-1 cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+          onClick={onEdit}
+        >
+          Edit account info
+        </a>
+      </div>
+    </div>
+  ),
+);
+
+const EditableUserInfo = React.memo(
+  ({
+    userFullName,
+    userEmail,
+    defaultAvatar,
+    onFullNameChange,
+    onEmailChange,
+    onSave,
+    onCancel,
+  }: {
+    userFullName: string;
+    userEmail: string;
+    defaultAvatar: string;
+    onFullNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSave: () => void;
+    onCancel: () => void;
+  }) => (
+    <div className="flex min-h-24 min-w-64 flex-col items-center">
+      <div className="flex flex-row items-center">
+        <img
+          src={defaultAvatar}
+          alt="user"
+          className="h-12 w-12 rounded-full object-cover"
+        />
+        <div className="ml-4 flex flex-col">
+          <Input
+            key="fullname-input"
+            className="mb-1 h-8 text-sm"
+            placeholder="Enter your full name"
+            value={userFullName}
+            onChange={onFullNameChange}
+          />
+          <Input
+            key="email-input"
+            className="mb-1 h-8 text-sm"
+            placeholder="Enter your email"
+            value={userEmail}
+            onChange={onEmailChange}
+          />
+        </div>
+      </div>
+      <div className="mt-1 flex w-full select-none flex-row items-center justify-end">
+        <a
+          className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+          onClick={onCancel}
+        >
+          Cancel
+        </a>
+        <a
+          className="ml-4 mr-2 cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+          onClick={onSave}
+        >
+          Save
+        </a>
+      </div>
+    </div>
+  ),
+);
+
 function UserModal({ onClose }: UserModalProps) {
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const { role, email, avatar, name, phone } = useSelector(
     (state: RootState) => state.user,
   );
   const dispatch = useDispatch();
-
-  const defaultAvatar = DefaultAvatar;
-
-  const userHandler = getUsername(email);
+  const navigate = useNavigate();
 
   const [userEmail, setUserEmail] = useState(email ?? "");
-  const [userName, setUserName] = useState(userHandler ?? "");
+  const [userName, setUserName] = useState("");
   const [userFullName, setUserFullName] = useState(name ?? "");
+  const defaultAvatar = DefaultAvatar;
+
+  useEffect(() => {
+    setUserName(getUsername(email));
+  }, [email]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -39,17 +132,22 @@ function UserModal({ onClose }: UserModalProps) {
     };
   }, []);
 
-  const handleSignOutClick = () => {
+  const handleSignOutClick = useCallback(() => {
     onClose();
     navigate("/login");
-  };
+  }, [onClose, navigate]);
 
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) =>
-      setter(e.target.value);
+  const handleFullNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setUserFullName(e.target.value),
+    [],
+  );
 
-  const handleSaveClick = () => {
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setUserEmail(e.target.value),
+    [],
+  );
+
+  const handleSaveClick = useCallback(() => {
     setIsEditing(false);
     dispatch(
       setUserInfo({
@@ -61,59 +159,16 @@ function UserModal({ onClose }: UserModalProps) {
         phone,
       }),
     );
-  };
+  }, [userEmail, userFullName, role, avatar, phone, dispatch]);
 
-  const handleViewClick = () => {
+  const handleViewClick = useCallback(() => {
     setIsEditing(false);
     setUserEmail(email || "");
     setUserName(userName || "");
     setUserFullName(name || "");
-  };
+  }, [email, userName, name]);
 
-  const UserInfo = () => (
-    <div className="flex items-center">
-      <img
-        src={defaultAvatar}
-        alt="user"
-        className="h-12 w-12 rounded-full object-cover"
-      />
-      <div className="ml-4 flex flex-col">
-        <p className="text-sm font-bold uppercase">{userFullName}</p>
-        <p className="text-xs text-fg-soft">{userEmail}</p>
-        <a
-          className="mt-1 cursor-pointer text-xs text-fg-softer hover:text-primary-default"
-          onClick={() => setIsEditing(true)}
-        >
-          Edit account info
-        </a>
-        {/*<p className="text-sm text-gray-600">Role: {role}</p>*/}
-      </div>
-    </div>
-  );
-
-  const EditableUserInfo = () => (
-    <div className="flex items-center">
-      <img
-        src={defaultAvatar}
-        alt="user"
-        className="h-14 w-14 rounded-full object-cover"
-      />
-      <div className="ml-4 flex flex-col">
-        <Input
-          className="font-semibold"
-          placeholder="Enter your full name"
-          value={userFullName}
-          onChange={handleInputChange(setUserFullName)}
-        />
-        <Input
-          placeholder="Enter your email"
-          value={userEmail}
-          onChange={handleInputChange(setUserEmail)}
-        />
-        <p className="text-sm text-gray-600">Role: {role}</p>
-      </div>
-    </div>
-  );
+  const handleEdit = useCallback(() => setIsEditing(true), []);
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-end">
@@ -122,62 +177,50 @@ function UserModal({ onClose }: UserModalProps) {
         onClick={onClose}
       />
       <div
-        className="border-bg-soft relative mr-1 mt-12 transform rounded bg-white p-4 shadow drop-shadow-2xl transition-all"
+        className="relative mr-1 mt-12 transform rounded border-bg-soft bg-white p-4 shadow drop-shadow-2xl transition-all"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          {isEditing ? (
-            <Input
-              className="w-64 font-semibold"
-              placeholder="Enter your username"
-              value={userName}
-              onChange={handleInputChange(setUserName)}
-            />
-          ) : (
-            <div className="flex w-full flex-row items-center justify-between">
-              <div className="flex flex-row items-center">
-                <p className="mr-2 text-sm font-semibold uppercase">
-                  {userName}
-                </p>
-                <p className="text-xs">{role}</p>
-              </div>
-              {!isEditing && (
-                <a
-                  onClick={handleSignOutClick}
-                  className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
-                >
-                  Sign out
-                </a>
-              )}
+          <div className="flex w-full flex-row items-center justify-between">
+            <div className="flex flex-row items-center">
+              <p className="mr-2 text-sm font-semibold uppercase">{userName}</p>
+              <p className="text-xs">{role}</p>
             </div>
-          )}
+            {!isEditing && (
+              <a
+                onClick={handleSignOutClick}
+                className="cursor-pointer text-xs text-fg-softer hover:text-primary-default"
+              >
+                Sign out
+              </a>
+            )}
+          </div>
         </div>
 
         <div className="mt-2">
-          {isEditing ? <EditableUserInfo /> : <UserInfo />}
+          {isEditing ? (
+            <EditableUserInfo
+              userFullName={userFullName}
+              userEmail={userEmail}
+              defaultAvatar={defaultAvatar}
+              onFullNameChange={handleFullNameChange}
+              onEmailChange={handleEmailChange}
+              onSave={handleSaveClick}
+              onCancel={handleViewClick}
+            />
+          ) : (
+            <UserInfo
+              userFullName={userFullName}
+              userEmail={userEmail}
+              defaultAvatar={defaultAvatar}
+              onEdit={handleEdit}
+            />
+          )}
         </div>
-
-        {/*<div className="mt-6 flex justify-end space-x-2">*/}
-        {/*  {isEditing ? (*/}
-        {/*    <>*/}
-        {/*      <Button secondary onClick={handleViewClick}>*/}
-        {/*        Cancel*/}
-        {/*      </Button>*/}
-        {/*      <Button primary onClick={handleSaveClick}>*/}
-        {/*        Save*/}
-        {/*      </Button>*/}
-        {/*    </>*/}
-        {/*  ) : (*/}
-        {/*    <Button primary onClick={() => setIsEditing(true)}>*/}
-        {/*      <FaRegEdit className="mr-2"/>*/}
-        {/*      Edit*/}
-        {/*    </Button>*/}
-        {/*  )}*/}
-        {/*</div>*/}
       </div>
     </div>,
     document.querySelector(".modal-container") as Element,
   );
 }
 
-export default UserModal;
+export default React.memo(UserModal);
