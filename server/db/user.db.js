@@ -83,17 +83,28 @@ class UserDB {
     return user;
   };
 
-  updateUserInfo = async (id, email, name, phone, publicURL) => {
+  updateUserInfo = async (id, email, name, phone, publicURL, linkTitle) => {
     try {
-      const checkUser = await this.getUserByEmailDB(email);
-      if (checkUser) {
-        throw new ErrorHandler(403, "The email is exist");
+      let checkUser;
+      if (email) {
+        checkUser = await this.getUserByEmailDB(email);
+        if (checkUser) {
+          throw new ErrorHandler(403, "The email is exist");
+        }
       }
       const updatedUser = await Person.findByPk(id);
-      updatedUser.name = name;
-      updatedUser.email = email;
-      updatedUser.phone = phone;
-      updatedUser.avatar = publicURL;
+      if (!name) {
+        updatedUser.name = name;
+      }
+      if (!email) {
+        updatedUser.email = email;
+      }
+      if (!phone) {
+        updatedUser.phone = phone;
+      }
+      if (!publicURL) {
+        updatedUser.avatar = publicURL;
+      }
       updatedUser.save();
       return updatedUser;
     } catch (err) {

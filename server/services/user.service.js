@@ -53,22 +53,24 @@ class UserService {
 
   updateUserInfo = async (id, email, name, phone, publicURL, linkTitle) => {
     try {
-
       const user = await UserDB.updateUserInfo(id, email, name, phone, publicURL, linkTitle);
       if (!user) {
-        throw new ErrorHandler(403, "Can not update user info");
+        throw new ErrorHandler(403, "Cannot update user info");
       }
 
-      const { avatar, role } = user;
+      const { role, avatar } = user;
+
+      name = user.name;
+      email = user.email;
+      phone = user.phone;
 
       let childEmail;
-      if (role == "Parent") {
+      if (role === "Parent") {
         const childID = await ClassDB.findChildID(id);
         const child = await UserDB.getUserByIdDB(childID);
         childEmail = child.email;
-      }
-      else {
-        childEmail = ""
+      } else {
+        childEmail = "";
       }
 
       return { updatedUser: { id, email, name, phone, role, avatar, childEmail } };
@@ -76,6 +78,7 @@ class UserService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
 }
 
 module.exports = new UserService();

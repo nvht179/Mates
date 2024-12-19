@@ -19,21 +19,21 @@ module.exports = {
       {
         "name": "email",
         "in": "formData",
-        "required": true,
+        "required": false,
         "description": "New email of user",
         "type": "string"
       },
       {
         "name": "name",
         "in": "formData",
-        "required": true,
+        "required": false,
         "description": "New name of user",
         "type": "string"
       },
       {
         "name": "phone",
         "in": "formData",
-        "required": true,
+        "required": false,
         "description": "New phone of user",
         "type": "string"
       }, 

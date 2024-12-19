@@ -33,11 +33,17 @@ class UserController {
 
       const file = req.file;
 
-      if (!file) {
-        throw new ErrorHandler(403, "Please pick an image");
-      }
+      let publicURL;
+      let linkTitle;
 
-      // Create path for Supabase Storage
+      if (!file) {
+        publicURL = null;
+        linkTitle = null;
+      }
+      else {
+        publicURL = publicData.publicUrl;
+        linkTitle = file.originalname;
+        // Create path for Supabase Storage
       const filePath = `${Date.now()}_${file.originalname}`;
       const { data, error } = await supabase.storage
         .from("Attachments")
@@ -50,9 +56,7 @@ class UserController {
       const { data: publicData } = supabase.storage
         .from("Attachments")
         .getPublicUrl(filePath);
-
-      const publicURL = publicData.publicUrl;
-      const linkTitle = file.originalname;
+      }
 
       const { updatedUser } = await UserService.updateUserInfo(id, email, name, phone, publicURL, linkTitle);
       const message = "Successful";
