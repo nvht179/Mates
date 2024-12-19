@@ -21,22 +21,25 @@ module.exports = {
         "in": "formData",
         "required": false,
         "description": "New email of user",
-        "type": "string"
+        "type": "string",
+        "nullable": true // Allow null value
       },
       {
         "name": "name",
         "in": "formData",
         "required": false,
         "description": "New name of user",
-        "type": "string"
+        "type": "string",
+        "nullable": true // Allow null value
       },
       {
         "name": "phone",
         "in": "formData",
         "required": false,
         "description": "New phone of user",
-        "type": "string"
-      }, 
+        "type": "string",
+        "nullable": true // Allow null value
+      },
       {
         "name": "file",
         "in": "formData",
@@ -47,7 +50,7 @@ module.exports = {
     ],
     "responses": {
       "200": {
-        "description": "Update user info successfully",
+        "description": "Update user info successfully"
       }
     }
   }
