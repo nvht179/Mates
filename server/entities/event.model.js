@@ -31,7 +31,7 @@ const Event = sequelize.define(
     },
     classID: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: Class,
         key: "classID",
