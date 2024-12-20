@@ -1,11 +1,36 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { LuCalendarPlus } from "react-icons/lu";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import { BsCalendarDate, BsChevronDown } from "react-icons/bs";
+import { BsCalendarDate } from "react-icons/bs";
 import Button from "../components/Button";
 import Calendar from "../components/Calendar";
+import Input from "../components/Input";
+import { useViewAllEventQuery } from "../store/services/eventApi";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 function CalendarPage() {
+  const [selectionDate, setSelectionDate] = useState<Date>(new Date());
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const user = useSelector((state: RootState) => state.user);
+  const { data, isError, isLoading, error } = useViewAllEventQuery({
+    userID: user.id ?? 0,
+  });
+
+  useEffect(() => {
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+  }, [isError, error]);
+
+  const events = data?.events ?? [];
+
   const header = (
     <div className="flex flex-row items-center justify-between px-8 py-2">
       <div className="flex flex-row items-center justify-between">
@@ -24,52 +49,49 @@ function CalendarPage() {
   );
 
   const navigationBar = (
-    <div className="flex flex-row items-center px-8 py-4">
-      <div className="flex flex-row items-center justify-between mx-2 cursor-pointer active:opacity-30">
-        <BsCalendarDate className="mr-2"/>
-        <p className="font-light">Today</p>
+    <div className="flex flex-row items-center px-8 py-2">
+      <div
+        className="mx-2 flex cursor-pointer flex-row items-center justify-between active:opacity-30"
+        onClick={() => setSelectionDate(new Date())}
+      >
+        <BsCalendarDate className="mr-2" />
+        <p className="font-light select-none">Today</p>
       </div>
-      <FaArrowLeft className="cursor-pointer mx-2 active:opacity-30" />
-      <FaArrowRight className="cursor-pointer mx-2 active:opacity-30" />
-      <div className="flex flex-row items-center justify-between mx-2 cursor-pointer active:opacity-30">
-        <p className="font-bold">08/12/2024</p>
-        <BsChevronDown className="ml-2"/>
+      <FaArrowLeft
+        className="mx-4 cursor-pointer active:opacity-30"
+        onClick={() => {
+          const newDate = new Date(selectionDate);
+          newDate.setDate(selectionDate.getDate() - 7);
+          setSelectionDate(newDate);
+        }}
+      />
+      <FaArrowRight
+        className="mx-2 cursor-pointer active:opacity-30"
+        onClick={() => {
+          const newDate = new Date(selectionDate);
+          newDate.setDate(selectionDate.getDate() + 7);
+          setSelectionDate(newDate);
+        }}
+      />
+      <div className="mx-2 flex cursor-pointer flex-row items-center justify-between active:opacity-30">
+        <Input
+          className="border-none"
+          type="date"
+          value={selectionDate.toISOString().split("T")[0]}
+          onChange={(e) => setSelectionDate(new Date(e.target.value))}
+        />
       </div>
     </div>
   );
 
-  const displayDate = new Date();
-  const events = [
-    {
-      id: 1,
-      title: "Event 1",
-      description: "Description 1",
-      startTime: new Date(2024, 11, 20, 1),
-      endTime: new Date(2024, 11, 20, 4),
-    },
-    {
-      id: 2,
-      title: "Event 2",
-      description: "Description 2",
-      startTime: new Date(),
-      endTime: new Date(2024, 12, 20, 22),
-    },
-    {
-      id: 3,
-      title: "Event 3",
-      description: "Description 3",
-      startTime: new Date(2024, 7, 12, 18),
-      endTime: new Date(2024, 7, 12, 20),
-    },
-  ];
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex h-full w-full flex-col">
       {header}
       <div className="border-b-2" />
       {navigationBar}
-      <div className="border-b-2 mb-1" />
+      <div className="mb-1 border-b-2" />
       <div className="flex-1 overflow-auto">
-        <Calendar displayDate={displayDate} events={events}/>
+        <Calendar displayDate={selectionDate} events={events} />
       </div>
     </div>
   );

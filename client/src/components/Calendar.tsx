@@ -1,12 +1,5 @@
 import React from "react";
-
-interface Event {
-  id: number;
-  title: string;
-  startTime: Date;
-  endTime: Date;
-  description: string;
-}
+import { Event } from "../interfaces/Event";
 
 interface CalendarProps {
   displayDate: Date;
@@ -19,13 +12,14 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
   const startOfWeek = new Date(
     displayDate.getFullYear(),
     displayDate.getMonth(),
-    displayDate.getDate() - displayDate.getDay() + 1,
+    displayDate.getDate() -
+      (displayDate.getDay() === 0 ? 6 : displayDate.getDay() - 1),
   );
 
   // Generate an array of 7 days (Monday to Sunday)
   const weekDays = Array.from({ length: 7 }).map((_, index) => {
     const day = new Date(startOfWeek);
-    day.setDate(day.getDate() + index);
+    day.setDate(startOfWeek.getDate() + index);
     return day;
   });
 
@@ -34,17 +28,43 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
     (_, index) => index.toString().padStart(2, "0") + ":00",
   );
 
+  // Helper function to calculate recurring events
+  const isRecurringEvent = (event: Event, day: Date): boolean => {
+    if (!event.repeatTime) return false;
+
+    const eventStart = new Date(event.startTime);
+    const eventStartMidnight = new Date(
+      eventStart.getFullYear(),
+      eventStart.getMonth(),
+      eventStart.getDate(),
+    );
+    const dayMidnight = new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate(),
+    );
+
+    const dayDiff = Math.floor(
+      (dayMidnight.getTime() - eventStartMidnight.getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+
+    switch (event.repeatTime) {
+      case "Weekly":
+        return dayDiff % 7 === 0 && dayDiff >= 0;
+      case "Bi-Weekly":
+        return dayDiff % 14 === 0 && dayDiff >= 0;
+      case "Monthly":
+        return eventStartMidnight.getDate() === dayMidnight.getDate();
+      default:
+        return false;
+    }
+  };
+
   // Function to calculate event positioning
-  const getEventStyles = (event: Event, day: Date) => {
+  const getEventStyles = (event: Event) => {
     const eventStart = new Date(event.startTime);
     const eventEnd = new Date(event.endTime);
-
-    if (
-      eventStart.toDateString() !== day.toDateString() &&
-      eventEnd.toDateString() !== day.toDateString()
-    ) {
-      return { display: "none" };
-    }
 
     const startHour = eventStart.getHours();
     const endHour = eventEnd.getHours();
@@ -100,18 +120,20 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
                 marginTop: `${HOURWIDTH}rem`,
               }}
             >
-              {/* Events for this day */}
               {events
                 .filter(
                   (event) =>
-                    event.startTime.toDateString() === day.toDateString() ||
-                    event.endTime.toDateString() === day.toDateString(),
+                    new Date(event.startTime).toDateString() ===
+                      day.toDateString() ||
+                    new Date(event.endTime).toDateString() ===
+                      day.toDateString() ||
+                    isRecurringEvent(event, day),
                 )
                 .map((event) => (
                   <div
-                    key={event.id}
+                    key={event.eventID}
                     className="absolute left-1 right-1 cursor-pointer truncate rounded border-2 border-fg-alt bg-primary-default px-2 py-1 text-xs text-white"
-                    style={getEventStyles(event, day)}
+                    style={getEventStyles(event)}
                     title={event.description}
                     onClick={() =>
                       alert(`Event: ${event.title}\n\n${event.description}`)
@@ -119,10 +141,15 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
                   >
                     <p>{event.title}</p>
                     <p>
-                      {event.startTime.toLocaleTimeString()} -{" "}
-                      {event.endTime.toLocaleTimeString()}
+                      {new Date(event.startTime).toLocaleTimeString()} -{" "}
+                      {new Date(event.endTime).toLocaleTimeString()}
                     </p>
                     <p>{event.description}</p>
+                    {event.repeatTime && (
+                      <p className="italic text-gray-300">
+                        Repeats: {event.repeatTime}
+                      </p>
+                    )}
                   </div>
                 ))}
             </div>
