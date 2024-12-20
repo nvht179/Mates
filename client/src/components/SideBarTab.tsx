@@ -10,19 +10,20 @@ export default function SideBarTab({
   active,
   ...rest
 }: SidebarTabProps) {
-  const style = className(
-    "mt-2 flex cursor-pointer border-l-2 flex-col active:opacity-30 w-16 h-16 text-fg-soft",
+  const buttonStyle = className(
+    "flex flex-col h-full w-full items-center justify-center hover:text-primary-default border-l-2 border-bg-soft",
     {
-      "text-primary-default border-primary-default": active, // Active style
+      "text-primary-default border-primary-default ": active,
     },
     rest.className,
   );
 
   return (
-    <div {...rest} className={style}>
-      <button className="hover:bg-bg-soft rounded w-full h-full flex flex-col items-center pt-2 justify-center hover:text-primary-default">
-        {children}
-      </button>
+    <div
+      {...rest}
+      className="mt-2 flex h-14 w-16 cursor-pointer rounded text-fg-soft hover:bg-bg-soft active:opacity-30"
+    >
+      <button className={buttonStyle}>{children}</button>
     </div>
   );
 }

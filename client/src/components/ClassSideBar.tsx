@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
-import Panel from "./Panel";
 import ClassSideBarTab from "./ClassSideBarTab";
 import { ClassState } from "../interfaces/Class";
+import ClassMemberList from "./ClassMemberList";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
@@ -37,7 +37,7 @@ function ClassSideBar() {
   };
 
   return (
-    <Panel className="flex h-full w-96 flex-col bg-bg-dark">
+    <div className="flex h-full w-96 flex-col border-r border-fg-border bg-bg-dark">
       <div
         onClick={handleClickAllClasses}
         className="ml-4 mt-4 flex cursor-pointer flex-row items-center text-fg-default hover:text-primary-default active:opacity-30"
@@ -45,40 +45,43 @@ function ClassSideBar() {
         <IoIosArrowBack />
         <p className="ml-2 text-sm font-semibold">All classes</p>
       </div>
-      <div className="mt-8">
-        <div className="ml-4 flex flex-row">
-          <img
-            className="h-16 w-16 rounded object-cover"
-            src={image}
-            alt={className}
-          />
-          <div className="flex flex-col justify-center ml-1">
-            <p className="ml-2 font-bold">{code}</p>
-            <p className="ml-2 mt-1 truncate text-xs text-fg-softer">{className}</p>
-          </div>
-        </div>
-        <div className="mt-4 flex flex-col">
-          <ClassSideBarTab
-            onClick={handleClickLecture}
-            active={buttonClicked === "lecture"}
-          >
-            Lecture
-          </ClassSideBarTab>
-          <ClassSideBarTab
-            onClick={handleClickAssignment}
-            active={buttonClicked === "assignment"}
-          >
-            Assignment
-          </ClassSideBarTab>
-          <ClassSideBarTab
-            onClick={handleClickDiscussion}
-            active={buttonClicked === "discussion"}
-          >
-            Discussion
-          </ClassSideBarTab>
+      <div className="ml-4 mt-8 flex flex-row">
+        <img
+          className="h-16 w-16 rounded object-cover"
+          src={image}
+          alt={className}
+        />
+        <div className="ml-1 flex flex-col justify-center">
+          <p className="ml-2 font-bold">{code}</p>
+          <p className="ml-2 mt-1 truncate text-xs text-fg-softer">
+            {className}
+          </p>
         </div>
       </div>
-    </Panel>
+      <div className="mx-1 mt-4 flex h-full flex-col">
+        <ClassSideBarTab
+          onClick={handleClickLecture}
+          active={buttonClicked === "lecture"}
+        >
+          Lecture
+        </ClassSideBarTab>
+        <ClassSideBarTab
+          onClick={handleClickAssignment}
+          active={buttonClicked === "assignment"}
+        >
+          Assignment
+        </ClassSideBarTab>
+        <ClassSideBarTab
+          onClick={handleClickDiscussion}
+          active={buttonClicked === "discussion"}
+        >
+          Discussion
+        </ClassSideBarTab>
+        <div className="h-full" />
+        <ClassMemberList type="students" id={cla.classID.toString()} />
+        <ClassMemberList type="teachers" id={cla.classID.toString()} />
+      </div>
+    </div>
   );
 }
 

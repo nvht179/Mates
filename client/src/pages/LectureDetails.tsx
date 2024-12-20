@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LuPencil } from "react-icons/lu";
 import { BiDetail } from "react-icons/bi";
 import Input from "../components/Input";
@@ -18,16 +18,17 @@ function LectureDetails() {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState(lecture?.title ?? "");
-  const [content, setcontent] = useState(lecture?.content ?? "");
+  const [content, setContent] = useState(lecture?.content ?? "");
   const [fileList, setFileList] = useState<FileList | null>(null);
-  const [createLecture, { isSuccess: isCreateLectureSuccess }] = useCreateLectureMutation();
-  const [editLecture, {isSuccess: isEditLectureSuccess}] = useEditLectureMutation();
+  const [createLecture, { isSuccess: isCreateLectureSuccess }] =
+    useCreateLectureMutation();
+  const [editLecture, { isSuccess: isEditLectureSuccess }] =
+    useEditLectureMutation();
 
   useEffect(() => {
     if (lecture?.attachments) {
       const attachments = lecture.attachments.map((attachment) => {
-        const file = new File([attachment.link], attachment.linkTitle);
-        return file;
+        return new File([attachment.link], attachment.linkTitle);
       });
       const dataTransfer = new DataTransfer();
       attachments.forEach((file) => dataTransfer.items.add(file));
@@ -68,14 +69,22 @@ function LectureDetails() {
     return () => {
       window.removeEventListener("saveLecture", handleSaveLecture);
     };
-  }, [title, content, fileList, cla.classID, createLecture, editLecture, lecture]);
+  }, [
+    title,
+    content,
+    fileList,
+    cla.classID,
+    createLecture,
+    editLecture,
+    lecture,
+  ]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setcontent(e.target.value);
+    setContent(e.target.value);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

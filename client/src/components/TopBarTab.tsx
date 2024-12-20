@@ -11,20 +11,18 @@ export default function TopBarTab({
   active,
   ...rest
 }: ClassTabBarTabProps) {
-  // const isPrimary = !disabled && primary && !secondary;
-  // const isSecondary = !disabled && secondary;
-
-
-  const style = className(
-    "cursor-pointer ml-3 px-1 pt-4 pb-4 text-fg-softer ",
+  const finalClassName = className(
+    "cursor-pointer h-full flex items-center text-sm",
     {
-      "font-semibold text-bg-default border-b-primary-default border-b-2": active, // Active style
+      "font-semibold text-fg-default border-b-primary-default border-b-[3px]":
+        active, // Active style
+      "text-fg-soft": !active,
     },
     additionalClassName,
   );
 
   return (
-    <div {...rest} className={style}>
+    <div {...rest} className={finalClassName}>
       {children}
     </div>
   );

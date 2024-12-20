@@ -14,10 +14,10 @@ function AssignmentList({ assignments }: AssignmentListProps) {
 
   const renderedAssignment = assignments.map((assignment) => {
     return (
-      <Panel key={assignment.id} className="my-6 flex-1 overflow-y-auto p-4">
+      <Panel key={assignment.id} className="my-6 p-4">
         <div className="flex flex-row items-center justify-between">
           <div className="flex w-2/5 items-center justify-between">
-            <p className="text-2xl">
+            <p className="font-semibold text-fg-default">
               {"#" + assignment.id + " " + assignment.title}
             </p>
             <div className="flex flex-row items-center">

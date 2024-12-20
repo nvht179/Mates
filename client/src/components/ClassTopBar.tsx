@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import TopBarTab from "./TopBarTab";
-import Panel from "./Panel";
 import Button from "./Button";
+import { RiEditBoxFill } from "react-icons/ri";
 
 type buttonClicked = "classwork" | "grade";
 
@@ -33,20 +33,36 @@ function ClassTopBar() {
     });
     setButtonClicked("grade");
   };
-  
+
   const assignmentContent = (
-    <div className="flex h-full flex-row items-center">
-      <h1 className="ml-4 text-lg font-bold">{title}</h1>
+    <>
+      <div className="flex h-full items-center">
+        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
+          {title}
+        </h1>
+      </div>
       <TopBarTab
+        className="ml-4 pt-1"
         onClick={handleClickClasswork}
         active={buttonClicked === "classwork"}
       >
         Classwork
       </TopBarTab>
-      <TopBarTab onClick={handleClickGrade} active={buttonClicked === "grade"}>
+      <TopBarTab
+        className="ml-4 pt-1"
+        onClick={handleClickGrade}
+        active={buttonClicked === "grade"}
+      >
         Grade
       </TopBarTab>
-    </div>
+      <div className="h-full w-full" />
+      <div className="flex h-full items-center">
+        <Button className="mr-4" secondary>
+          <RiEditBoxFill className="mr-2" />
+          <label className="truncate text-sm">New Assignment</label>
+        </Button>
+      </div>
+    </>
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -71,51 +87,59 @@ function ClassTopBar() {
     });
   };
 
-  const lectureContent = display ? (
-    <div className="flex h-full w-full flex-row items-center justify-between">
-      <div className="flex items-center">
-        <h1 className="ml-4 text-lg font-bold">{display}</h1>
-        <TopBarTab active={true}>Detail</TopBarTab>
+  const lectureContent = (
+    <>
+      <div className="flex h-full items-center">
+        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
+          {display ? display : title}
+        </h1>
       </div>
-      <div className="mr-4 flex items-center">
-        <Button
-          primary
-          className="mr-4 w-28"
-          onClick={handleSaveLectureClick}
-          disabled={isLoading}
-        >
-          {isLoading ? "Saving..." : "Save"}
-        </Button>
-        <Button secondary className="w-28" onClick={handleCancelLectureClick}>
-          Close
-        </Button>
-      </div>
-    </div>
-  ) : (
-    <div className="flex h-full flex-row items-center">
-      <h1 className="ml-4 text-lg font-bold">{title}</h1>
-    </div>
+      {display ? (
+        <>
+          <TopBarTab active className="ml-4 pt-1">
+            Detail
+          </TopBarTab>
+          <div className="h-full w-full" />
+          <div className="flex h-full items-center">
+            <Button
+              primary
+              className="mr-4 w-20 truncate"
+              onClick={handleSaveLectureClick}
+              disabled={isLoading}
+            >
+              {isLoading ? "Saving..." : "Save"}
+            </Button>
+            <Button
+              secondary
+              className="mr-4 w-20"
+              onClick={handleCancelLectureClick}
+            >
+              Close
+            </Button>
+          </div>
+        </>
+      ) : null}
+    </>
   );
 
-  const content =
-    title === "Assignment" ? (
-      assignmentContent
-    ) : title === "Lecture" ? (
-      lectureContent
-    ) : (
-      <h1 className="ml-4 text-lg font-bold">{title}</h1>
-    );
-
   return (
-    <Panel className="flex h-[60px] flex-row items-center bg-bg-soft py-4">
-      <img
-        src={image}
-        alt={className}
-        className="ml-4 h-8 w-8 rounded object-cover"
-      />
+    <div className="flex h-[60px] flex-row border-b border-fg-border bg-bg-soft">
+      <div className="flex h-full flex-shrink-0 items-center">
+        <img
+          src={image}
+          alt={className}
+          className="ml-4 h-8 w-8 rounded object-cover"
+        />
+      </div>
 
-      {content}
-    </Panel>
+      {title === "Assignment" ? (
+        assignmentContent
+      ) : title === "Lecture" ? (
+        lectureContent
+      ) : (
+        <h1 className="ml-4 text-lg font-bold">{title}</h1>
+      )}
+    </div>
   );
 }
 

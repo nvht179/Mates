@@ -5,6 +5,8 @@ import {
   CreateClassResponse,
   ViewAllClassesRequest,
   ViewAllClassesResponse,
+  ViewAllStudentInClassResponse,
+  ViewAllTeachersInClassResponse,
 } from "../../interfaces/Class";
 
 const classApi = createApi({
@@ -16,8 +18,8 @@ const classApi = createApi({
       if (token) {
         headers.set("auth-token", token);
       }
-      return headers
-    }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     viewAllClasses: builder.query<
@@ -34,6 +36,28 @@ const classApi = createApi({
         };
       },
     }),
+    viewAllStudentsInClass: builder.query<
+      ViewAllStudentInClassResponse,
+      string
+    >({
+      query: (classID) => {
+        return {
+          url: `/classes/view-all-students-in-class/${classID}`,
+          method: "GET",
+        };
+      },
+    }),
+    viewAllTeachersInClass: builder.query<
+      ViewAllTeachersInClassResponse,
+      string
+    >({
+      query: (classID) => {
+        return {
+          url: `/classes/view-all-teachers-in-class/${classID}`,
+          method: "GET",
+        };
+      },
+    }),
     createClass: builder.mutation<CreateClassResponse, CreateClassRequest>({
       query: (newClass) => {
         return {
@@ -46,5 +70,10 @@ const classApi = createApi({
   }),
 });
 
-export const { useViewAllClassesQuery, useCreateClassMutation } = classApi;
+export const {
+  useViewAllClassesQuery,
+  useCreateClassMutation,
+  useViewAllStudentsInClassQuery,
+  useViewAllTeachersInClassQuery,
+} = classApi;
 export default classApi;
