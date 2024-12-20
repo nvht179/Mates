@@ -10,7 +10,7 @@ module.exports =
       {
         "name": "classID",
         "in": "path",
-        "description": "The ID of the class to retrieve teachers from",
+        "description": "The id of class",
         "required": true,
         "schema": {
           "type": "string",
