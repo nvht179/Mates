@@ -1,6 +1,6 @@
 import PostList from "../components/PostList";
 import AddPost from "../components/AddPost";
-import { useViewPostsQuery } from "../store/services/postApi";
+import { useViewPostsQuery } from "../store";
 import { useLocation } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 

@@ -19,7 +19,7 @@ function LectureList({ lectures }: LectureListProps) {
   
   const handleEditClick = (lecture: Lecture) => {
     navigate(`/class/${code}/lecture-details`, {
-      state: { ...state, title: "Lecture", display: "New Lecture", lecture },
+      state: { ...state, display: "New Lecture", lecture },
     });
   }
 

@@ -8,7 +8,9 @@ type buttonClicked = "class" | "calendar";
 
 export default function SideBar() {
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("class");
-  const [hoveredButton, setHoveredButton] = useState<buttonClicked | null>(null);
+  const [hoveredButton, setHoveredButton] = useState<buttonClicked | null>(
+    null,
+  );
   const navigate = useNavigate();
 
   const handleClickClass = () => {
@@ -21,32 +23,30 @@ export default function SideBar() {
   };
 
   return (
-    <div className="sticky flex h-full flex-col items-center border bg-bg-darker px-0.5">
+    <div className="sticky flex h-full flex-col items-center border bg-bg-darker">
       <SideBarTab
         onClick={handleClickClass}
         active={buttonClicked === "class"}
-        className="mt-2 text-2xl"
         onMouseEnter={() => setHoveredButton("class")}
         onMouseLeave={() => setHoveredButton(null)}
       >
         {buttonClicked === "class" || hoveredButton === "class" ? (
-          <MdSchool />
+          <MdSchool className="text-2xl" />
         ) : (
-          <MdOutlineSchool />
+          <MdOutlineSchool className="text-2xl" />
         )}
-        <p className="text-[10px]">Class</p>
+        <p className="text-[10px] font-semibold">Class</p>
       </SideBarTab>
       <SideBarTab
         onClick={handleClickCalendar}
         active={buttonClicked === "calendar"}
-        className="mt-2 text-2xl font-semibold"
         onMouseEnter={() => setHoveredButton("calendar")}
         onMouseLeave={() => setHoveredButton(null)}
       >
         {buttonClicked === "calendar" || hoveredButton === "calendar" ? (
-          <TiCalendar />
+          <TiCalendar className="text-2xl" />
         ) : (
-          <TiCalendarOutline />
+          <TiCalendarOutline className="text-2xl" />
         )}
         <p className="text-[10px] font-semibold">Calendar</p>
       </SideBarTab>

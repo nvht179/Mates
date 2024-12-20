@@ -1,4 +1,3 @@
-import Panel from "./Panel";
 import { MdInfo, MdInfoOutline } from "react-icons/md";
 import { RiEditBoxFill, RiEditBoxLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
@@ -33,17 +32,20 @@ function ClassCardList({ classes }: ClassCardListProps) {
     const randomImage = classImages[cla.classID];
 
     return (
-      <Panel
+      <div
         key={cla.classID}
-        className="rounded p-3 shadow hover:bg-bg-dark active:bg-bg-darker select-none"
+        className="select-none rounded border p-3 shadow hover:bg-bg-dark active:bg-bg-darker"
       >
-        <div className="flex cursor-pointer flex-row items-center justify-start" onClick={() => handleClick(cla, randomImage)}>
+        <div
+          className="flex cursor-pointer flex-row items-center justify-start"
+          onClick={() => handleClick(cla, randomImage)}
+        >
           <img
             className="h-[72px] w-[72px] rounded object-cover"
             src={randomImage}
             alt={cla.className}
           />
-          <p className="text-fg-default hover:text-primary-default ml-4 truncate text-sm">
+          <p className="ml-4 truncate text-sm text-fg-default hover:text-primary-default">
             {cla.className}
           </p>
         </div>
@@ -71,7 +73,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
             )}
           </div>
         </div>
-      </Panel>
+      </div>
     );
   });
 

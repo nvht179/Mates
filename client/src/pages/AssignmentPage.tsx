@@ -1,6 +1,4 @@
 import AssignmentList from "../components/AssignmentList";
-import Button from "../components/Button";
-import { RiEditBoxFill } from "react-icons/ri";
 
 function AssignmentPage() {
   const assignments = [
@@ -36,14 +34,8 @@ function AssignmentPage() {
     },
   ];
   return (
-    <div className="relative mx-20 flex h-screen flex-col">
+    <div className="h-full px-40">
       <AssignmentList assignments={assignments} />
-      <div className="flex">
-        <Button className="items-center">
-          <RiEditBoxFill className="mr-2" />
-          <label className="text-sm">New Assignment</label>
-        </Button>
-      </div>
     </div>
   );
 }

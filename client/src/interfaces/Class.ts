@@ -44,10 +44,31 @@ interface CreateClassResponse {
   }>;
 }
 
+interface ViewAllStudentInClassResponse {
+  message: string;
+  studentsInClass: Array<{
+    id: number;
+    classID: number;
+    studentID: number;
+  }>;
+}
+
+interface ViewAllTeachersInClassResponse {
+  message: string;
+  teachersInClass: Array<{
+    id: number;
+    classID: number;
+    teacherID: number;
+    role: string;
+  }>;
+}
+
 export type {
   ClassState,
   ViewAllClassesResponse,
   ViewAllClassesRequest,
   CreateClassRequest,
   CreateClassResponse,
+  ViewAllStudentInClassResponse,
+  ViewAllTeachersInClassResponse,
 };

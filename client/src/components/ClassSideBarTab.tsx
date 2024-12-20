@@ -11,9 +11,10 @@ export default function ClassSideBarTab({
   ...rest
 }: ClassSideBarTabProps) {
   const style = className(
-    "cursor-pointer pl-4 py-1 text-fg-softer active:opacity-30 hover:bg-bg-soft m-1",
+    "cursor-pointer pl-4 py-1 active:opacity-30 hover:bg-bg-soft my-0.5 rounded",
     {
-      "text-fg-default bg-bg-default": active, // Active style
+      "text-fg-default bg-bg-default": active,
+      "text-fg-softer": !active,
     },
     rest.className,
   );

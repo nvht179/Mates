@@ -3,7 +3,11 @@ import TopBar from "../components/TopBar.tsx";
 import SideBar from "../components/SideBar.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { useLazyRefreshTokenQuery, useLazyGetUserByIdQuery, setUserInfo } from "../store";
+import {
+  useLazyRefreshTokenQuery,
+  useLazyGetUserByIdQuery,
+  setUserInfo,
+} from "../store";
 import { useEffect, useCallback, useState } from "react";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
@@ -16,7 +20,8 @@ function Layout() {
     (state: RootState) => state.user,
   );
   const navigate = useNavigate();
-  const [getUserById, { isError, error, data, isSuccess, isLoading }] = useLazyGetUserByIdQuery();
+  const [getUserById, { isError, error, data, isSuccess, isLoading }] =
+    useLazyGetUserByIdQuery();
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
 
@@ -45,7 +50,11 @@ function Layout() {
   }, [handleRefreshToken]);
 
   useEffect(() => {
-    responseErrorHandler(isError, error as FetchBaseQueryError, setErrorMessage);
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
     if (isError) {
       console.error("Error loading user info:", errorMessage);
     }
@@ -85,7 +94,7 @@ function Layout() {
       <TopBar />
       <div className="flex h-[calc(100vh-54px)] flex-row">
         <SideBar />
-        <main className="flex-1">
+        <main className="flex-1 border border-fg-border">
           <Outlet />
         </main>
       </div>
