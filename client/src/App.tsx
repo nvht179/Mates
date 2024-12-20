@@ -22,6 +22,7 @@ import GradePage from "./pages/GradePageStudent";
 import ToGradePage from "./pages/ToGradePage";
 // import GradeDetail from "./pages/GradeDetail";
 import CreateAssignment from "./pages/CreateAssignment";
+import LectureDetails from "./pages/LectureDetails";
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/class/:classCode" element={<ClassLayout />}>
             <Route path="lecture" element={<LecturePage />} />
+            <Route path="lecture-details" element={<LectureDetails/>} />
             <Route path="assignment" element={<AssignmentPage />} />
             <Route path="create-assignment" element={<CreateAssignment />} />
             <Route path="grade" element={<ToGradePage />} />

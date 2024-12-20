@@ -1,3 +1,13 @@
+import { Attachment } from "./Attachment";
+
+interface Lecture {
+  id: number;
+  title: string;
+  content: string;
+  classID: number;
+  attachments: Attachment[];
+}
+
 interface ViewAllLecturesRequest {
   classID: number;
 }
@@ -20,12 +30,7 @@ interface ViewAllLecturesResponse {
   }[];
 }
 
-interface CreateLectureRequest {
-  title: string;
-  content: string;
-  classID: number;
-  files: File[];
-}
+type CreateLectureRequest = FormData;
 
 interface CreateLectureResponse {
   message: string;
@@ -37,8 +42,21 @@ interface CreateLectureResponse {
   };
 }
 
+type EditLectureRequest = FormData;
+
+interface EditLectureResponse {
+  message: string;
+  updatedLecture: {
+    id: number;
+    title: string;
+    content: string;
+    classID: number;
+  };
+}
+
 interface DeleteLectureRequest {
   lectureId: number;
+  classId: number;
 }
 
 interface DeleteLectureResponse {
@@ -46,10 +64,13 @@ interface DeleteLectureResponse {
 }
 
 export type {
+  Lecture,
   ViewAllLecturesRequest,
   ViewAllLecturesResponse,
   CreateLectureRequest,
   CreateLectureResponse,
+  EditLectureRequest,
+  EditLectureResponse,
   DeleteLectureRequest,
   DeleteLectureResponse,
 };

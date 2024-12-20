@@ -1,37 +1,30 @@
-import { useState } from "react";
 import LectureOption from "./LectureOption";
 import Panel from "./Panel";
-
-interface Lecture {
-  id: number;
-  title: string;
-  content: string;
-  classID: number;
-  attachments: Attachment[];
-}
-
-interface Attachment {
-  id: number;
-  link: string;
-  linkTitle: string;
-  assignmentId: number | null;
-  postId: number | null;
-  lectureId: number;
-}
+import { useNavigate, useLocation } from "react-router-dom";
+import { useDeleteLectureMutation } from "../store";
+import { Lecture } from "../interfaces/Lecture";
+import { ClassState } from "../interfaces/Class";
 
 interface LectureListProps {
   lectures: Lecture[];
 }
 
 function LectureList({ lectures }: LectureListProps) {
-  const [editLectureId, setEditLectureId] = useState<number | null>(null);
+  const { state } = useLocation();
+  const { cla } = state as { cla: ClassState};
+  const { code } = cla;
 
+  const navigate = useNavigate();
+  const [deleteLecture] = useDeleteLectureMutation();
+  
   const handleEditClick = (lecture: Lecture) => {
-    setEditLectureId(lecture.id);
+    navigate(`/class/${code}/lecture-details`, {
+      state: { ...state, title: "Lecture", display: "New Lecture", lecture },
+    });
   }
 
   const handleDeleteClick = (lecture: Lecture) => {
-    console.log("Delete lecture with id: ", lecture.id);
+    deleteLecture({ lectureId: lecture.id, classId: lecture.classID });
   }
 
   const renderedLectures = lectures.map((lecture) => {

@@ -5,12 +5,15 @@ import {
   CreateLectureResponse,
   DeleteLectureRequest,
   DeleteLectureResponse,
+  EditLectureRequest,
+  EditLectureResponse,
   ViewAllLecturesRequest,
   ViewAllLecturesResponse,
 } from "../../interfaces/Lecture";
 
 export const lectureApi = createApi({
   reducerPath: "lecture",
+  tagTypes: ["Lecture"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
     prepareHeaders: async (headers) => {
@@ -26,6 +29,9 @@ export const lectureApi = createApi({
       ViewAllLecturesResponse,
       ViewAllLecturesRequest
     >({
+      providesTags: (_result, _error, arg) => {
+        return [{ type: "Lecture", id: arg.classID }];
+      },
       query: (cla) => {
         return {
           url: `/lectures/view-all-lectures-in-class/${cla.classID}`,
@@ -37,9 +43,10 @@ export const lectureApi = createApi({
       },
     }),
     createLecture: builder.mutation<
-      CreateLectureResponse,
+      CreateLectureResponse,  
       CreateLectureRequest
     >({
+      invalidatesTags: (_result, _error, arg) => [{ type: "Lecture", id: arg.get("classID") as string }],
       query: (newLecture) => {
         return {
           url: "/lectures/create",
@@ -48,13 +55,27 @@ export const lectureApi = createApi({
         };
       },
     }),
+    editLecture: builder.mutation<
+      EditLectureResponse,
+      EditLectureRequest
+    >({
+      invalidatesTags: (_result, _error, arg) => [{ type: "Lecture", id: arg.get("classID") as string }],
+      query: (newLecture) => {
+        return {
+          url: "/lectures/edit",
+          method: "PUT",
+          body: newLecture,
+        };
+      },
+    }), 
     deleteLecture: builder.mutation<
       DeleteLectureResponse,
       DeleteLectureRequest
     >({
-      query: (lectureId) => {
-        return {
-          url: `/lectures/remove-lecture/${lectureId}`,
+      invalidatesTags: (_result, _error, arg) => [{ type: "Lecture", id: arg.classId }],
+      query: (lecture) => {
+        return {  
+          url: `/lectures/remove-lecture/${lecture.lectureId}`,
           method: "DELETE",
         };
       },
@@ -65,6 +86,7 @@ export const lectureApi = createApi({
 export const {
   useViewAllLecturesQuery,
   useCreateLectureMutation,
+  useEditLectureMutation,
   useDeleteLectureMutation,
 } = lectureApi;
 export default lectureApi;

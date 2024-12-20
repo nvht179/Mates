@@ -19,19 +19,19 @@ function ClassSideBar() {
   };
   const handleClickLecture = () => {
     navigate(`/class/${code}/lecture`, {
-      state: { ...state, title: "Lecture" },
+      state: { ...state, title: "Lecture", display: null },
     });
     setButtonClicked("lecture");
   };
   const handleClickAssignment = () => {
     navigate(`/class/${code}/assignment`, {
-      state: { ...state, title: "Assignment" },
+      state: { ...state, title: "Assignment", display: null },
     });
     setButtonClicked("assignment");
   };
   const handleClickDiscussion = () => {
     navigate(`/class/${code}/discussion`, {
-      state: { ...state, title: "Discussion" },
+      state: { ...state, title: "Discussion", display: null },
     });
     setButtonClicked("discussion");
   };
