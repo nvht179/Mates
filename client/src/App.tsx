@@ -11,7 +11,6 @@ import ClassLayout from "./layouts/ClassLayout";
 import LecturePage from "./pages/LecturePage";
 import AssignmentPage from "./pages/AssignmentPage";
 import DiscussionPage from "./pages/DiscussionPage";
-import Calendar from "./pages/Calendar";
 import ForgetPassword from "./pages/ForgetPassword";
 import VerificationSent from "./components/VerificationSent";
 import EmailInput from "./components/EmailInput";
@@ -23,6 +22,7 @@ import ToGradePage from "./pages/ToGradePage";
 // import GradeDetail from "./pages/GradeDetail";
 import CreateAssignment from "./pages/CreateAssignment";
 import LectureDetails from "./pages/LectureDetails";
+import CalendarPage from "./pages/CalendarPage";
 
 export default function App() {
   return (
@@ -45,7 +45,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/create-class" element={<CreateClass />} />
-          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/class/:classCode" element={<ClassLayout />}>
             <Route path="lecture" element={<LecturePage />} />
             <Route path="lecture-details" element={<LectureDetails/>} />
