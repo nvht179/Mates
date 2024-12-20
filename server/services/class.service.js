@@ -160,7 +160,6 @@ class ClassService {
       const studentClassInfo = [];
       for (const studentInClass of studentsInClass) {
         const id = studentInClass.studentID;
-        console.log("ClassService:", id);
         const user = await UserDB.getUserByIdDB(id);
         const { email, name, phone, role, avatar } = user
         studentClassInfo.push({ id, email, name, phone, role, avatar });
@@ -182,7 +181,6 @@ class ClassService {
       const teacherClassInfo = [];
       for (const teacherInClass of teachersInClass) {
         const id = teacherInClass.teacherID;
-        console.log("ClassService:", id);
         const user = await UserDB.getUserByIdDB(id);
         const { email, name, phone, role, avatar } = user
         teacherClassInfo.push({ id, email, name, phone, role, avatar });
@@ -197,19 +195,20 @@ class ClassService {
   removeStudentsInClass = async (classID, studentsEmail) => {
     try {
       const removedStudents = [];
-
-      // Split the comma-separated string into an array
-      if (typeof studentsEmail === 'string') {
-        studentsEmail = studentsEmail.split(',');
-      }
-
       for (const email of studentsEmail) {
         console.log("ClassService:", email)
         const removedStudent = await UserDB.getUserByEmailDB(email);
         if (!removedStudent) {
           throw new ErrorHandler(403, "There is not student");
         }
-        const resultRemoved = ClassDB.removeStudentInClass(classID, removedStudent.id);
+        const personID = removedStudent.id;
+        const resultRemoved = await ClassDB.removeStudentInClass(classID, removedStudent.id);
+        const events = await EventDB.getAllEventByClassID(classID);
+
+        for (const event of events) {
+          const eventID = event.eventID;
+          await EventDB.removePersonEvent(eventID, personID);
+        }
         removedStudents.push(resultRemoved);
       }
       return removedStudents;
@@ -221,18 +220,18 @@ class ClassService {
   removeTeachersInClass = async (classID, teachersEmail) => {
     try {
       const removedTeachers = [];
-
-      // Split the comma-separated string into an array
-      if (typeof teachersEmail === 'string') {
-        teachersEmail = teachersEmail.split(',');
-      }
-
       for (const email of teachersEmail) {
         const removedTeacher = await UserDB.getUserByEmailDB(email);
         if (!removedTeacher) {
           throw new ErrorHandler(403, "There is not student");
         }
-        const resultRemoved = ClassDB.removeTeacherInClass(classID, removedTeacher.id);
+        const resultRemoved = await ClassDB.removeTeacherInClass(classID, removedTeacher.id);
+        const personID = removedTeacher.id;
+        const events = await EventDB.getAllEventByClassID(classID);
+        for (const event of events) {
+          const eventID = event.eventID;
+          await EventDB.removePersonEvent(eventID, personID);
+        }
         removedTeachers.push(resultRemoved);
       }
       return removedTeachers;
@@ -244,10 +243,11 @@ class ClassService {
   viewClassInfo = async (classID) => {
     try {
       const classInfo = await ClassDB.getInfoByID(classID);
+      const classEvents = await EventDB.getAllEventByClassID(classID);
       if (!classInfo) {
         throw new ErrorHandler(403, "The class is not exist");
       }
-      return classInfo;
+      return { classInfo, classEvents };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
@@ -260,6 +260,34 @@ class ClassService {
         throw new ErrorHandler(403, "Can not update class");
       }
       return updatedClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  removeClass = async (classID) => {
+    try {
+      // Remove student_class
+      const studentClassInfo = await this.viewAllStudentsInClass(classID);
+      const studentsEmail = []
+      for (const student of studentClassInfo) {
+        const emailStudent = student.email;
+        studentsEmail.push(emailStudent);
+      }
+      const removedStudents = await this.removeStudentsInClass(classID, studentsEmail);
+
+      // Remove teacher_class
+      const teacherClassInfo = await this.viewAllTeachersInClass(classID);
+      const teachersEmail = []
+      for (const teacher of teacherClassInfo) {
+        const emailTeacher = teacher.email;
+        teachersEmail.push(emailTeacher);
+      }
+      const removedTeachers = await this.removeTeachersInClass(classID, teachersEmail);
+
+      await EventDB.removeEventByClassID(classID);
+
+      await ClassDB.removeClassByClassID(classID);
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }

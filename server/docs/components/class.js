@@ -1,6 +1,48 @@
 module.exports =
 {
   schemas: {
+    "removeTeacherInClass": {
+      "type": "object",
+      "properties": {
+        "classID": {
+          "type": "string",
+          "example": "1"
+        },
+        "teachersEmail": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "email"
+          },
+          "example": [
+            "cucdaunho@gmail.com",
+            "lnkhoa22@apcs.fitus.edu.vn"
+          ]
+        }
+      },
+      "required": ["classID", "teachersEmail"]
+    },
+    "removeStudentInClass": {
+      "type": "object",
+      "properties": {
+        "classID": {
+          "type": "string",
+          "example": "1"
+        },
+        "studentsEmail": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "email"
+          },
+          "example": [
+            "cucdaunho@gmail.com",
+            "lnkhoa22@apcs.fitus.edu.vn"
+          ]
+        }
+      },
+      "required": ["classID", "studentsEmail"]
+    },
     "editClassInfo": {
       "properties": {
         "classID": {
