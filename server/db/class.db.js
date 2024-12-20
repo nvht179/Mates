@@ -168,7 +168,12 @@ class ClassDB {
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
-  }
+  };
+
+  removeClassByClassID = async (classID) => {
+    const removedClass = await Class.findByPk(classID);
+    removedClass.destroy();
+  };
 }
 
 module.exports = new ClassDB();

@@ -3,31 +3,14 @@ module.exports = {
     tags: ['Classes'],
     description: 'Remove multiple students from a class by class ID',
     summary: 'Remove multiple students from a class',
-    parameters: [
+    "parameters": [
       {
-        name: 'classID',
-        in: 'path',
-        description: 'The ID of the class',
-        required: true,
-        schema: {
-          type: 'string',
-          example: '1',
-        },
-      },
-      {
-        name: 'studentsEmail',
-        in: 'path',
-        description: 'Array of student emails to remove',
-        required: true,
-        schema: {
-          type: 'array',
-          items: {
-            type: 'string',
-            format: 'email',
-          },
-          example: ['cucdaunho@gmail.com', 'lnkhoa22@apcs.fitus.edu.vn'],
-        },
-      },
+        "name": "classID",
+        "in": "body",
+        "schema": {
+          "$ref": "#/components/schemas/removeStudentInClass"
+        }
+      }
     ],
     responses: {
       200: {

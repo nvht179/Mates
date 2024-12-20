@@ -79,9 +79,29 @@ class EventDB {
     const removedEvent = await this.getEventByID(eventID);
     const event_persons = await this.getPersonEventByID(eventID);
     for (const event_person of event_persons) {
-      event_person.destroy();
+      await event_person.destroy();
     }
-    removedEvent.destroy();
+    await removedEvent.destroy();
+  };
+
+  removeEventByClassID = async (classID) => {
+    const events = await this.getAllEventByClassID(classID);
+    for (const event of events) {
+      const eventID = event.eventID;
+      await this.removeEvent(eventID);
+    }
+  };
+
+  removePersonEvent = async (eventID, personID) => {
+    const removedEvents = await Event_Person.findAll({
+      where: {
+        eventID: eventID,
+        personID: personID
+      }
+    });
+    for (const removedEvent of removedEvents) {
+      await removedEvent.destroy();
+    }
   };
 }
 

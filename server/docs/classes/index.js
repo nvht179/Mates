@@ -8,6 +8,7 @@ const viewAllClasses = require("./viewAllClasses");
 const viewAllStudentsInClass = require("./viewAllStudentsInClass");
 const viewAllTeachersInClass = require("./viewAllStudentsInClass");
 const viewClassInfo = require("./viewClassInfo");
+const removeClass = require("./removeClass");
 
 module.exports = {
   "/classes/create-class": {
@@ -34,10 +35,13 @@ module.exports = {
   "/classes/edit-class-info": {
     ...editClassInfo
   },
-  "/classes/remove-students-in-class/{classID}/{studentsEmail}": {
+  "/classes/remove-students-in-class": {
     ...removeStudentsInClass
   },
-  "/classes/remove-teachers-in-class/{classID}/{teachersEmail}": {
+  "/classes/remove-teachers-in-class": {
     ...removeTeachersInClass
+  },
+  "/classes/remove-class/{classID}": {
+    ...removeClass
   },
 };
