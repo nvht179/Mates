@@ -1,3 +1,5 @@
+import { UserRole } from "./Misc";
+
 interface ClassState {
   classID: number;
   className: string;
@@ -46,21 +48,46 @@ interface CreateClassResponse {
 
 interface ViewAllStudentInClassResponse {
   message: string;
-  studentsInClass: Array<{
+  studentClassInfo: Array<{
     id: number;
-    classID: number;
-    studentID: number;
+    name: string;
+    email: string;
+    phone: string;
+    avatar: number;
+    role: UserRole;
   }>;
 }
 
 interface ViewAllTeachersInClassResponse {
   message: string;
-  teachersInClass: Array<{
+  teacherClassInfo: Array<{
     id: number;
-    classID: number;
-    teacherID: number;
-    role: string;
+    name: string;
+    email: string;
+    phone: string;
+    avatar: string;
+    role: UserRole;
   }>;
+}
+
+interface RemoveStudentsInClassRequest {
+  classID: string;
+  studentsEmail: string[];
+}
+
+interface RemoveStudentsInClassResponse {
+  message: string;
+  studentsInClass: Array<{}>;
+}
+
+interface RemoveTeachersInClassRequest {
+  classID: string;
+  teachersEmail: string[];
+}
+
+interface RemoveTeachersInClassResponse {
+  message: string;
+  teachersInClass: Array<{}>;
 }
 
 export type {
@@ -71,4 +98,8 @@ export type {
   CreateClassResponse,
   ViewAllStudentInClassResponse,
   ViewAllTeachersInClassResponse,
+  RemoveStudentsInClassRequest,
+  RemoveStudentsInClassResponse,
+  RemoveTeachersInClassRequest,
+  RemoveTeachersInClassResponse,
 };

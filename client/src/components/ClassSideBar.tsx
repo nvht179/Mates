@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ClassSideBarTab from "./ClassSideBarTab";
 import { ClassState } from "../interfaces/Class";
 import ClassMemberList from "./ClassMemberList";
+import { MdInfoOutline } from "react-icons/md";
+import { MdPersonAddAlt1 } from "react-icons/md";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
@@ -12,6 +14,8 @@ function ClassSideBar() {
   const { cla, image } = state as { cla: ClassState; image: string };
   const { className, code } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
+
+  console.log("cla", cla);
 
   const navigate = useNavigate();
   const handleClickAllClasses = () => {
@@ -45,17 +49,23 @@ function ClassSideBar() {
         <IoIosArrowBack />
         <p className="ml-2 text-sm font-semibold">All classes</p>
       </div>
-      <div className="ml-4 mt-8 flex flex-row">
-        <img
-          className="h-16 w-16 rounded object-cover"
-          src={image}
-          alt={className}
-        />
-        <div className="ml-1 flex flex-col justify-center">
-          <p className="ml-2 font-bold">{code}</p>
-          <p className="ml-2 mt-1 truncate text-xs text-fg-softer">
-            {className}
-          </p>
+      <div className="ml-4 mt-8 flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center">
+          <img
+            className="h-16 w-16 rounded object-cover"
+            src={image}
+            alt={className}
+          />
+          <div className="ml-1 flex flex-col justify-center">
+            <p className="ml-2 font-bold">{code}</p>
+            <p className="ml-2 mt-1 truncate text-xs text-fg-softer">
+              {className}
+            </p>
+          </div>
+        </div>
+        <div className="mr-4 flex flex-row items-center">
+          <MdInfoOutline className="mr-2 text-xl text-fg-softer hover:text-fg-default active:opacity-30" />
+          <MdPersonAddAlt1 className="text-xl text-fg-softer hover:text-fg-default active:opacity-30" />
         </div>
       </div>
       <div className="mx-1 mt-4 flex h-full flex-col">

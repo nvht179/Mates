@@ -7,10 +7,15 @@ import {
   ViewAllClassesResponse,
   ViewAllStudentInClassResponse,
   ViewAllTeachersInClassResponse,
+  RemoveStudentsInClassResponse,
+  RemoveStudentsInClassRequest,
+  RemoveTeachersInClassResponse,
+  RemoveTeachersInClassRequest,
 } from "../../interfaces/Class";
 
 const classApi = createApi({
   reducerPath: "class",
+  tagTypes: ["ClassMemberStudent", "ClassMemberTeacher"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
     prepareHeaders: async (headers) => {
@@ -40,6 +45,9 @@ const classApi = createApi({
       ViewAllStudentInClassResponse,
       string
     >({
+      providesTags: (_result, _error, classID) => [
+        { type: "ClassMemberStudent", id: classID },
+      ],
       query: (classID) => {
         return {
           url: `/classes/view-all-students-in-class/${classID}`,
@@ -51,6 +59,9 @@ const classApi = createApi({
       ViewAllTeachersInClassResponse,
       string
     >({
+      providesTags: (_result, _error, classID) => [
+        { type: "ClassMemberTeacher", id: classID },
+      ],
       query: (classID) => {
         return {
           url: `/classes/view-all-teachers-in-class/${classID}`,
@@ -67,6 +78,34 @@ const classApi = createApi({
         };
       },
     }),
+    removeStudentsInClass: builder.mutation<
+      RemoveStudentsInClassResponse,
+      RemoveStudentsInClassRequest
+    >({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ClassMemberStudent", id: arg.classID },
+      ],
+      query: ({ classID, studentsEmail }) => {
+        return {
+          url: `/classes/remove-students-in-class/${classID}/${studentsEmail.join(",")}`,
+          method: "DELETE",
+        };
+      },
+    }),
+    removeTeachersInClass: builder.mutation<
+      RemoveTeachersInClassResponse,
+      RemoveTeachersInClassRequest
+    >({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ClassMemberTeacher", id: arg.classID },
+      ],
+      query: ({ classID, teachersEmail }) => {
+        return {
+          url: `/classes/remove-teachers-in-class/${classID}/${teachersEmail.join(",")}`,
+          method: "DELETE",
+        };
+      },
+    }),
   }),
 });
 
@@ -75,5 +114,7 @@ export const {
   useCreateClassMutation,
   useViewAllStudentsInClassQuery,
   useViewAllTeachersInClassQuery,
+  useRemoveStudentsInClassMutation,
+  useRemoveTeachersInClassMutation,
 } = classApi;
 export default classApi;
