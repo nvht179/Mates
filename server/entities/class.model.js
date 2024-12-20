@@ -13,8 +13,7 @@ const Class = sequelize.define(
       allowNull: false,
     },
     className: {
-      type: DataTypes.STRING,
-      unique: true,
+      type: DataTypes.STRING
     },
     code: {
       type: DataTypes.STRING,

@@ -41,21 +41,22 @@ class UserController {
         linkTitle = null;
       }
       else {
+        // Create path for Supabase Storage
+        const filePath = `${Date.now()}_${file.originalname}`;
+        const { data, error } = await supabase.storage
+          .from("Attachments")
+          .upload(filePath, file.buffer);
+
+        if (error) {
+          throw new Error(`File upload failed: ${error.message}`);
+        }
+
+        const { data: publicData } = supabase.storage
+          .from("Attachments")
+          .getPublicUrl(filePath);
+
         publicURL = publicData.publicUrl;
         linkTitle = file.originalname;
-        // Create path for Supabase Storage
-      const filePath = `${Date.now()}_${file.originalname}`;
-      const { data, error } = await supabase.storage
-        .from("Attachments")
-        .upload(filePath, file.buffer);
-
-      if (error) {
-        throw new Error(`File upload failed: ${error.message}`);
-      }
-
-      const { data: publicData } = supabase.storage
-        .from("Attachments")
-        .getPublicUrl(filePath);
       }
 
       const { updatedUser } = await UserService.updateUserInfo(id, email, name, phone, publicURL, linkTitle);
