@@ -1,6 +1,26 @@
 module.exports =
 {
   schemas: {
+    "editClassInfo": {
+      "properties": {
+        "classID": {
+          "type": "string",
+          "example": "1"
+        },
+        "className": {
+          "type": "string",
+          "example": "NLP Chon"
+        },
+        "code": {
+          "type": "string",
+          "example": "CS400"
+        },
+        "description": {
+          "type": "string",
+          "example": "Meow Meow"
+        },
+      }
+    },
     "createClass": {
       "properties": {
         "className": {

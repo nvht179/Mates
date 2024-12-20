@@ -9,7 +9,7 @@ class ClassController {
         code,
         description,
         events,
-        userID, 
+        userID,
         role
       });
       const message = "Successful";
@@ -59,9 +59,9 @@ class ClassController {
   viewAllStudentsInClass = async (req, res) => {
     try {
       const { classID } = req.params;
-      const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
+      const studentClassInfo = await ClassService.viewAllStudentsInClass(classID);
       const message = "Successful";
-      res.status(200).json({ message, studentsInClass });
+      res.status(200).json({ message, studentClassInfo });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
@@ -71,9 +71,21 @@ class ClassController {
   viewAllTeachersInClass = async (req, res) => {
     try {
       const { classID } = req.params;
-      const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
+      const teacherClassInfo = await ClassService.viewAllTeachersInClass(classID);
       const message = "Successful";
-      res.status(200).json({ message, teachersInClass });
+      res.status(200).json({ message, teacherClassInfo });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  viewClassInfo = async (req, res) => {
+    try {
+      const { classID } = req.params;
+      const classInfo = await ClassService.viewClassInfo(classID);
+      const message = "Successful";
+      res.status(200).json({ message, classInfo });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
@@ -104,6 +116,19 @@ class ClassController {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
     }
+  };
+
+  editClassInfo = async (req, res) => {
+    try {
+      const { classID, className, code, description } = req.body;
+      const updatedClass = await ClassService.editClassInfo(classID, className, code, description);
+      const message = "Successful";
+      res.status(200).json({ message, updatedClass });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+
   };
 }
 

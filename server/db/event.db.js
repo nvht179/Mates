@@ -12,8 +12,18 @@ class EventDB {
   };
 
   addPersonToEvent = async (eventID, personID) => {
-    const event_person = await Event_Person.create({ eventID, personID });
-    return event_person;
+    try {
+      const existingRecord = await Event_Person.findOne({
+        where: { eventID, personID },
+      });
+      if (existingRecord) {
+        throw new ErrorHandler(403, "The event is already added to that user");
+      }
+      const event_person = await Event_Person.create({ eventID, personID });
+      return event_person;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
   };
 
   getEventByID = async (eventID) => {

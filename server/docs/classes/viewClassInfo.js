@@ -4,8 +4,8 @@ module.exports =
     "tags": [
       "Classes"
     ],
-    "description": "View all students in class",
-    "summary": "View all students in class",
+    "description": "View class info by classID",
+    "summary": "View class info by classID",
     "parameters": [
       {
         "name": "classID",
@@ -20,7 +20,7 @@ module.exports =
     ],
     "responses": {
       "200": {
-        "description": "View all students in class successfully"
+        "description": "View class info by classID successfully"
       }
     }
   }

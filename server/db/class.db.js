@@ -69,20 +69,41 @@ class ClassDB {
   };
 
   addStudentsToClass = async (studentID, classID) => {
-    const studentClass = await StudentClass.create({
-      classID,
-      studentID
-    });
-    return studentClass;
+    try {
+      const existingStudentClass = await StudentClass.findOne({
+        where: { classID, studentID },
+      });
+      if (existingStudentClass) {
+        throw new ErrorHandler(403, "The student is already in class");
+      }
+      const studentClass = await StudentClass.create({
+        classID,
+        studentID
+      });
+      return studentClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
   };
 
   addTeachersToClass = async (teacherID, classID, role) => {
-    const teacherClass = await TeacherClass.create({
-      classID,
-      teacherID,
-      role
-    });
-    return teacherClass;
+    try {
+      const existingTeacherClass = await TeacherClass.findOne({
+        where: { classID, teacherID },
+      });
+      if (existingTeacherClass) {
+        throw new ErrorHandler(403, "The student is already in class");
+      }
+      const teacherClass = await TeacherClass.create({
+        classID,
+        teacherID,
+        role
+      });
+      return teacherClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+
   };
 
   viewAllStudentsInClass = async (classID) => {
@@ -122,6 +143,32 @@ class ClassDB {
     });
     return result;
   };
+
+  editClassInfo = async (classID, className, code, description) => {
+    try {
+      const updatedClass = await this.getInfoByID(classID);
+      if (code != null && updatedClass.code != code) {
+        const checkClass = await this.findClassByCode(code);
+        console.log("CheckClass", checkClass)
+        if (checkClass) {
+          throw new ErrorHandler(403, "The code is already used for another class");
+        }
+      }
+      if (className) {
+        updatedClass.className = className;
+      }
+      if (code) {
+        updatedClass.code = code;
+      }
+      if (description) {
+        updatedClass.description = description;
+      }
+      updatedClass.save();
+      return updatedClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  }
 }
 
 module.exports = new ClassDB();

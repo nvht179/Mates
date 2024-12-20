@@ -10,5 +10,7 @@ router.get("/view-all-students-in-class/:classID", ClassController.viewAllStuden
 router.get("/view-all-teachers-in-class/:classID", ClassController.viewAllTeachersInClass);
 router.delete("/remove-students-in-class/:classID/:studentsEmail", ClassController.removeStudentsInClass)
 router.delete("/remove-teachers-in-class/:classID/:teachersEmail", ClassController.removeTeachersInClass)
+router.get("/view-class-info/:classID", ClassController.viewClassInfo);
+router.put("/edit-class-info", ClassController.editClassInfo);
 
 module.exports = router;

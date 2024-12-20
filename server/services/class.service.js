@@ -87,15 +87,17 @@ class ClassService {
   addStudentsToClass = async (classID, emailStudents) => {
     try {
       const events = await EventDB.getAllEventByClassID(classID);
-      const studentsClass = []
+      const studentsClass = [];
       const totalEvents = [];
       for (const email of emailStudents) {
+        console.log("ClassService:", email)
         const student = await UserDB.getUserByEmailDB(email)
         if (!student) {
           throw new ErrorHandler(403, "There is not exist student");
         }
         console.log("ClassService:", student.id, classID)
         const studentClass = await ClassDB.addStudentsToClass(student.id, classID);
+
         studentsClass.push(studentClass);
 
         // Add to Event_Person table
@@ -104,6 +106,7 @@ class ClassService {
         for (const eachEvent of events) {
           const personID = student.id;
           const eventID = eachEvent.eventID;
+          console.log("PersonID", personID, "EventID", eventID);
           const event_person = await EventDB.addPersonToEvent(eventID, personID);
           newEvents.push(event_person);
         }
@@ -153,7 +156,17 @@ class ClassService {
       if (!studentsInClass) {
         throw new ErrorHandler(403, "There is not students in class");
       }
-      return studentsInClass;
+
+      const studentClassInfo = [];
+      for (const studentInClass of studentsInClass) {
+        const id = studentInClass.studentID;
+        console.log("ClassService:", id);
+        const user = await UserDB.getUserByIdDB(id);
+        const { email, name, phone, role, avatar } = user
+        studentClassInfo.push({ id, email, name, phone, role, avatar });
+      }
+
+      return studentClassInfo;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
@@ -165,7 +178,17 @@ class ClassService {
       if (!teachersInClass) {
         throw new ErrorHandler(403, "There is not teachers in class");
       }
-      return teachersInClass;
+
+      const teacherClassInfo = [];
+      for (const teacherInClass of teachersInClass) {
+        const id = teacherInClass.teacherID;
+        console.log("ClassService:", id);
+        const user = await UserDB.getUserByIdDB(id);
+        const { email, name, phone, role, avatar } = user
+        teacherClassInfo.push({ id, email, name, phone, role, avatar });
+      }
+
+      return teacherClassInfo;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
@@ -213,6 +236,30 @@ class ClassService {
         removedTeachers.push(resultRemoved);
       }
       return removedTeachers;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  viewClassInfo = async (classID) => {
+    try {
+      const classInfo = await ClassDB.getInfoByID(classID);
+      if (!classInfo) {
+        throw new ErrorHandler(403, "The class is not exist");
+      }
+      return classInfo;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  editClassInfo = async (classID, className, code, description) => {
+    try {
+      const updatedClass = await ClassDB.editClassInfo(classID, className, code, description);
+      if (!updatedClass) {
+        throw new ErrorHandler(403, "Can not update class");
+      }
+      return updatedClass;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
