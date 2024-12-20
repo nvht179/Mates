@@ -10,7 +10,7 @@ export default function TopBar() {
   const userModal = <UserModal onClose={() => setShowModal(false)} />;
 
   return (
-    <div className="sticky top-0 flex h-12 items-center justify-between border bg-bg-darker p-1 px-4">
+    <div className="sticky top-0 flex h-12 items-center justify-between border bg-bg-darker p-1 px-6">
       {/* Logo */}
       <img src={MatesLogo} alt="Logo" className="h-6 w-6" />
 
