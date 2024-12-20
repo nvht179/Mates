@@ -14,13 +14,15 @@ interface GetUserInfoResponse {
   user: UserInfo;
 }
 
-interface UpdateUserInfoRequest {
-  id: string;
-  email: string;
-  name: string;
-  phone: string;
-  avatar: File | null;
-}
+// interface UpdateUserInfoRequest {
+//   id: string;
+//   email: string;
+//   name: string;
+//   phone: string;
+//   avatar: File | null;
+// }
+
+type UpdateUserInfoRequest = FormData
 
 interface UpdateUserInfoResponse {
   message: string;

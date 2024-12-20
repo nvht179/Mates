@@ -36,9 +36,8 @@ function ClassCardList({ classes }: ClassCardListProps) {
       <Panel
         key={cla.classID}
         className="rounded p-3 shadow hover:bg-bg-dark active:bg-bg-darker select-none"
-        onClick={() => handleClick(cla, randomImage)}
       >
-        <div className="flex cursor-pointer flex-row items-center justify-start">
+        <div className="flex cursor-pointer flex-row items-center justify-start" onClick={() => handleClick(cla, randomImage)}>
           <img
             className="h-[72px] w-[72px] rounded object-cover"
             src={randomImage}

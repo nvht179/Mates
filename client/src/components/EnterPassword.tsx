@@ -57,6 +57,7 @@ export default function EnterPassword() {
           value={password}
           onChange={handlePasswordChange}
           autoFocus
+          className="w-full px-3 py-2"
         />
         <div className="ml-1 mt-1 h-2 text-xs text-red-default">
           {errorMessage}
