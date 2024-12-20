@@ -8,8 +8,9 @@ router.post("/add-students-to-class", ClassController.addStudentsToClass);
 router.post("/add-teachers-to-class", ClassController.addTeachersToClass);
 router.get("/view-all-students-in-class/:classID", ClassController.viewAllStudentsInClass);
 router.get("/view-all-teachers-in-class/:classID", ClassController.viewAllTeachersInClass);
-router.delete("/remove-students-in-class/:classID/:studentsEmail", ClassController.removeStudentsInClass)
-router.delete("/remove-teachers-in-class/:classID/:teachersEmail", ClassController.removeTeachersInClass)
+router.delete("/remove-students-in-class", ClassController.removeStudentsInClass)
+router.delete("/remove-teachers-in-class", ClassController.removeTeachersInClass)
+router.delete("/remove-class/:classID", ClassController.removeClass)
 router.get("/view-class-info/:classID", ClassController.viewClassInfo);
 router.put("/edit-class-info", ClassController.editClassInfo);
 

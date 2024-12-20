@@ -83,9 +83,9 @@ class ClassController {
   viewClassInfo = async (req, res) => {
     try {
       const { classID } = req.params;
-      const classInfo = await ClassService.viewClassInfo(classID);
+      const { classInfo, classEvents } = await ClassService.viewClassInfo(classID);
       const message = "Successful";
-      res.status(200).json({ message, classInfo });
+      res.status(200).json({ message, classInfo, classEvents });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
@@ -94,7 +94,7 @@ class ClassController {
 
   removeStudentsInClass = async (req, res) => {
     try {
-      const { classID, studentsEmail } = req.params;
+      const { classID, studentsEmail } = req.body;
       const removedStudents = await ClassService.removeStudentsInClass(classID, studentsEmail);
       const studentsInClass = await ClassService.viewAllStudentsInClass(classID);
       const message = "Successful";
@@ -107,7 +107,7 @@ class ClassController {
 
   removeTeachersInClass = async (req, res) => {
     try {
-      const { classID, teachersEmail } = req.params;
+      const { classID, teachersEmail } = req.body;
       const removedTeachers = await ClassService.removeTeachersInClass(classID, teachersEmail);
       const teachersInClass = await ClassService.viewAllTeachersInClass(classID);
       const message = "Successful";
@@ -128,7 +128,18 @@ class ClassController {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
     }
+  };
 
+  removeClass = async (req, res) => {
+    try {
+      const { classID } = req.params;
+      const removedClass = await ClassService.removeClass(classID);
+      const message = "Successful";
+      res.status(200).json({ message });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
   };
 }
 
