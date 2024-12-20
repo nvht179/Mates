@@ -68,6 +68,7 @@ export default function Login() {
           value={email}
           onChange={handleEmailChange}
           autoFocus
+          className="px-3 py-2 w-full"
         />
         <div className="ml-1 mt-1 h-2 text-xs text-red-default">
           {errorMessage}

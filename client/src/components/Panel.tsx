@@ -1,3 +1,4 @@
+import React from "react";
 import classnames from "classnames";
 
 interface PanelProps extends React.HTMLAttributes<HTMLDivElement> {

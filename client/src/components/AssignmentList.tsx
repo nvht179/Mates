@@ -3,7 +3,7 @@ import Panel from "./Panel";
 import { SlOptions } from "react-icons/sl";
 import Button from "./Button";
 
-interface AssignmentListProps {
+interface AssignmentListProps extends React.HTMLAttributes<HTMLDivElement> {
   assignments: Assignment[];
 }
 
@@ -14,12 +14,16 @@ function AssignmentList({ assignments }: AssignmentListProps) {
 
   const renderedAssignment = assignments.map((assignment) => {
     return (
-      <Panel key={assignment.id} className="my-6 p-4">
+      <Panel key={assignment.id} className="my-6 flex-1 overflow-y-auto p-4">
         <div className="flex flex-row items-center justify-between">
-          <div className="w-2/5 flex items-center justify-between">
-            <p className="text-2xl">{"#" + assignment.id + " " + assignment.title}</p>
+          <div className="flex w-2/5 items-center justify-between">
+            <p className="text-2xl">
+              {"#" + assignment.id + " " + assignment.title}
+            </p>
             <div className="flex flex-row items-center">
-              <p className="text-fg-soft mx-2 inline text-sm font-bold">Due Time: </p>
+              <p className="mx-2 inline text-sm font-bold text-fg-soft">
+                Due Time:{" "}
+              </p>
               <span className="text-fg-softer">{assignment.dueTime}</span>
             </div>
           </div>
@@ -28,7 +32,7 @@ function AssignmentList({ assignments }: AssignmentListProps) {
         <div className="mt-4 border-b-2" />
         <div className="mt-2 flex flex-row">
           <div className="flex-2">
-            <p className="mr-2 inline font-bold text-sm">Description:</p>
+            <p className="mr-2 inline text-sm font-bold">Description:</p>
             <span className="text-fg-softer">{assignment.description}</span>
             {/* submission */}
             {assignment.isSubmitted && (
@@ -38,14 +42,9 @@ function AssignmentList({ assignments }: AssignmentListProps) {
               </div>
             )}
 
-            {role === 'student' && (
-              <Button className="mt-4">
-                Submit
-              </Button>
-            )}
-
+            {role === "student" && <Button className="mt-4">Submit</Button>}
           </div>
-          <div className="flex-1 pr-8 pl-16">
+          <div className="flex-1 pl-16 pr-8">
             <p className="mr-2 inline text-sm font-bold">Attachment: </p>
             <a
               href={assignment.href}

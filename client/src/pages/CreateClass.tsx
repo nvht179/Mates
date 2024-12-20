@@ -257,6 +257,7 @@ export default function CreateClass() {
           >
             <option value="Weekly">Weekly</option>
             <option value="Bi-Weekly">Bi-Weekly</option>
+            <option value="Monthly">Bi-Weekly</option>
           </select>
         </div>
 
