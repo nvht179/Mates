@@ -16,14 +16,6 @@ module.exports={
         "responses": {
           "200": {
             "description": "Assignment removed successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
           },
           "404": {
             "description": "Assignment not found"

@@ -36,6 +36,42 @@ class CommentDB {
       throw new Error(`Error deleting comment with ID ${commentId}: ${err.message}`);
     }
   }
+
+  async getCommentsByPostId(postId) {
+    try {
+      const comments = await Comment.findAll({
+        where: { postId },
+      });
+
+      return comments;
+    } catch (err) {
+      console.error("Error in CommentDB - getCommentsByPostId:", err);
+      throw new Error(`Error retrieving comments for postId ${postId}: ${err.message}`);
+    }
+  }
+
+  async updateComment(commentId, content) {
+    try {
+      // Tìm và cập nhật comment theo commentId
+      const [updatedRowsCount] = await Comment.update(
+        { content },
+        {
+          where: { id: commentId },
+        }
+      );
+  
+      if (updatedRowsCount === 0) {
+        throw new Error(`Comment with ID ${commentId} does not exist.`);
+      }
+  
+      // Lấy lại comment sau khi cập nhật
+      const updatedComment = await Comment.findByPk(commentId);
+      return updatedComment;
+    } catch (err) {
+      console.error("Error in CommentDB - updateComment:", err);
+      throw new Error(`Error updating comment with ID ${commentId}: ${err.message}`);
+    }
+  }
 }
 
 module.exports = new CommentDB();

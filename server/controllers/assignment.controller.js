@@ -57,7 +57,8 @@ class AssignmentController {
         data: newAssignment,
       });
     } catch (err) {
-      res.status(403).json({ error: err.message });
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
     }
   };
 
@@ -118,7 +119,8 @@ class AssignmentController {
         data: updatedAssignment,
       });
     } catch (err) {
-      res.status(403).json({ error: err.message });
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
     }
   };
 
@@ -134,7 +136,8 @@ class AssignmentController {
         message: "Assignment removed successfully",
       });
     } catch (err) {
-      res.status(403).json({ error: err.message });
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
     }
   };
 
@@ -155,7 +158,8 @@ class AssignmentController {
         data: assignment,
       });
     } catch (err) {
-      res.status(403).json({ message: err.message });
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
     }
   };
   
@@ -174,8 +178,9 @@ class AssignmentController {
         message: "Assignments found successfully",
         data: assignments,
       });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
     }
   }
 }
