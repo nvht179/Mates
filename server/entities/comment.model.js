@@ -31,7 +31,7 @@ const Comment = sequelize.define(
         key: "id",
       },
     },
-    time: {
+    createAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW, // Tự động gán giá trị thời gian hiện tại

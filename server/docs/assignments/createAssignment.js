@@ -63,47 +63,6 @@ module.exports =
         "responses": {
           "200": {
             "description": "Assignment and attachments created successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "title": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "startTime": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "endTime": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "attachments": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "link": {
-                            "type": "string"
-                          },
-                          "linkTitle": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           },
           "400": {
             "description": "Bad request. Missing required fields."
