@@ -17,9 +17,7 @@ import EmailInput from "./components/EmailInput";
 import CreateClass from "./pages/CreateClass";
 import ForgetPasswordOtp from "./pages/ForgetPasswordOtp";
 import ForgetPasswordReset from "./pages/ForgetPasswordReset";
-import GradePage from "./pages/GradePageStudent";
 import ToGradePage from "./pages/ToGradePage";
-// import GradeDetail from "./pages/GradeDetail";
 import CreateAssignment from "./pages/CreateAssignment";
 import LectureDetails from "./pages/LectureDetails";
 import CalendarPage from "./pages/CalendarPage";
@@ -39,7 +37,10 @@ export default function App() {
           <Route path="/verification-sent" element={<VerificationSent />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/forget-password-otp" element={<ForgetPasswordOtp />} />
-          <Route path="/forget-password-reset" element={<ForgetPasswordReset />} />
+          <Route
+            path="/forget-password-reset"
+            element={<ForgetPasswordReset />}
+          />
           <Route path="/email-input" element={<EmailInput />} />
         </Route>
         {/* Protected routes with main layout */}
@@ -48,7 +49,7 @@ export default function App() {
           <Route path="/create-class" element={<CreateClass />} />
           <Route path="/class/:classCode" element={<ClassLayout />}>
             <Route path="lecture" element={<LecturePage />} />
-            <Route path="lecture-details" element={<LectureDetails/>} />
+            <Route path="lecture-details" element={<LectureDetails />} />
             <Route path="assignment" element={<AssignmentPage />} />
             <Route path="create-assignment" element={<CreateAssignment />} />
             <Route path="grade" element={<ToGradePage />} />

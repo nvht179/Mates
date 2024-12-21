@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ClassSideBarTab from "./ClassSideBarTab";
 import { ClassState } from "../interfaces/Class";
 import ClassMemberList from "./ClassMemberList";
-import { MdInfoOutline } from "react-icons/md";
-import { MdPersonAddAlt1 } from "react-icons/md";
+import AddMemberDropDown from "./AddMemberDropDown";
+import { MdInfo, MdInfoOutline } from "react-icons/md";
+import ClassSettingsDropDown from "./ClassSettingsDropDown";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
 function ClassSideBar() {
   const { state } = useLocation();
   const { cla, image } = state as { cla: ClassState; image: string };
-  const { className, code } = cla;
+  const { className, code, classID } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
+
+  const [infoHovered, setInfoHovered] = useState(false);
 
   const navigate = useNavigate();
   const handleClickAllClasses = () => {
@@ -61,9 +64,16 @@ function ClassSideBar() {
             </p>
           </div>
         </div>
-        <div className="mr-4 flex flex-row items-center">
-          <MdInfoOutline className="mr-2 text-xl text-fg-softer hover:text-fg-default active:opacity-30" />
-          <MdPersonAddAlt1 className="text-xl text-fg-softer hover:text-fg-default active:opacity-30" />
+        <div
+          className="mr-6 flex flex-row items-center"
+          onMouseEnter={() => setInfoHovered(true)}
+          onMouseLeave={() => setInfoHovered(false)}
+        >
+          {infoHovered ? (
+            <MdInfo className="text-xl text-primary-default active:opacity-30" />
+          ) : (
+            <MdInfoOutline className="text-xl text-fg-softer active:opacity-30" />
+          )}
         </div>
       </div>
       <div className="mx-1 mt-4 flex h-full flex-col">
@@ -85,9 +95,14 @@ function ClassSideBar() {
         >
           Discussion
         </ClassSideBarTab>
-        <div className="h-full" />
-        <ClassMemberList type="students" id={cla.classID.toString()} />
-        <ClassMemberList type="teachers" id={cla.classID.toString()} />
+        <ClassMemberList type="students" id={String(cla.classID)} />
+        <ClassMemberList type="teachers" id={String(cla.classID)} />
+      </div>
+      <div className="mx-4 flex flex-row items-center border-t border-fg-border px-1 py-1">
+        <AddMemberDropDown memberType="student" classID={String(classID)} />
+        <AddMemberDropDown memberType="teacher" classID={String(classID)} />
+        <div className="mr-auto" />
+        <ClassSettingsDropDown classId={String(cla.classID)}/>
       </div>
     </div>
   );

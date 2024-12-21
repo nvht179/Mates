@@ -7,15 +7,22 @@ import {
   ViewAllClassesResponse,
   ViewAllStudentInClassResponse,
   ViewAllTeachersInClassResponse,
+  AddStudentsToClassResponse,
+  AddStudentsToClassRequest,
+  AddTeachersToClassResponse,
+  AddTeachersToClassRequest,
   RemoveStudentsInClassResponse,
   RemoveStudentsInClassRequest,
   RemoveTeachersInClassResponse,
   RemoveTeachersInClassRequest,
+  ViewClassInfoResponse,
+  RemoveClassResponse,
+  RemoveClassRequest,
 } from "../../interfaces/Class";
 
 const classApi = createApi({
   reducerPath: "class",
-  tagTypes: ["ClassMemberStudent", "ClassMemberTeacher"],
+  tagTypes: ["ClassMember", "ClassMemberStudent", "ClassMemberTeacher"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
     prepareHeaders: async (headers) => {
@@ -31,6 +38,8 @@ const classApi = createApi({
       ViewAllClassesResponse,
       ViewAllClassesRequest
     >({
+      providesTags: (result) => 
+        result ? result.allClassesInfo.map((c) => ({ type: "ClassMember", id: c.classID })) : [],
       query: (user) => {
         return {
           url: `/classes/view-all-classes/${user.email}`,
@@ -78,6 +87,55 @@ const classApi = createApi({
         };
       },
     }),
+    removeClass: builder.mutation<RemoveClassResponse, RemoveClassRequest>({
+      invalidatesTags: (_result, _error, classID) => [
+        { type: "ClassMember", id: classID },
+      ],
+      query: (classID) => {
+        return {
+          url: `/classes/remove-class/${classID}`,
+          method: "DELETE",
+        };
+      },
+    }),
+    viewClassInfo: builder.query<ViewClassInfoResponse, string>({
+      query: (classID) => {
+        return {
+          url: `/classes/view-class-info/${classID}`,
+          method: "GET",
+        };
+      },
+    }),
+    addStudentsToClass: builder.mutation<
+      AddStudentsToClassResponse,
+      AddStudentsToClassRequest
+    >({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ClassMemberStudent", id: arg.classID },
+      ],
+      query: (args) => {
+        return {
+          url: `/classes/add-students-to-class/`,
+          body: args,
+          method: "POST",
+        };
+      },
+    }),
+    addTeachersToClass: builder.mutation<
+      AddTeachersToClassResponse,
+      AddTeachersToClassRequest
+    >({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ClassMemberTeacher", id: arg.classID },
+      ],
+      query: (args) => {
+        return {
+          url: `/classes/add-teachers-to-class/`,
+          body: args,
+          method: "POST",
+        };
+      },
+    }),
     removeStudentsInClass: builder.mutation<
       RemoveStudentsInClassResponse,
       RemoveStudentsInClassRequest
@@ -85,9 +143,10 @@ const classApi = createApi({
       invalidatesTags: (_result, _error, arg) => [
         { type: "ClassMemberStudent", id: arg.classID },
       ],
-      query: ({ classID, studentsEmail }) => {
+      query: (args) => {
         return {
-          url: `/classes/remove-students-in-class/${classID}/${studentsEmail.join(",")}`,
+          url: `/classes/remove-students-in-class/`,
+          body: args,
           method: "DELETE",
         };
       },
@@ -99,9 +158,10 @@ const classApi = createApi({
       invalidatesTags: (_result, _error, arg) => [
         { type: "ClassMemberTeacher", id: arg.classID },
       ],
-      query: ({ classID, teachersEmail }) => {
+      query: (args) => {
         return {
-          url: `/classes/remove-teachers-in-class/${classID}/${teachersEmail.join(",")}`,
+          url: `/classes/remove-teachers-in-class/`,
+          body: args,
           method: "DELETE",
         };
       },
@@ -112,8 +172,11 @@ const classApi = createApi({
 export const {
   useViewAllClassesQuery,
   useCreateClassMutation,
+  useRemoveClassMutation,
   useViewAllStudentsInClassQuery,
   useViewAllTeachersInClassQuery,
+  useAddStudentsToClassMutation,
+  useAddTeachersToClassMutation,
   useRemoveStudentsInClassMutation,
   useRemoveTeachersInClassMutation,
 } = classApi;

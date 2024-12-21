@@ -53,7 +53,7 @@ interface ViewAllStudentInClassResponse {
     name: string;
     email: string;
     phone: string;
-    avatar: number;
+    avatar: string;
     role: UserRole;
   }>;
 }
@@ -70,6 +70,38 @@ interface ViewAllTeachersInClassResponse {
   }>;
 }
 
+interface AddStudentsToClassRequest {
+  classID: string;
+  emailStudents: string[];
+}
+
+interface AddStudentsToClassResponse {
+  message: string;
+  studentsInClass: Array<{
+    id: number;
+    classID: number;
+    studentID: number;
+  }>;
+}
+
+interface AddTeachersToClassRequest {
+  classID: string;
+  newTeachers: Array<{
+    teacherEmail: string;
+    role: string;
+  }>;
+}
+
+interface AddTeachersToClassResponse {
+  message: string;
+  teachersInClass: Array<{
+    id: number;
+    classID: number;
+    teacherID: number;
+    role: string;
+  }>;
+}
+
 interface RemoveStudentsInClassRequest {
   classID: string;
   studentsEmail: string[];
@@ -77,7 +109,14 @@ interface RemoveStudentsInClassRequest {
 
 interface RemoveStudentsInClassResponse {
   message: string;
-  studentsInClass: Array<{}>;
+  studentsInClass: Array<{
+    id: number;
+    email: string;
+    name: string;
+    phone: string;
+    role: UserRole;
+    avatar: string;
+  }>;
 }
 
 interface RemoveTeachersInClassRequest {
@@ -87,8 +126,31 @@ interface RemoveTeachersInClassRequest {
 
 interface RemoveTeachersInClassResponse {
   message: string;
-  teachersInClass: Array<{}>;
+  teachersInClass: Array<{
+    id: number;
+    email: string;
+    name: string;
+    phone: string;
+    role: UserRole;
+    avatar: string;
+  }>;
 }
+
+interface ViewClassInfoResponse {
+  message: string;
+  classInfo?: {
+    classID: number;
+    className: string;
+    code: string;
+    description: string;
+  };
+}
+
+type RemoveClassRequest = string;
+
+type RemoveClassResponse = {
+  message: string;
+};
 
 export type {
   ClassState,
@@ -102,4 +164,11 @@ export type {
   RemoveStudentsInClassResponse,
   RemoveTeachersInClassRequest,
   RemoveTeachersInClassResponse,
+  AddStudentsToClassRequest,
+  AddStudentsToClassResponse,
+  AddTeachersToClassRequest,
+  AddTeachersToClassResponse,
+  ViewClassInfoResponse,
+  RemoveClassRequest,
+  RemoveClassResponse,
 };

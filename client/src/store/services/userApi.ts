@@ -49,7 +49,7 @@ const userApi = createApi({
       UpdateUserInfoRequest
     >({
       invalidatesTags: (_result, _error, userInfo) => [
-        { type: "UserInfo", id: userInfo.id },
+        { type: "UserInfo", id: Number(userInfo.get("id")) },
       ],
       query: (userInfo: UpdateUserInfoRequest) => ({
         url: "/users/update-user-info",
@@ -63,7 +63,7 @@ const userApi = createApi({
 export const {
   useLazyCheckUserByEmailQuery,
   useLazyGetUserByIdQuery,
-  useGetUserByIdQuery,
   useUpdateUserIntoMutation,
+  useGetUserByIdQuery
 } = userApi;
 export default userApi;

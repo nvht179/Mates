@@ -116,7 +116,7 @@ export default function ClassMemberList({ type, id }: ClassMemberListProps) {
               className="my-1 ml-1 mt-2 flex flex-row items-center"
             >
               <img
-                src={DefaultAvatar}
+                src={student.avatar || DefaultAvatar}
                 alt={student.name}
                 className="h-10 w-10 rounded-full object-cover"
               />
@@ -153,7 +153,7 @@ export default function ClassMemberList({ type, id }: ClassMemberListProps) {
               className="my-1 ml-1 mt-2 flex flex-row items-center"
             >
               <img
-                src={DefaultAvatar}
+                src={teacher.avatar || DefaultAvatar}
                 alt={teacher.name}
                 className="h-10 w-10 rounded-full object-cover"
               />

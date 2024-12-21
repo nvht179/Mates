@@ -128,7 +128,7 @@ function ClassTopBar() {
         <img
           src={image}
           alt={className}
-          className="ml-4 h-8 w-8 rounded object-cover"
+          className="ml-4 h-8 w-8 rounded object-cover flex-shrink-0"
         />
       </div>
 
