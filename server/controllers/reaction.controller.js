@@ -1,18 +1,16 @@
 const ReactionService = require("../services/reaction.service");
 
 class ReactionController {
-  // Phương thức tạo mới reaction
   async createReaction(req, res) {
     try {
       const { personId, postId, type } = req.body;
       const newReaction = await ReactionService.createReaction({ personId, postId, type });
-      res.status(200).json(newReaction);
+      res.status(200).json({newReaction});
     } catch (err) {
       res.status(403).json(err);
     }
   }
 
-  // Phương thức lấy tất cả reactions của một bài viết
   async getReactionsByPostId(req, res) {
     try {
       const { postId } = req.params;
@@ -22,13 +20,12 @@ class ReactionController {
         throw new ErrorHandler(403, "No reactions found for this post");
       }
 
-      res.status(200).json(reactions);
+      res.status(200).json({reactions});
     } catch (err) {
       res.status(403).json(err.message);
     }
   }
 
-  // Phương thức xóa reaction theo ID
   async deleteReaction(req, res) {
     try {
       const { id } = req.body;

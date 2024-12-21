@@ -12,11 +12,9 @@ class PostController {
         throw new Error("class ID is required");
       }
 
-      // Kiểm tra và xử lý các file upload
       const attachments = [];
       if (req.files && req.files.length > 0) {
         for (const file of req.files) {
-          // Tạo đường dẫn file trên Supabase Storage
           const filePath = `${Date.now()}_${file.originalname}`;
           const { data, error } = await supabase.storage
             .from("Attachments")
@@ -39,7 +37,6 @@ class PostController {
         }
       }
 
-      // Gọi service để tạo post cùng với attachments
       const newPost = await PostService.addNewPostWithAttachments({
         classID,
         title,
@@ -64,18 +61,15 @@ class PostController {
       const { title, content } = req.body;
 
   
-      // Lấy thông tin bài post hiện tại
       const currentPost = await PostService.getPostById(postId);
   
       if (!currentPost) {
         return res.status(404).json({ error: "Post not found" });
       }
   
-      // Xử lý file upload và tạo attachments mới
       const attachments = [];
       if (req.files && req.files.length > 0) {
         for (const file of req.files) {
-          // Tạo đường dẫn file trên Supabase Storage
           const filePath = `${Date.now()}_${file.originalname}`;
           const { data, error } = await supabase.storage
             .from("Attachments")
@@ -102,12 +96,11 @@ class PostController {
         }
       }
   
-      // Gọi service để cập nhật post và xóa các attachment cũ rồi thêm mới
       const updatedPost = await PostService.editPost({
         postId,
         title: title || currentPost.title,
         content: content || currentPost.content,
-        attachments, // Danh sách attachments mới
+        attachments, 
       });
   
       res.status(200).json({
@@ -140,7 +133,6 @@ class PostController {
     try {
       const { postId } = req.params;
 
-      // Gọi service để tìm post theo ID
       const post = await PostService.getPostById(postId);
 
       if (!post) {
@@ -158,14 +150,12 @@ class PostController {
 
   getPostsByClassId = async (req, res) => {
     try {
-      const { classID } = req.params;  // Lấy classID từ URL parameters
-  
-      // Kiểm tra xem classID có được truyền vào không
+      const { classID } = req.params;  
+
       if (!classID) {
         return res.status(400).json({ message: "classID is required." });
       }
   
-      // Logic để lấy các bài viết theo classID
       const posts = await PostService.getPostsByClassId(classID);
   
       if (!posts) {

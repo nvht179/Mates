@@ -19,6 +19,14 @@ module.exports =
         },
         "required": ["content", "postId", "personId"]
     },
+    "editComment": {
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "NLP Chon"
+        },
+      }
+    },
     "Comment": {
         "type": "object",
         "properties": {

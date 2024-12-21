@@ -16,35 +16,10 @@ module.exports={
         "responses": {
           "200": {
             "description": "Assignments fetched successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "startTime": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "endTime": {
-                    "type": "string",
-                    "format": "date-time"
-                  }
-                }
-              }
-            }
           },
           "404": {
             "description": "No assignments found for the given class"
           },
-          "500": {
-            "description": "Internal server error"
-          }
         }
       }
     

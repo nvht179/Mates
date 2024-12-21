@@ -2,6 +2,7 @@ const Post = require("../entities/post.model");
 const { ErrorHandler } = require("../helpers/error");
 const AttachmentDB = require("../db/attachment.db"); // Import AttachmentDB để xử lý việc thêm attachment
 const sequelize = require("../config/db");
+const { Comment, Reaction, Person, Attachment } = require("../entities");
 class PostDB {
   addNewPostWithAttachments = async ({ classID, title, content, attachments, personID }) => {
     let transaction;
@@ -47,16 +48,47 @@ class PostDB {
     }
   };
 
-  async getPostsByClassId(classID) {
+  getPostsByClassId = async (classID) => {
     try {
       const posts = await Post.findAll({
-        where: { classID }
+        where: { classID },
+        include: [
+          {
+            model: Comment,
+            as: "comments",
+            include: [
+              {
+                model: Person,
+                as: "person",
+                attributes: ["id", "name", "avatar"],
+              },
+            ],
+          },
+          {
+            model: Reaction,
+            as: "reactions",
+            include: [
+              {
+                model: Person,
+                as: "person",
+                attributes: ["id", "name", "avatar"],
+              },
+            ],
+          },
+          {
+            model: Attachment,
+            as: "attachments",
+            attributes: ["id", "link", "linkTitle"],
+
+          },
+        ],
       });
+  
       return posts;
     } catch (error) {
-      throw new ErrorHandler(500, "Error retrieving reactions", error);
+      throw new Error(`Error retrieving posts by class ID: ${error.message}`);
     }
-  }
+  };
   /**
    * Edit a post
    * @param {number} postId - ID of the post to edit
@@ -132,9 +164,44 @@ class PostDB {
     }
   }
   getPostById = async (postId) => {
-    const post = await Post.findByPk(postId);
-    if (!post) return null;
-    return post;
+    try {
+      const post = await Post.findByPk(postId, {
+        include: [
+          {
+            model: Comment,
+            as: "comments",
+            include: [
+              {
+                model: Person,
+                as: "person",
+                attributes: ["id", "name", "avatar"],
+              },
+            ],
+          },
+          {
+            model: Reaction,
+            as: "reactions",
+            include: [
+              {
+                model: Person,
+                as: "person",
+                attributes: ["id", "name", "avatar"],
+              },
+            ],
+          },
+          {
+            model: Attachment,
+            as: "attachments",
+            attributes: ["id", "link", "linkTitle"],
+
+          },
+        ],
+      });
+  
+      return post;
+    } catch (error) {
+      throw new Error(`Error retrieving post with ID ${postId}: ${error.message}`);
+    }
   };
 }
 
