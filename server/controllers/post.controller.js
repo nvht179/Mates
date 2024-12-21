@@ -4,39 +4,45 @@ class PostController {
   addNewPost = async (req, res) => {
     try {
       const { classID, title, content, personID } = req.body;
-
+  
+      // Kiểm tra Person ID và Class ID
       if (!personID) {
         throw new Error("Person ID is required");
       }
-      if (!classID){
-        throw new Error("class ID is required");
+      if (!classID) {
+        throw new Error("Class ID is required");
       }
-
+  
       const attachments = [];
+  
+      // Kiểm tra xem có file đính kèm không
       if (req.files && req.files.length > 0) {
+        // Duyệt qua từng file nếu có
         for (const file of req.files) {
           const filePath = `${Date.now()}_${file.originalname}`;
           const { data, error } = await supabase.storage
             .from("Attachments")
             .upload(filePath, file.buffer);
-
+  
           if (error) {
             throw new Error(`File upload failed: ${error.message}`);
           }
-
+  
           const { data: publicData } = supabase.storage
             .from("Attachments")
             .getPublicUrl(filePath);
-
+  
           const publicURL = publicData.publicUrl;
-
+  
+          // Thêm thông tin file vào mảng attachments
           attachments.push({
             link: publicURL,
             linkTitle: file.originalname,
           });
         }
       }
-
+  
+      // Tạo bài đăng mới với các tệp đính kèm (nếu có)
       const newPost = await PostService.addNewPostWithAttachments({
         classID,
         title,
@@ -44,7 +50,7 @@ class PostController {
         attachments,
         personID,
       });
-
+  
       res.status(200).json({
         message: "Post and attachments created successfully",
         data: newPost,
@@ -53,7 +59,6 @@ class PostController {
       res.status(403).json({ error: err.message });
     }
   };
-
    // Edit a post
    editPost = async (req, res) => {
     try {
@@ -150,19 +155,23 @@ class PostController {
 
   getPostsByClassId = async (req, res) => {
     try {
-      const { classID } = req.params;  
-
+      const { classID } = req.params;
+  
+      // Kiểm tra classID có được truyền vào không
       if (!classID) {
         return res.status(400).json({ message: "classID is required." });
       }
   
-      const posts = await PostService.getPostsByClassId(classID);
+      // Lấy danh sách bài viết từ service
+      let posts = await PostService.getPostsByClassId(classID);
   
-      if (!posts) {
-        return res.status(404).json({ message: "No posts found for this class ID." });
+      // Kiểm tra xem có bài viết nào không
+      if (!posts || posts.length === 0) {
+        return res.status(200).json({ message: "No posts found", data: [] });
       }
   
-      return res.status(200).json({ data: posts });
+      // Nếu có bài viết, trả về mảng bài viết cùng thông báo thành công
+      return res.status(200).json({ message: "Success", data: posts });
     } catch (error) {
       console.error("Error fetching posts by class ID:", error);
       return res.status(500).json({ message: "Error fetching posts." });
