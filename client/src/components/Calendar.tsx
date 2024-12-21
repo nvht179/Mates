@@ -1,5 +1,7 @@
-import React from "react";
 import { Event } from "../interfaces/Event";
+import { useNavigate } from "react-router-dom";
+import OptionDropdown from "./OptionDropdown";
+import { useDeleteEventMutation } from "../store";
 
 interface CalendarProps {
   displayDate: Date;
@@ -7,7 +9,10 @@ interface CalendarProps {
 }
 
 const HOURWIDTH = 5; // 1 hour = 5rem
-const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
+function Calendar({ displayDate, events }: CalendarProps) {
+  const navigate = useNavigate();
+  const [deleteEvent] = useDeleteEventMutation();
+
   // Get the start of the week (Monday)
   const startOfWeek = new Date(
     displayDate.getFullYear(),
@@ -76,6 +81,14 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
     };
   };
 
+  const handleEditClick = (event: Event) => {
+    navigate("/calendar/event-details", { state: { event } });
+  };
+
+  const handleDeleteClick = (event: Event) => {
+    deleteEvent({ eventID: event.eventID });
+  }
+
   return (
     <div className="flex h-full w-full flex-col border border-fg-border">
       <div className="flex flex-row">
@@ -132,21 +145,30 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
                 .map((event) => (
                   <div
                     key={event.eventID}
-                    className="absolute left-1 right-1 cursor-pointer truncate rounded border-2 border-fg-alt bg-primary-default px-2 py-1 text-xs text-white"
+                    className="absolute left-1 right-1 truncate rounded border-2 border-fg-alt bg-primary-default px-2 py-1 text-sm text-white"
                     style={getEventStyles(event)}
                     title={event.description}
-                    onClick={() =>
-                      alert(`Event: ${event.title}\n\n${event.description}`)
-                    }
                   >
-                    <p>{event.title}</p>
-                    <p>
-                      {new Date(event.startTime).toLocaleTimeString()} -{" "}
-                      {new Date(event.endTime).toLocaleTimeString()}
+                    <div className="flex items-center justify-between">
+                      <h2 className="font-semibold">{event.title}</h2>
+                      <OptionDropdown handleEditClick={() => handleEditClick(event)} handleDeleteClick={() => handleDeleteClick(event)} />
+                    </div>
+                    <p className="text-xs">
+                      {new Date(event.startTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}{" "}
+                      -{" "}
+                      {new Date(event.endTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
-                    <p>{event.description}</p>
+                    <p className="mt-2 text-wrap">
+                      Description: {event.description}
+                    </p>
                     {event.repeatTime && (
-                      <p className="italic text-gray-300">
+                      <p className="text-xs italic text-fg-disabled">
                         Repeats: {event.repeatTime}
                       </p>
                     )}
@@ -158,6 +180,6 @@ const Calendar: React.FC<CalendarProps> = ({ displayDate, events }) => {
       </div>
     </div>
   );
-};
+}
 
 export default Calendar;

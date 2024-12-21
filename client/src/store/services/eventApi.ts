@@ -1,10 +1,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getAuthToken } from "../../utils/getAuthToken";
-import { ViewAllEventRequest, ViewAllEventResponse } from "../../interfaces/Event";
+import {
+  CreateEventRequest,
+  CreateEventResponse,
+  DeleteEventRequest,
+  DeleteEventResponse,
+  EditEventRequest,
+  EditEventResponse,
+  ViewAllEventRequest,
+  ViewAllEventResponse,
+} from "../../interfaces/Event";
 
 export const eventApi = createApi({
   reducerPath: "event",
-  tagTypes: ["Event"],
+  tagTypes: ["Event", "UserEvent"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
     prepareHeaders: async (headers) => {
@@ -16,68 +25,67 @@ export const eventApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    viewAllEvent: builder.query<
-      ViewAllEventResponse,
-      ViewAllEventRequest
-    >({
-      providesTags: (_result, _error, arg) => {
-        return [{ type: "Event", id: arg.userID.toString() }];
+    viewAllEvent: builder.query<ViewAllEventResponse, ViewAllEventRequest>({
+      providesTags: (result, _error, arg) => {
+        const tags = (result?.events ?? []).map((event) => ({
+          type: "Event" as const,
+          id: event.eventID,
+        }));
+        tags.push({ type: "UserEvent" as const, id: arg.userID });
+        return tags;
       },
       query: (user) => {
         return {
           url: `/events/view-event-by-userID/${user.userID}`,
           params: {
-            userID: user.userID
+            userID: user.userID,
           },
           method: "GET",
         };
       },
     }),
-    // createLecture: builder.mutation<
-    //   CreateLectureResponse,  
-    //   CreateLectureRequest
-    // >({
-    //   invalidatesTags: (_result, _error, arg) => [{ type: "Lecture", id: arg.get("classID") as string }],
-    //   query: (newLecture) => {
-    //     return {
-    //       url: "/lectures/create",
-    //       method: "POST",
-    //       body: newLecture,
-    //     };
-    //   },
-    // }),
-    // editLecture: builder.mutation<
-    //   EditLectureResponse,
-    //   EditLectureRequest
-    // >({
-    //   invalidatesTags: (_result, _error, arg) => [{ type: "Lecture", id: arg.get("classID") as string }],
-    //   query: (newLecture) => {
-    //     return {
-    //       url: "/lectures/edit",
-    //       method: "PUT",
-    //       body: newLecture,
-    //     };
-    //   },
-    // }), 
-    // deleteLecture: builder.mutation<
-    //   DeleteLectureResponse,
-    //   DeleteLectureRequest
-    // >({
-    //   invalidatesTags: (_result, _error, arg) => [{ type: "Lecture", id: arg.classId }],
-    //   query: (lecture) => {
-    //     return {  
-    //       url: `/lectures/remove-lecture/${lecture.lectureId}`,
-    //       method: "DELETE",
-    //     };
-    //   },
-    // }),
+    createEvent: builder.mutation<CreateEventResponse, CreateEventRequest>({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "UserEvent", id: arg.personID },
+      ],
+      query: (newEvent) => {
+        return {
+          url: "/events/create",
+          method: "POST",
+          body: newEvent,
+        };
+      },
+    }),
+    editEvent: builder.mutation<EditEventResponse, EditEventRequest>({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Event", id: arg.eventID },
+      ],
+      query: (newEvent) => {
+        return {
+          url: "/events/update-event",
+          method: "PUT",
+          body: newEvent,
+        };
+      },
+    }),
+    deleteEvent: builder.mutation<DeleteEventResponse, DeleteEventRequest>({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Event", id: arg.eventID },
+      ],
+      query: (event) => {
+        return {
+          url: `/events/delete-event/${event.eventID}`,
+          method: "DELETE",
+        };
+      },
+    }),
   }),
 });
 
 export const {
   useViewAllEventQuery,
-  // useCreateLectureMutation,
-  // useEditLectureMutation,
-  // useDeleteLectureMutation,
+  useCreateEventMutation,
+  useEditEventMutation,
+  useDeleteEventMutation,
 } = eventApi;
 export default eventApi;

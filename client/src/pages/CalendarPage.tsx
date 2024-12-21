@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -9,27 +10,21 @@ import Button from "../components/Button";
 import Calendar from "../components/Calendar";
 import Input from "../components/Input";
 import { useViewAllEventQuery } from "../store/services/eventApi";
-import { responseErrorHandler } from "../utils/responseErrorHandler";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 function CalendarPage() {
+  const navigate = useNavigate();
   const [selectionDate, setSelectionDate] = useState<Date>(new Date());
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const user = useSelector((state: RootState) => state.user);
-  const { data, isError, isLoading, error } = useViewAllEventQuery({
+  const { data } = useViewAllEventQuery({
     userID: user.id ?? 0,
   });
 
-  useEffect(() => {
-    responseErrorHandler(
-      isError,
-      error as FetchBaseQueryError,
-      setErrorMessage,
-    );
-  }, [isError, error]);
-
   const events = data?.events ?? [];
+
+  const handleNewEventClick = () => {
+    navigate("/calendar/event-details", { state: { event: null } });
+  };
 
   const header = (
     <div className="flex flex-row items-center justify-between px-8 py-2">
@@ -40,7 +35,7 @@ function CalendarPage() {
         <h1 className="text-lg font-bold">Calendar</h1>
       </div>
       <div>
-        <Button primary>
+        <Button primary onClick={handleNewEventClick}>
           <LuCalendarPlus className="mr-2" />
           New event
         </Button>
@@ -55,7 +50,7 @@ function CalendarPage() {
         onClick={() => setSelectionDate(new Date())}
       >
         <BsCalendarDate className="mr-2" />
-        <p className="font-light select-none">Today</p>
+        <p className="select-none font-light">Today</p>
       </div>
       <FaArrowLeft
         className="mx-4 cursor-pointer active:opacity-30"

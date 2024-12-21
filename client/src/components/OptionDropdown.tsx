@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { SlOptions } from "react-icons/sl";
 
-interface LectureOptionProps {
+interface OptionDropdownProps {
   handleEditClick: () => void;
   handleDeleteClick: () => void;
 }
 
-function LectureOption({
+function OptionDropdown({
   handleEditClick,
   handleDeleteClick,
-}: LectureOptionProps) {
+}: OptionDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const divEl = useRef<HTMLDivElement>(null);
 
@@ -34,7 +34,7 @@ function LectureOption({
       />
       <div className="absolute right-0">
         {isOpen ? (
-          <div className="z-10 mt-2 w-48 rounded-md border border-fg-border bg-bg-default shadow-lg">
+          <div className="z-10 mt-2 w-40 cursor-pointer rounded-md border border-fg-border bg-bg-darker text-black shadow-lg">
             <div
               className="py-1"
               onClick={() => {
@@ -42,7 +42,7 @@ function LectureOption({
                 setIsOpen(false);
               }}
             >
-              <p className="block px-4 py-2 text-sm hover:bg-fg-border">
+              <p className="block px-4 py-2 text-sm font-semibold hover:bg-primary-default hover:text-white">
                 Edit
               </p>
             </div>
@@ -53,7 +53,7 @@ function LectureOption({
                 setIsOpen(false);
               }}
             >
-              <p className="block px-4 py-2 text-sm hover:bg-fg-border">
+              <p className="block px-4 py-2 text-sm font-semibold hover:bg-red-default hover:text-white">
                 Delete
               </p>
             </div>
@@ -64,4 +64,4 @@ function LectureOption({
   );
 }
 
-export default LectureOption;
+export default OptionDropdown;
