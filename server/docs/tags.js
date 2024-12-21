@@ -40,5 +40,9 @@ module.exports = {
       "name": "Events",
       "description": "API for events"
     },
+    {
+      "name": "Notifications",
+      "description": "API for notifications"
+    }
   ],
 }

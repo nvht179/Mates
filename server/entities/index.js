@@ -11,6 +11,7 @@ const { Teacher, Student, Parent } = require("./user.model");
 const Lecture = require("./lecture.model");
 const Grade = require("./grade.model");
 const { Event, Event_Person } = require("./event.model");
+const Notification = require('./notification.model')
 
 // Assignment and Attachment
 Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
@@ -73,5 +74,6 @@ module.exports = {
   Lecture,
   Event,
   Event_Person,
-  Grade
+  Grade,
+  Notification
 };

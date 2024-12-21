@@ -8,6 +8,7 @@ const attachments = require("./attachments");
 const lectures = require("./lectures");
 const assignments = require("./assignments");
 const events = require("./events");
+const notifications = require("./notifications");
 
 module.exports = {
   paths: {
@@ -20,6 +21,7 @@ module.exports = {
     ...attachments,
     ...lectures,
     ...assignments,
-    ...events
+    ...events,
+    ...notifications
   },
 };

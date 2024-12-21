@@ -13,7 +13,7 @@ const reactionRouter = require('./reaction.router');
 const commentRouter = require('./comment.router');
 const lectureRouter = require('./lecture.router');
 const eventRouter = require('./event.router');
-
+const notificationRouter = require('./notification.router')
 router.use("/reactions", reactionRouter);
 router.use("/auth", authRouter);
 router.use("/users", userRouter);
@@ -24,7 +24,7 @@ router.use("/posts", postRouter);
 router.use("/comments", commentRouter);
 router.use("/lectures", lectureRouter);
 router.use("/events", eventRouter);
-
+router.use("/notifications",notificationRouter)
 // Custom Swagger UI options
 const swaggerOptions = {
   customCss: '.swagger-ui .topbar { display: none }',
