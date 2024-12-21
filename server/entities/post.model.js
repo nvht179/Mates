@@ -15,7 +15,6 @@ const Post = sequelize.define(
     },
     title: {
       type: DataTypes.STRING,
-      unique: true,
     },
     content: {
       type: DataTypes.STRING,
