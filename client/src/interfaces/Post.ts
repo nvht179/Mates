@@ -1,3 +1,32 @@
+interface Person {
+  id: number;
+  name: string;
+  avatar: string | null;
+}
+
+interface Comment {
+  id: number;
+  content: string;
+  postId: number;
+  personId: number;
+  createAt: string;
+  person: Person;
+}
+
+interface ReactionType {
+  id: number;
+  personId: number;
+  type: string;
+  postId: number;
+  person: Person;
+}
+
+interface Attachment {
+  id: number;
+  link: string;
+  linkTitle: string;
+}
+
 interface Post {
   id: number;
   title: string;
@@ -5,13 +34,9 @@ interface Post {
   classID: number;
   personID: number;
   time: string;
-}
-
-interface Comment {
-  user: string;
-  image: string;
-  content: string;
-  time: string;
+  comments: Comment[];
+  reactions: ReactionType[];
+  attachments: Attachment[];
 }
 
 interface ViewPostRequest {
@@ -19,20 +44,14 @@ interface ViewPostRequest {
 }
 
 interface ViewPostsResponse {
-  data: Array<{
-    id: number;
-    title: string;
-    content: string;
-    classID: number;
-    personID: number;
-    time: string;
-  }>;
+  message: string;
+  data: Post[];
 }
 
 interface CreatePostRequest {
+  classID: number;
   title: string;
   content: string;
-  classID: number;
   personID: number;
 }
 
@@ -49,8 +68,10 @@ interface CreatePostResponse {
 }
 
 export type {
-  ViewPostRequest,
+  ReactionType,
+  Attachment,
   Post,
+  ViewPostRequest,
   ViewPostsResponse,
   CreatePostRequest,
   CreatePostResponse,

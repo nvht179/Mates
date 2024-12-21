@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getAuthToken } from "../../utils/getAuthToken";
-import { CreateReactionResponse, ViewReactionRequest, ViewReactionResponse } from "../../interfaces/Reaction";
+import { CreateReactionResponse } from "../../interfaces/Reaction";
 
 const reactionApi = createApi({
   reducerPath: "reaction",
@@ -15,17 +15,6 @@ const reactionApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    viewReaction: builder.query<ViewReactionResponse, ViewReactionRequest>({
-      query: (post) => {
-        return {
-          url: `/reactions/postId=${post.postId}`,
-          params: {
-            postId: post.postId,
-          },
-          method: "GET",
-        };
-      },
-    }),
     createReaction: builder.mutation<CreateReactionResponse, CreateReactionResponse>({
       query: ({ personId, type, postId }) => ({
         url: `reaction`,
@@ -36,5 +25,5 @@ const reactionApi = createApi({
   }),
 });
 
-export const { useViewReactionQuery, useCreateReactionMutation } = reactionApi;
+export const { useCreateReactionMutation } = reactionApi;
 export default reactionApi;

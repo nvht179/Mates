@@ -4,9 +4,14 @@ import { RxCross2 } from "react-icons/rx";
 import Button from "../components/Button";
 import Panel from "../components/Panel";
 import Input from "./Input";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import defaultAvatar from "../assets/default-avatar.png";
 
 function AddPost() {
   const [addPostActive, setAddPostActive] = useState(false);
+
+  const user = useSelector((state: RootState) => state.user);
 
   const addPostButton = () => {
     return (
@@ -24,8 +29,8 @@ function AddPost() {
           <div className="flex flex-row items-center p-4">
             <img
               className="h-8 w-8 rounded-full object-cover"
-              src="../../public/mates.svg"
-              alt="user"
+              src={user.avatar ? user.avatar : defaultAvatar}
+              alt={user.name || "Unknown"}
             />
             <p className="ml-4 font-bold">Jane Doe</p>
           </div>

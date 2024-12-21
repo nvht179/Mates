@@ -1,55 +1,19 @@
-import { useReducer } from "react";
 import classNames from "classnames";
 import { FaRegHeart } from "react-icons/fa6";
 import { BiLike } from "react-icons/bi";
 
 interface ReactionProps {
-  reactType: "love" | "like";
-  initNumber: number;
-  initActive: boolean;
-}
-
-interface ReactionState {
+  reactType: string;
   number: number;
   active: boolean;
+  handleClick: () => void;
 }
 
-interface Action {
-  type: "increment" | "decrement";
-}
-
-const INCREMENT = "increment";
-const DECREMENT = "decrement";
-
-const reducer = (state: ReactionState, action: Action): ReactionState => {
-  switch (action.type) {
-    case INCREMENT:
-      return { number: state.number + 1, active: true };
-    case DECREMENT:
-      return { number: state.number - 1, active: false };
-    default:
-      throw new Error();
-  }
-};
-
-function Reaction({ reactType, initNumber, initActive }: ReactionProps) {
-  const [state, dispatch] = useReducer(reducer, {
-    number: initNumber,
-    active: initActive,
-  });
-
+function Reaction({ reactType, number, active, handleClick }: ReactionProps) {
   const style = classNames({
-    "text-red-500": reactType === "love" && state.active,
-    "text-yellow-400": reactType === "like" && state.active,
+    "text-red-500": reactType === "love" && active,
+    "text-yellow-400": reactType === "like" && active,
   });
-
-  const handleClick = () => {
-    if (state.active) {
-      dispatch({ type: DECREMENT });
-    } else {
-      dispatch({ type: INCREMENT });
-    }
-  };
 
   let icon;
   if (reactType === "love") {
@@ -63,7 +27,7 @@ function Reaction({ reactType, initNumber, initActive }: ReactionProps) {
       className="flex cursor-pointer flex-row items-center rounded-full border border-fg-border px-2"
     >
       {icon}
-      <p className="ml-2">{state.number}</p>
+      <p className="ml-2 select-none">{active ? number + 1 : number}</p>
     </div>
   );
 }

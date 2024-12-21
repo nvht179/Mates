@@ -23,7 +23,7 @@ import { BiDetail } from "react-icons/bi";
 function EventDetails() {
   const { state } = useLocation();
   const { event } = state as { event: Event };
-  console.log(event);
+
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
 
@@ -47,7 +47,6 @@ function EventDetails() {
   const [repeatType, setRepeatType] = useState<string>(
     event?.repeatTime ?? "Does not repeat",
   );
-  console.log(startDate, startTime, endDate, endTime);
 
   const [
     createEvent,
@@ -67,7 +66,6 @@ function EventDetails() {
     const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
 
     if (user.id === null) {
-      console.error("User ID is null");
       return;
     }
     if (event) {
