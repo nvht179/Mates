@@ -151,7 +151,7 @@ class PostController {
   getPostsByClassId = async (req, res) => {
     try {
       const { classID } = req.params;  
-  
+
       if (!classID) {
         return res.status(400).json({ message: "classID is required." });
       }
