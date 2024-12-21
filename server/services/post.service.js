@@ -23,18 +23,21 @@ class PostService {
     }
   };
 
-  async getPostsByClassId(classID) {
+   getPostsByClassId = async (classID) => {
     try {
       const posts = await PostDB.getPostsByClassId(classID);
+  
+      if (!posts || posts.length === 0) {
+        throw new Error(`No posts found for class ID ${classID}.`);
+      }
+  
       return posts;
     } catch (error) {
-      throw new ErrorHandler(
-        500,
-        "Error in service layer while retrieving reactions",
-        error
+      throw new Error(
+        `Error in PostService - getPostsByClassId: ${error.message}`
       );
     }
-  }
+  };
 
   // Edit a post
   async editPost({ postId, title, content, attachments }) {
@@ -67,12 +70,17 @@ class PostService {
     }
   }
 
-  getPostById = async (postId) => {
+   getPostById = async (postId) => {
     try {
       const post = await PostDB.getPostById(postId);
+  
+      if (!post) {
+        throw new Error(`Post with ID ${postId} not found.`);
+      }
+  
       return post;
     } catch (err) {
-      throw new Error("Error in PostService: " + err.message);
+      throw new Error(`Error in PostService - getPostById: ${err.message}`);
     }
   };
 }
