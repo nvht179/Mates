@@ -5,52 +5,55 @@ module.exports = {
     ],
     "description": "Create a post with multiple attachments",
     "summary": "Create a post with multiple attachments",
+    "consumes": [
+      "multipart/form-data"
+    ],
     "parameters": [
       {
-        "name": "post",
-        "in": "body",
-        "description": "Create a post with attachments",
+        "name": "classID",
+        "in": "formData",
         "required": true,
-        "schema": {
-          "$ref": "#/components/schemas/createPostWithAttachments"
-        }
+        "description": "Class ID",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "in": "formData",
+        "required": false,
+        "description": "Content of the lecture",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "in": "formData",
+        "required": true,
+        "description": "Nhap title",
+        "type": "string"
+      },
+      {
+        "name": "personID",
+        "in": "formData",
+        "required": true,
+        "description": "Person ID",
+        "type": "string"
       },
       {
         "name": "files",
         "in": "formData",
-        "description": "Files to be uploaded with the post",
         "required": false,
-        "type": "array",
-        "collectionFormat": "multi",
-        "items": {
-          "type": "file"
-        }
+        "description": "File to upload as an attachment",
+        "type": "file"
       }
     ],
     "responses": {
       "200": {
-        "description": "Create a post successfully",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
+        "description": "Lecture created successfully with attachments",
       },
       "400": {
-        "description": "Bad request, missing required fields or invalid file format"
+        "description": "Bad request. Missing required fields or invalid file."
       },
-      "500": {
-        "description": "Server error"
+      "403": {
+        "description": "Unauthorized access or upload failed"
       }
     }
   }
