@@ -15,8 +15,6 @@ function ClassSideBar() {
   const { className, code } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
 
-  console.log("cla", cla);
-
   const navigate = useNavigate();
   const handleClickAllClasses = () => {
     navigate("/");

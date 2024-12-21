@@ -3,37 +3,55 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import UserModal from "./UserModal";
 import MatesLogo from "../assets/mates.svg";
 import Input from "./Input";
+import defaultAvatar from "../assets/default-avatar.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export default function TopBar() {
   const [showModal, setShowModal] = useState(false);
 
+  const user = useSelector((state: RootState) => state.user);
+
   const userModal = <UserModal onClose={() => setShowModal(false)} />;
 
   return (
-    <div className="sticky top-0 flex h-12 items-center justify-between border bg-bg-darker p-1 px-6">
-      {/* Logo */}
-      <img src={MatesLogo} alt="Logo" className="h-6 w-6" />
+    <div>
+      <div className="sticky top-0 grid h-12 w-full grid-cols-3 items-center justify-between border bg-bg-darker p-1 px-6">
+        {/* Logo */}
+        <img src={MatesLogo} alt="Logo" className="h-6 w-6" />
 
-      {/* Search Bar */}
-      <Input type="text" placeholder="Search..." className="w-1/3 text-sm" />
-
-      {/* Icons */}
-      <div className="mr-2 flex items-center space-x-4">
-        {/* Notification Icon */}
-        <div className="relative">
-          <span className="absolute right-0 top-0 inline-block h-2 w-2 rounded-full bg-red-default"></span>
-          <IoMdNotificationsOutline className="mt-1 cursor-pointer text-2xl active:opacity-30" />
+        {/* Search Bar */}
+        <div className="flex flex-grow justify-center">
+          <Input
+            type="text"
+            placeholder="Search..."
+            className="w-full text-sm"
+          />
         </div>
 
-        {/* Profile Image */}
-        <img
-          src="../../public/mates.svg"
-          alt="User Profile"
-          className="h-6 w-6 cursor-pointer rounded-full active:opacity-30"
-          onClick={() => setShowModal(true)}
-        />
-      </div>
+        {/* Icons */}
+        <div className="mr-2 ml-auto flex items-center space-x-4">
+          {/* Notification Icon */}
+          <div className="relative">
+            <span className="absolute right-0 top-0 inline-block h-2 w-2 rounded-full bg-red-default"></span>
+            <IoMdNotificationsOutline className="mt-1 cursor-pointer text-2xl active:opacity-30" />
+          </div>
 
+          <div
+            className="flex cursor-pointer items-center space-x-2 active:opacity-30"
+            onClick={() => setShowModal(true)}
+          >
+            {/* Profile Image */}
+
+            <img
+              src={user.avatar ? user.avatar : defaultAvatar}
+              alt={user.name || "Unknown"}
+              className="h-6 w-6 rounded-full object-cover"
+            />
+            <p className="text-sm">{user.name}</p>
+          </div>
+        </div>
+      </div>
       {/* User Modal */}
       {showModal && userModal}
     </div>
