@@ -2,7 +2,7 @@ const Post = require("../entities/post.model");
 const { ErrorHandler } = require("../helpers/error");
 const AttachmentDB = require("../db/attachment.db"); // Import AttachmentDB để xử lý việc thêm attachment
 const sequelize = require("../config/db");
-const { Comment, Reaction, Person } = require("../entities");
+const { Comment, Reaction, Person, Attachment } = require("../entities");
 class PostDB {
   addNewPostWithAttachments = async ({ classID, title, content, attachments, personID }) => {
     let transaction;
@@ -74,6 +74,12 @@ class PostDB {
                 attributes: ["id", "name", "avatar"],
               },
             ],
+          },
+          {
+            model: Attachment,
+            as: "attachments",
+            attributes: ["id", "link", "linkTitle"],
+
           },
         ],
       });
@@ -182,6 +188,12 @@ class PostDB {
                 attributes: ["id", "name", "avatar"],
               },
             ],
+          },
+          {
+            model: Attachment,
+            as: "attachments",
+            attributes: ["id", "link", "linkTitle"],
+
           },
         ],
       });
