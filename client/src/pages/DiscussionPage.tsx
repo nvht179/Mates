@@ -8,7 +8,7 @@ function DiscussionPage() {
   const { state } = useLocation();
   const { cla } = state as { cla: ClassState };
   const { data } = useViewPostsQuery({ classID: cla.classID });
-  console.log(data);
+
   const posts = data?.data ?? [];
 
   return (

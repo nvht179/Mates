@@ -67,12 +67,45 @@ interface CreatePostResponse {
   };
 }
 
+interface EditPostRequest {
+  postID: number;
+  title: string;
+  content: string;
+  files: File[];
+}
+
+interface EditPostResponse {
+  message: string;
+  data: {
+    id: number;
+    title: string;
+    content: string;
+    attachments: {
+      link: string;
+      linkTitle: string;
+    }[];
+  };
+}
+
+interface DeletePostRequest {
+  postID: number;
+}
+
+interface DeletePostResponse {
+  message: string;
+}
+
 export type {
   ReactionType,
   Attachment,
+  Comment,
   Post,
   ViewPostRequest,
   ViewPostsResponse,
   CreatePostRequest,
   CreatePostResponse,
+  EditPostRequest,
+  EditPostResponse,
+  DeletePostRequest,
+  DeletePostResponse,
 };

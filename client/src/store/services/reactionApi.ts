@@ -1,6 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getAuthToken } from "../../utils/getAuthToken";
-import { CreateReactionResponse } from "../../interfaces/Reaction";
+import {
+  CreateReactionRequest,
+  CreateReactionResponse,
+  DeleteReactionRequest,
+  DeleteReactionResponse,
+  EditReactionRequest,
+  EditReactionResponse,
+} from "../../interfaces/Reaction";
 
 const reactionApi = createApi({
   reducerPath: "reaction",
@@ -15,15 +22,39 @@ const reactionApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    createReaction: builder.mutation<CreateReactionResponse, CreateReactionResponse>({
-      query: ({ personId, type, postId }) => ({
-        url: `reaction`,
+    createReaction: builder.mutation<
+      CreateReactionResponse,
+      CreateReactionRequest
+    >({
+      query: (react) => ({
+        url: `reactions/create`,
         method: "POST",
-        body: { personId, type, postId },
+        body: react,
+      }),
+    }),
+    editReaction: builder.mutation<EditReactionResponse, EditReactionRequest>({
+      query: (newReact) => ({
+        url: `reactions/update`,
+        method: "PUT",
+        body: newReact,
+      }),
+    }),
+    deleteReaction: builder.mutation<
+      DeleteReactionResponse,
+      DeleteReactionRequest
+    >({
+      query: (react) => ({
+        url: `reactions/delete`,
+        method: "DELETE",
+        body: react,
       }),
     }),
   }),
 });
 
-export const { useCreateReactionMutation } = reactionApi;
+export const {
+  useCreateReactionMutation,
+  useEditReactionMutation,
+  useDeleteReactionMutation,
+} = reactionApi;
 export default reactionApi;

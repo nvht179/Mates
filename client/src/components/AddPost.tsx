@@ -7,11 +7,21 @@ import Input from "./Input";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import defaultAvatar from "../assets/default-avatar.png";
+import Textarea from "./TextArea";
+import { useCreatePostMutation } from "../store";
+import { useLocation } from "react-router-dom";
+import { ClassState } from "../interfaces/Class";
 
 function AddPost() {
   const [addPostActive, setAddPostActive] = useState(false);
+  const [subject, setSubject] = useState("");
+  const [postContent, setPostContent] = useState("");
+
+  const [createPost] = useCreatePostMutation();
 
   const user = useSelector((state: RootState) => state.user);
+  const { state } = useLocation();
+  const { cla } = state as { cla: ClassState };
 
   const addPostButton = () => {
     return (
@@ -20,6 +30,16 @@ function AddPost() {
         New Post
       </Button>
     );
+  };
+
+  const handleSavePost = () => {
+    setAddPostActive(false);
+    createPost({
+      classID: cla.classID,
+      title: subject,
+      content: postContent,
+      personID: user.id || 0,
+    });
   };
 
   const addPostArea = () => {
@@ -32,7 +52,7 @@ function AddPost() {
               src={user.avatar ? user.avatar : defaultAvatar}
               alt={user.name || "Unknown"}
             />
-            <p className="ml-4 font-bold">Jane Doe</p>
+            <p className="ml-4 font-bold">{user.name}</p>
           </div>
           <RxCross2
             onClick={() => setAddPostActive(false)}
@@ -40,15 +60,19 @@ function AddPost() {
           />
         </div>
         <Input
-          className="rounded-none border-x-0 py-4 text-xl"
+          className="rounded-none border-x-0 px-4 py-4 text-xl"
           placeholder="Add a subject"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
         />
-        <textarea
-          className="h-28 border-0 p-3 text-lg focus:outline-none focus:ring-0"
+        <Textarea
+          className="h-28 border-none px-4"
           placeholder="Type a message"
+          value={postContent}
+          onChange={(e) => setPostContent(e.target.value)}
         />
         <div className="m-4 mt-2 flex flex-col items-end">
-          <Button onClick={() => setAddPostActive(false)} className="w-36">
+          <Button onClick={handleSavePost} className="w-36">
             Post
           </Button>
         </div>

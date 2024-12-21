@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Panel from "./Panel";
 import CommentList from "./CommentList";
 import ReactionList from "./ReactionList";
@@ -7,6 +8,7 @@ import AttachmentCardList from "./AttachmentCardList";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import defaultAvatar from "../assets/default-avatar.png";
+import { useCreateCommentMutation } from "../store";
 
 interface PostListProps {
   posts: Post[];
@@ -14,6 +16,16 @@ interface PostListProps {
 
 function PostList({ posts }: PostListProps) {
   const user = useSelector((state: RootState) => state.user);
+  const [currentComment, setCurrentComment] = useState("");
+
+  const [createComment, {isSuccess}] = useCreateCommentMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCurrentComment("");
+    }
+  }
+  , [isSuccess]);
 
   const userProfileRendered = (
     <div className="flex flex-row items-center">
@@ -26,6 +38,18 @@ function PostList({ posts }: PostListProps) {
     </div>
   );
 
+  const onsubmitAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (currentComment === "") {
+      return;
+    }
+    await createComment({
+      content: currentComment,
+      postId: posts[0].id,
+      personId: user.id || 0,
+    });
+  };
+
   const renderedAddComment = (
     <div className="mt-4 px-4 pb-4">
       <div className="flex flex-row items-center">
@@ -34,7 +58,15 @@ function PostList({ posts }: PostListProps) {
           src={user.avatar ? user.avatar : defaultAvatar}
           alt={user.name || "Unknown"}
         />
-        <Input className="ml-4 w-full" type="text" placeholder="Add comment" />
+        <form onSubmit={onsubmitAddComment} className="w-full">
+          <Input
+            className="ml-4 w-full"
+            type="text"
+            placeholder="Add comment"
+            value={currentComment}
+            onChange={(e) => setCurrentComment(e.target.value)}
+          />
+        </form>
       </div>
     </div>
   );

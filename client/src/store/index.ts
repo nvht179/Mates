@@ -8,6 +8,7 @@ import postApi from "./services/postApi";
 import reactionApi from "./services/reactionApi";
 import lectureApi from "./services/lectureApi";
 import eventApi from "./services/eventApi";
+import commentApi from "./services/commentApi";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     [classApi.reducerPath]: classApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [reactionApi.reducerPath]: reactionApi.reducer,
+    [commentApi.reducerPath]: commentApi.reducer,
     [lectureApi.reducerPath]: lectureApi.reducer,
     [eventApi.reducerPath]: eventApi.reducer,
   },
@@ -27,6 +29,7 @@ export const store = configureStore({
       .concat(classApi.middleware)
       .concat(postApi.middleware)
       .concat(reactionApi.middleware)
+      .concat(commentApi.middleware)
       .concat(lectureApi.middleware)
       .concat(eventApi.middleware),
 });
@@ -37,10 +40,12 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export { authApi, classApi, postApi, reactionApi, userApi };
 export * from "./services/authApi";
-export * from "./services/userApi"
+export * from "./services/userApi";
 export * from "./services/classApi";
 export * from "./services/postApi";
-export * from "./slices/userSlice";
 export * from "./services/reactionApi";
+export * from "./services/commentApi";
 export * from "./services/lectureApi";
 export * from "./services/eventApi";
+
+export * from "./slices/userSlice";
