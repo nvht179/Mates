@@ -22,6 +22,7 @@ import CreateAssignment from "./pages/CreateAssignment";
 import LectureDetails from "./pages/LectureDetails";
 import CalendarPage from "./pages/CalendarPage";
 import EventDetails from "./pages/EventDetails";
+import EditClass from "./pages/EditClass";
 
 export default function App() {
   return (
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/create-class" element={<CreateClass />} />
           <Route path="/class/:classCode" element={<ClassLayout />}>
+            <Route path="edit-class" element={<EditClass />} />
             <Route path="lecture" element={<LecturePage />} />
             <Route path="lecture-details" element={<LectureDetails />} />
             <Route path="assignment" element={<AssignmentPage />} />

@@ -4,12 +4,31 @@ import { useRemoveClassMutation } from "../store";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useNavigate } from "react-router-dom";
+import { ClassState } from "../interfaces/Class";
 
 interface ClassSettingsDropDownProps {
-  classId: string;
+  cla: ClassState;
+  image: string
 }
 
-const ClassSettingsDropDown = ({ classId }: ClassSettingsDropDownProps) => {
+interface LocationState {
+  cla: ClassState;
+  image: string;
+  title: string;
+  display: string | null;
+}
+
+const ClassSettingsDropDown = ({ 
+  cla,
+  image,
+}: ClassSettingsDropDownProps) => {
+  const state = {
+    cla,
+    image,
+    title: "Edit Class",
+    display: null,
+  } as LocationState;
+  
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [settingsHovered, setSettingsHovered] = useState(false);
@@ -22,12 +41,12 @@ const ClassSettingsDropDown = ({ classId }: ClassSettingsDropDownProps) => {
   };
 
   const handleRemove = () => {
-    removeClass(classId);
+    removeClass(cla.classID.toString());
     navigate("/");
   };
 
   const handleEdit = () => {
-    // navigate to edit class page
+    navigate(`/class/${cla.code}/edit-class`, { state });
   };
 
   useEffect(() => {

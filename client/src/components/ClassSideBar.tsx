@@ -102,7 +102,10 @@ function ClassSideBar() {
         <AddMemberDropDown memberType="student" classID={String(classID)} />
         <AddMemberDropDown memberType="teacher" classID={String(classID)} />
         <div className="mr-auto" />
-        <ClassSettingsDropDown classId={String(cla.classID)}/>
+        <ClassSettingsDropDown 
+          cla={cla}
+          image={image}
+        />
       </div>
     </div>
   );

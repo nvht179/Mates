@@ -15,7 +15,8 @@ import { getNextDate, parseHours } from "../utils/date";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useLocation } from "react-router-dom";
-import { ClassState } from "../interfaces/Class";
+// import { ClassState } from "../interfaces/Class";
+import { useViewClassInfoQuery } from "../store";
 
 type ScheduleSlot = {
     day: string;
@@ -23,16 +24,47 @@ type ScheduleSlot = {
     endTime: string;
 };
 
+// interface ClassIDState {
+//     classID: string;
+// }
+
+// interface LocationState {
+//     cla: ClassState;
+//     image: string;
+//     title: string;
+//     display: string | null;
+// }
+
 export default function EditClass() {
+
     const { state } = useLocation();
-    const { cla } = state as { cla: ClassState; image: string };
-    const { classID } = cla;
+    const classIDnum = state?.cla.classID;
+    const classID = classIDnum?.toString();
+    // const { state } = useLocation();
+    // const { cla } = state as { cla: ClassState; image: string };
+    // const { classID } = cla;
+
+    const classInfoQuery = useViewClassInfoQuery(classID);
+
+    const { data, isError: CIIsError, error: CIError } = classInfoQuery;
+
+    useEffect(() => {
+        responseErrorHandler(
+            CIIsError,
+            CIError as FetchBaseQueryError,
+            setErrorMessage,
+        );
+    }, [CIIsError, CIError]);
+
+    const cla = data?.classInfo ?? { className: "", code: "", description: "" };
 
     const [className, setClassName] = useState(cla.className);
     const [classCode, setClassCode] = useState(cla.code);
     const [description, setDescription] = useState(cla.description);
-    const [schedule, setSchedule] = useState<ScheduleSlot[]>([]);
-    const [frequency, setFrequency] = useState("Weekly");
+    const [schedule, setSchedule] = useState<ScheduleSlot[]>(
+        [{ day: "Monday", startTime: "13:30", endTime: "15:30" }]
+    );
+    const [frequency, setFrequency] = useState(data?.classEvents[0].repeatTime ?? "Weekly");
 
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [editClassMutation, { isLoading, isSuccess, isError, error }] =
@@ -55,6 +87,11 @@ export default function EditClass() {
         }
     }, [isSuccess, navigate]);
 
+    const handleClose = () => {
+        state.title = "Lecture";
+        navigate(`/class/${cla.code}/lecture`, { state })
+    }
+
     const handleScheduleChange = (
         index: number,
         field: keyof ScheduleSlot,
@@ -66,7 +103,7 @@ export default function EditClass() {
     };
 
     const addTimeSlot = () => {
-        setSchedule([...schedule, { day: "Monday", startTime: "", endTime: "" }]);
+        setSchedule([...schedule, { day: "Monday", startTime: "13:15", endTime: "15:15" }]);
     };
 
     // const handleScheduleChange = (index: number, field: string, value: string) => {
@@ -99,7 +136,7 @@ export default function EditClass() {
         e.preventDefault();
 
         await editClassMutation({
-            classID,
+            classID: classIDnum,
             className,
             code: classCode,
             description,
@@ -111,11 +148,21 @@ export default function EditClass() {
 
     return (
         <div className="max-w mx-auto">
-            <div className="mb-10 flex items-center justify-between border-b-2 border-b-fg-border px-10 pb-5 pt-6">
-                <h1 className="text-3xl font-bold">Edit Class</h1>
+            <div className="flex items-center justify-between mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
+                <div className="flex items-center pr-20">
+                    {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
+                    <LuPencilLine className="mx-3 text-2xl" />
+                    <Input
+                        className="border-bg-alt bg-bg-alt"
+                        type="text"
+                        value={className}
+                        placeholder="Enter class name"
+                        onChange={(e) => setClassName(e.target.value)}
+                    />
+                </div>
                 {/* Buttons */}
-                <div className="flex justify-end space-x-7">
-                    <Button secondary onClick={() => navigate("/")}>
+                <div className="flex justify-end space-x-7 mr-20">
+                    <Button secondary onClick={handleClose}>
                         Close
                     </Button>
                     {isLoading ? (
@@ -129,10 +176,9 @@ export default function EditClass() {
                     )}
                 </div>
             </div>
-            <div className="mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
+            <div className="mx-auto mr-20 pb-5 pl-10 pr-20">
                 {/* Class Name */}
-                <div className="mb-4 flex items-center pr-20">
-                    {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
+                {/* <div className="mb-4 flex items-center pr-20">
                     <LuPencilLine className="mx-3 text-2xl" />
                     <Input
                         className="border-bg-alt bg-bg-alt"
@@ -141,7 +187,7 @@ export default function EditClass() {
                         placeholder="Enter class name"
                         onChange={(e) => setClassName(e.target.value)}
                     />
-                </div>
+                </div> */}
 
                 {/* Class Code */}
                 <div className="mb-4 flex w-1/4 items-center">

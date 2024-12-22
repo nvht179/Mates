@@ -52,6 +52,7 @@ const classApi = createApi({
         };
       },
     }),
+
     viewAllStudentsInClass: builder.query<
       ViewAllStudentInClassResponse,
       string
@@ -92,7 +93,7 @@ const classApi = createApi({
     editClass: builder.mutation<EditClassResponse, EditClassRequest>({
       query: (edittedClass) => {
         return {
-          url: "/classes/edit-class-ìno",
+          url: "/classes/edit-class-info",
           method: "PUT",
           body: edittedClass,
         };
@@ -191,5 +192,6 @@ export const {
   useRemoveStudentsInClassMutation,
   useRemoveTeachersInClassMutation,
   useEditClassMutation,
+  useViewClassInfoQuery,
 } = classApi;
 export default classApi;

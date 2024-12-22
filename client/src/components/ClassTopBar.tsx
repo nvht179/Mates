@@ -122,6 +122,7 @@ function ClassTopBar() {
     </>
   );
 
+
   return (
     <div className="flex h-[60px] flex-row border-b border-fg-border bg-bg-soft">
       <div className="flex h-full flex-shrink-0 items-center">
@@ -137,7 +138,10 @@ function ClassTopBar() {
       ) : title === "Lecture" ? (
         lectureContent
       ) : (
-        <h1 className="ml-4 text-lg font-bold">{title}</h1>
+        <div className="flex h-full items-center">
+
+          <h1 className="ml-4 text-lg font-bold">{title}</h1>
+        </div>
       )}
     </div>
   );
