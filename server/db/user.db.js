@@ -1,5 +1,5 @@
 const pool = require("../config/db");
-const { Person } = require("../entities");
+const { Person, StudentClass } = require("../entities");
 const { Teacher, Student, Parent } = require("../entities/user.model");
 const { ErrorHandler } = require("../helpers/error");
 
@@ -81,6 +81,13 @@ class UserDB {
     user.resetToken = OTP;
     await user.save();
     return user;
+  };
+
+  checkStudentInClass = async (classID, studentID) => {
+    const checkStudent = await StudentClass.findAll({
+      where: {classID, studentID}
+    })
+    return checkStudent;
   };
 
   updateUserInfo = async (id, email, name, phone, publicURL, linkTitle) => {

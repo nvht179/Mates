@@ -43,10 +43,46 @@ class GradeController {
 
   viewGradesInThatAssignmentStudent = async (req, res) => {
     try {
-      const { assignmentID, personID } = req.params;
-      const submission = await GradeService.viewGradesInThatAssignmentStudent(assignmentID, personID);
+      const { personID } = req.params;
+      const allSubmissionsStudent = await GradeService.viewGradesInThatAssignmentStudent(personID);
       const message = "Successful";
-      res.status(200).json({ message, submission });
+      res.status(200).json({ message, allSubmissionsStudent });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  viewGradeDetailStudent = async (req, res) => {
+    try {
+      const { assignmentID, personID } = req.params;
+      const { submissionDetail, attachments } = await GradeService.viewGradeDetailStudent(assignmentID, personID);
+      const message = "Successful";
+      res.status(200).json({ message, submissionDetail, attachments });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  viewGradeAssignmentsTeacher = async (req, res) => {
+    try {
+      const { assignmentID } = req.params;
+      const allSubmissionAssignment = await GradeService.viewGradeAssignmentsTeacher(assignmentID);
+      const message = "Successful";
+      res.status(200).json({ message, allSubmissionAssignment });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  gradeAssignmentTeacher = async (req, res) => {
+    try {
+      const { assignmentID, personID, grade100, comment } = req.body;
+      const submissionDetail = await GradeService.gradeAssignmentTeacher(assignmentID, personID, grade100, comment);
+      const message = "Successful";
+      res.status(200).json({ message, submissionDetail });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
