@@ -1,27 +1,30 @@
 module.exports = {
-  "get": {
+  "put": {
     "tags": [
-      "Lectures"
+      "Notifications"
     ],
-    "description": "View all lectures in that class",
-    "summary": "View all lectures in that class",
+    "description": "Mark a specific notification as read by its ID",
+    "summary": "Mark notification as read",
     "parameters": [
       {
-        "name": "classID",
+        "name": "notificationId",
         "in": "path",
         "required": true,
-        "description": "Class's ID",
+        "description": "The ID of the notification to mark as read",
         "schema": {
-          "type": "string"
+          "type": "integer"
         }
       }
     ],
     "responses": {
       "200": {
-        "description": "View all lectures in that class successfully",
+        "description": "Notification marked as read successfully"
       },
       "404": {
-        "description": "Lectures not found"
+        "description": "Notification not found"
+      },
+      "500": {
+        "description": "Internal server error"
       }
     }
   }
