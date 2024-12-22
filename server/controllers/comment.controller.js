@@ -65,7 +65,7 @@ class CommentController {
       const comments = await CommentService.getCommentsByPostId(postId);
 
       if (!comments || comments.length === 0) {
-        return res.status(404).json({
+        return res.status(200).json({
           message: "No comments found for this post.",
           data: [],
         });
