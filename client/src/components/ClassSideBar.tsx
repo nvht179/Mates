@@ -24,19 +24,29 @@ function ClassSideBar() {
   };
   const handleClickLecture = () => {
     navigate(`/class/${code}/lecture`, {
-      state: { ...state, title: "Lecture", display: null },
+      state: { ...state, module: "Lecture", title: "Lecture", display: null },
     });
     setButtonClicked("lecture");
   };
   const handleClickAssignment = () => {
     navigate(`/class/${code}/assignment`, {
-      state: { ...state, title: "Assignment", display: null },
+      state: {
+        ...state,
+        module: "Assignment",
+        title: "Assignment",
+        display: null,
+      },
     });
     setButtonClicked("assignment");
   };
   const handleClickDiscussion = () => {
     navigate(`/class/${code}/discussion`, {
-      state: { ...state, title: "Discussion", display: null },
+      state: {
+        ...state,
+        module: "Discussion",
+        title: "Discussion",
+        display: null,
+      },
     });
     setButtonClicked("discussion");
   };
@@ -102,10 +112,7 @@ function ClassSideBar() {
         <AddMemberDropDown memberType="student" classID={String(classID)} />
         <AddMemberDropDown memberType="teacher" classID={String(classID)} />
         <div className="mr-auto" />
-        <ClassSettingsDropDown 
-          cla={cla}
-          image={image}
-        />
+        <ClassSettingsDropDown cla={cla} image={image} />
       </div>
     </div>
   );

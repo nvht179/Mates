@@ -4,6 +4,7 @@ import userReducer from "./slices/userSlice";
 import authApi from "./services/authApi";
 import userApi from "./services/userApi";
 import classApi from "./services/classApi";
+import assignmentApi from "./services/assignmentApi";
 import postApi from "./services/postApi";
 import reactionApi from "./services/reactionApi";
 import lectureApi from "./services/lectureApi";
@@ -16,6 +17,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [classApi.reducerPath]: classApi.reducer,
+    [assignmentApi.reducerPath]: assignmentApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [reactionApi.reducerPath]: reactionApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer,
@@ -27,6 +29,7 @@ export const store = configureStore({
       .concat(authApi.middleware)
       .concat(userApi.middleware)
       .concat(classApi.middleware)
+      .concat(assignmentApi.middleware)
       .concat(postApi.middleware)
       .concat(reactionApi.middleware)
       .concat(commentApi.middleware)
@@ -47,5 +50,5 @@ export * from "./services/reactionApi";
 export * from "./services/commentApi";
 export * from "./services/lectureApi";
 export * from "./services/eventApi";
-
+export * from "./services/assignmentApi";
 export * from "./slices/userSlice";

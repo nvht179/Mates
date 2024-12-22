@@ -74,7 +74,7 @@ export default function ForgetPassword() {
           <Input
             placeholder={DATA.placeholder}
             autoFocus
-            className="mb-2"
+            className="mb-2 w-full"
             onChange={handleChange}
           />
         </div>

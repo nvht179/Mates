@@ -29,33 +29,29 @@ function OptionDropdown({
   return (
     <div ref={divEl} className="relative">
       <SlOptions
-        className="cursor-pointer active:opacity-30"
-        onClick={() => setIsOpen(true)}
+        className="cursor-pointer text-sm text-fg-default active:opacity-50"
+        onClick={() => setIsOpen((prev) => !prev)}
       />
       <div className="absolute right-0">
         {isOpen ? (
-          <div className="z-10 mt-2 w-40 cursor-pointer rounded-md border border-fg-border bg-bg-darker text-black shadow-lg">
+          <div className="z-10 mt-2 w-40 cursor-pointer overflow-hidden rounded border border-fg-border text-black shadow-lg">
             <div
-              className="py-1"
+              className="bg-bg-default px-4 py-2 text-sm font-semibold text-fg-soft hover:bg-bg-dark hover:text-fg-default active:bg-bg-darker"
               onClick={() => {
                 handleEditClick();
                 setIsOpen(false);
               }}
             >
-              <p className="block px-4 py-2 text-sm font-semibold hover:bg-primary-default hover:text-white">
-                Edit
-              </p>
+              <p className="select-none text-sm">Edit</p>
             </div>
             <div
-              className="py-1"
+              className="bg-bg-default px-4 py-2 text-sm font-semibold text-red-default hover:bg-red-50 active:bg-bg-darker"
               onClick={() => {
                 handleDeleteClick();
                 setIsOpen(false);
               }}
             >
-              <p className="block px-4 py-2 text-sm font-semibold hover:bg-red-default hover:text-white">
-                Delete
-              </p>
+              <p className="select-none text-sm">Delete</p>
             </div>
           </div>
         ) : null}

@@ -36,7 +36,8 @@ const ClassSettingsDropDown = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
 
@@ -79,7 +80,7 @@ const ClassSettingsDropDown = ({
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <div
         className="flex items-center justify-center rounded p-2 hover:bg-bg-default active:opacity-50"
         onMouseEnter={() => setSettingsHovered(true)}

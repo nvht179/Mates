@@ -25,7 +25,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
 
   const handleClick = (cla: ClassState, image: string) => {
     navigate("/class/" + cla.code + "/lecture", {
-      state: { cla, title: "Lecture", image },
+      state: { cla, title: "Lecture", module: "Lecture", image },
     });
   };
 
@@ -58,20 +58,20 @@ function ClassCardList({ classes }: ClassCardListProps) {
             onMouseLeave={() => setHoveredIcon("")}
           >
             {hoveredIcon === `${cla.classID}_info` ? (
-              <MdInfo />
+              <MdInfo className="text-primary-default"/>
             ) : (
-              <MdInfoOutline />
+              <MdInfoOutline className="text-fg-soft"/>
             )}
           </ClassInfo>
           <div
-            className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl text-fg-soft hover:text-primary-default"
+            className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl"
             onMouseEnter={() => setHoveredIcon(`${cla.classID}_edit`)}
             onMouseLeave={() => setHoveredIcon("")}
           >
             {hoveredIcon === `${cla.classID}_edit` ? (
-              <RiEditBoxFill />
+              <RiEditBoxFill className="text-primary-default"/>
             ) : (
-              <RiEditBoxLine />
+              <RiEditBoxLine className="text-fg-soft"/>
             )}
           </div>
         </div>

@@ -1,19 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../components/Button";
 import Input from "../components/Input";
 import { LuPencilLine } from "react-icons/lu";
-import { IoMdCode } from "react-icons/io";
 import { FaRegClock } from "react-icons/fa6";
+import { LuWeight } from "react-icons/lu";
 import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
-import { FaRegFile } from "react-icons/fa";
+import { MdAttachment } from "react-icons/md";
+import { useCreateAssignmentMutation } from "../store";
+import { useLocation } from "react-router-dom";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export default function CreateAssignment() {
   const [assignmentTitle, setAssignmentTitle] = useState("");
-  const [assignmentCode, setAssignmentCode] = useState("");
   const [description, setDescription] = useState("");
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState<File[]>([]);
+  const [weight, setWeight] = useState(1);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { state } = useLocation();
+  const { classID, code } = state.cla;
+  const [createAssignment, { isLoading, isError, error, isSuccess }] =
+    useCreateAssignmentMutation();
+  const navigate = useNavigate();
 
   type ScheduleSlot = {
     startDate: string;
@@ -36,128 +45,182 @@ export default function CreateAssignment() {
     }));
   };
 
-  const navigate = useNavigate();
-  const handleSubmit = () => {
-    console.log({
-      assignmentTitle,
-      assignmentCode,
-      schedule,
-      description,
-      attachment,
+  useEffect(() => {
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+    if (isSuccess)
+      navigate(`/class/${code}/assignment`, {
+        state: { ...state, module: "Assignment", title: "Assignment" },
+      });
+  }, [error, isError, navigate, code, isSuccess, state]); 
+
+  useEffect(() => {
+    const now = new Date();
+    const nowDate = now.toISOString().slice(0, 10);
+    const nowTime = now.toTimeString().slice(0, 5);
+
+    if (schedule.startDate < nowDate) {
+      setSchedule((prev) => ({ ...prev, startDate: nowDate }));
+    } else if (schedule.startDate === nowDate && schedule.startTime < nowTime) {
+      setSchedule((prev) => ({ ...prev, startTime: nowTime }));
+    }
+
+    const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
+    const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
+    if (endDT <= startDT) {
+      setSchedule((prev) => ({
+        ...prev,
+        endDate: schedule.startDate,
+        endTime: schedule.startTime,
+      }));
+    }
+  }, [schedule]);
+
+  const handleSubmit = useCallback(async () => {
+    const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
+    const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
+    if (endDT <= startDT) return alert("End time must be after start time");
+
+    const formData = new FormData();
+    formData.append("title", assignmentTitle);
+    formData.append("description", description);
+    formData.append("classID", classID.toString());
+    formData.append("weight", weight.toString());
+    formData.append("startTime", startDT.toISOString());
+    formData.append("endTime", endDT.toISOString());
+    attachment.forEach((file) => formData.append("files", file));
+
+    await createAssignment(formData);
+  }, [
+    schedule,
+    assignmentTitle,
+    description,
+    classID,
+    weight,
+    attachment,
+    createAssignment,
+  ]);
+
+  useEffect(() => {
+    addEventListener("SaveAssignment", handleSubmit);
+    return () => {
+      removeEventListener("SaveAssignment", handleSubmit);
+    };
+  }, [handleSubmit]);
+
+  useEffect(() => {
+    const event = new CustomEvent("AssignmentLoadingStateChange", {
+      detail: { isLoading },
     });
-  };
+    document.dispatchEvent(event);
+  }, [isLoading]);
 
   return (
-    <div className="max-w mx-auto">
-      <div className="mb-10 flex items-center justify-between border-b-2 border-b-fg-border px-10 pb-5 pt-6">
-        <h1 className="text-3xl font-bold">New Assignment</h1>
-        {/* Buttons */}
-        <div className="flex justify-end space-x-7">
-          <Button secondary onClick={() => navigate("assignments")}>
-            Close
-          </Button>
-          <Button onClick={handleSubmit}>Create</Button>
-        </div>
+    <div className="max-w mx-auto mr-20 px-20 py-10 text-fg-soft">
+      {/* Class Name */}
+      <div className="mb-6 flex items-center">
+        <LuPencilLine className="mx-4 text-xl text-fg-soft" />
+        <Input
+          className="bg-bg-dark"
+          type="text"
+          value={assignmentTitle}
+          placeholder="Assignment title"
+          onChange={(e) => setAssignmentTitle(e.target.value)}
+        />
       </div>
-      <div className="mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
-        {/* Class Name */}
-        <div className="mb-4 flex items-center pr-20">
-          {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
-          <LuPencilLine className="mx-4 text-2xl" />
-          <Input
-            className="bg-bg-alt border-bg-alt"
-            type="text"
-            value={assignmentTitle}
-            placeholder="Enter assignment title"
-            onChange={(e) => setAssignmentTitle(e.target.value)}
-          />
-        </div>
 
-        {/* Class Code */}
-        <div className="mb-4 flex w-1/4 items-center">
-          {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
-          <IoMdCode className="ml-3 mr-4 text-3xl" />
-          <Input
-            className="bg-bg-alt border-bg-alt"
-            type="text"
-            value={assignmentCode}
-            placeholder="Enter class code"
-            onChange={(e) => setAssignmentCode(e.target.value)}
-          />
-        </div>
-
-        {/* Attachment */}
-        <div className="mb-4 flex w-1/4 items-center">
-          {/* <label className="block text-gray-700 mb-1 mx-3">Attachment</label> */}
-          <FaRegFile className="ml-4 mr-4 text-2xl" />
-
-          <Input
-            className="bg-bg-alt border-bg-alt"
-            type="file"
-            onChange={(e) => {
-              if (e.target.files && e.target.files[0]) {
-                setAttachment(e.target.files[0].name);
-              }
-            }}
-          />
-        </div>
-
-        {/* Schedule */}
-        <div className="mb-4 flex-col items-center pr-20">
-          <div className="mb-2 flex items-center space-x-4">
-            {/* Start Day */}
-            <FaRegClock className="ml-4 h-auto text-8xl" />
-            <Input
-              type="date"
-              value={schedule.startDate}
-              onChange={(e) =>
-                handleScheduleChange("startDate", e.target.value)
-              }
-              className="bg-bg-alt border-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-            />
-
-            {/* Start Time */}
-            <Input
-              type="time"
-              value={schedule.startTime}
-              onChange={(e) =>
-                handleScheduleChange("startTime", e.target.value)
-              }
-              className="bg-bg-alt border-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-            />
-            <HiArrowLongRight className="h-auto text-8xl" />
-
-            {/* End Day */}
-            <Input
-              type="date"
-              value={schedule.endDate}
-              onChange={(e) => handleScheduleChange("endDate", e.target.value)}
-              className="bg-bg-alt border-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-            />
-
-            {/* End Time */}
-            <Input
-              type="time"
-              value={schedule.endTime}
-              onChange={(e) => handleScheduleChange("endTime", e.target.value)}
-              className="bg-bg-alt border-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Description */}
-        <div className="mb-6 flex w-full items-center pr-20">
-          {/* <label className="block text-gray-700 mb-1">Description</label> */}
-          <GrTextAlignFull className="ml-3 mr-4 text-2xl" />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="bg-bg-alt border-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-            placeholder="Enter assignment description"
-            rows={4}
-          />
-        </div>
+      {/* Weight */}
+      <div className="mb-6 flex items-center">
+        <LuWeight className="mx-4 text-xl text-fg-soft" />
+        <Input
+          className="bg-bg-dark"
+          type="number"
+          value={weight}
+          placeholder="Weight"
+          onChange={(e) => setWeight(Number(e.target.value))}
+        />
       </div>
+
+      {/* Attachment */}
+      <div className="mb-6 flex items-center">
+        <MdAttachment className="mx-4 text-xl text-fg-soft" />
+        <Input
+          className="bg-bg-dark"
+          type="file"
+          multiple
+          onChange={(e) => {
+            if (e.target.files) {
+              setAttachment(Array.from(e.target.files));
+            }
+          }}
+        />
+      </div>
+
+      {/* Schedule */}
+      <div className="mb-6 flex items-center gap-4">
+        {/* Start Day */}
+        <FaRegClock className="ml-4 text-xl" />
+        <Input
+          className="bg-bg-dark"
+          type="date"
+          value={schedule.startDate}
+          min={new Date().toISOString().slice(0, 10)}
+          onChange={(e) => handleScheduleChange("startDate", e.target.value)}
+        />
+
+        {/* Start Time */}
+        <Input
+          className="bg-bg-dark"
+          type="time"
+          value={schedule.startTime}
+          min={
+            schedule.startDate === new Date().toISOString().slice(0, 10)
+              ? new Date().toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""
+          }
+          onChange={(e) => handleScheduleChange("startTime", e.target.value)}
+        />
+        <HiArrowLongRight className="text-xl" />
+
+        {/* End Day */}
+        <Input
+          className="bg-bg-dark"
+          type="date"
+          value={schedule.endDate}
+          min={schedule.startDate}
+          onChange={(e) => handleScheduleChange("endDate", e.target.value)}
+        />
+
+        {/* End Time */}
+        <Input
+          className="bg-bg-dark"
+          type="time"
+          value={schedule.endTime}
+          min={
+            schedule.startDate === schedule.endDate ? schedule.startTime : ""
+          }
+          onChange={(e) => handleScheduleChange("endTime", e.target.value)}
+        />
+      </div>
+
+      {/* Description */}
+      <div className="flex">
+        <GrTextAlignFull className="mx-4 text-xl" />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full rounded border-2 border-fg-border bg-bg-dark px-3 py-2 transition focus:border-b-primary-default focus:outline-none"
+          placeholder="Description"
+          rows={4}
+        />
+      </div>
+      <p className="mt-4 text-red-default">{errorMessage}</p>
     </div>
   );
 }

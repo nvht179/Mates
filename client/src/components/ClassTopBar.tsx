@@ -4,68 +4,75 @@ import { ClassState } from "../interfaces/Class";
 import TopBarTab from "./TopBarTab";
 import Button from "./Button";
 import { RiEditBoxFill } from "react-icons/ri";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
-type buttonClicked = "classwork" | "grade";
+type AssignmentTopBarTab = "classwork" | "grade";
+type Module = "Assignment" | "Lecture" | "Discussion";
 
 function ClassTopBar() {
-  const { state } = useLocation();
-  const { cla, image, title, display } = state as {
+  const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
+  const [isCreatingLecture, setIsCreatingLecture] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [assignmentButtonClick, setAssignmentButtonClick] =
+    useState<AssignmentTopBarTab>("classwork");
+  const role = useSelector((state: RootState) => state.user.role);
+  const { state, pathname } = useLocation();
+  const { cla, image, module, title, display } = state as {
     cla: ClassState;
     image: string;
+    module: Module;
     title: string;
     display: string | null;
   };
   const { className, code } = cla;
-
-  const [buttonClicked, setButtonClicked] =
-    useState<buttonClicked>("classwork");
   const navigate = useNavigate();
+
+  // safe check for manual url change
+  // only a workaround, because the required state passed from the previous page is missing
+  useEffect(() => {
+    if (pathname.includes("assignment")) {
+      setIsCreatingAssignment(false);
+    }
+    if (pathname.includes("create-assignment")) {
+      setIsCreatingAssignment(true);
+    }
+    if (pathname.includes("lecture")) {
+      setIsCreatingLecture(false);
+    }
+    if (pathname.includes("lecture-details")) {
+      setIsCreatingLecture(true);
+    }
+  }, [pathname]);
+
+  const toggleCreateAssignment = () => {
+    const newState = !isCreatingAssignment;
+    setIsCreatingAssignment(newState);
+    if (newState) {
+      navigate(`/class/${code}/create-assignment`, {
+        state: { ...state, module: "Assignment", title: "New Assignment" },
+      });
+    } else {
+      handleClickClasswork();
+    }
+  };
 
   const handleClickClasswork = () => {
     navigate(`/class/${code}/assignment`, {
-      state: { ...state, title: "Assignment" },
+      state: { ...state, module: "Assignment", title: "Assignment" },
     });
-    setButtonClicked("classwork");
+    setAssignmentButtonClick("classwork");
   };
+
   const handleClickGrade = () => {
     navigate(`/class/${code}/grade`, {
-      state: { ...state, title: "Assignment" },
+      state: { ...state, module: "Assignment", title: "Assignment" },
     });
-    setButtonClicked("grade");
+    setAssignmentButtonClick("grade");
   };
 
-  const assignmentContent = (
-    <>
-      <div className="flex h-full items-center">
-        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
-          {title}
-        </h1>
-      </div>
-      <TopBarTab
-        className="ml-4 pt-1"
-        onClick={handleClickClasswork}
-        active={buttonClicked === "classwork"}
-      >
-        Classwork
-      </TopBarTab>
-      <TopBarTab
-        className="ml-4 pt-1"
-        onClick={handleClickGrade}
-        active={buttonClicked === "grade"}
-      >
-        Grade
-      </TopBarTab>
-      <div className="h-full w-full" />
-      <div className="flex h-full items-center">
-        <Button className="mr-4" secondary>
-          <RiEditBoxFill className="mr-2" />
-          <label className="truncate text-sm">New Assignment</label>
-        </Button>
-      </div>
-    </>
-  );
+  console.log(isCreatingLecture);
 
-  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const handleSaveSuccess = () => {
       setIsLoading(false);
@@ -75,74 +82,179 @@ function ClassTopBar() {
       window.removeEventListener("SaveLectureSuccess", handleSaveSuccess);
     };
   }, []);
+
+  useEffect(() => {
+    const handleLoadingChange = (e: CustomEvent) => {
+      const isLoading = e.detail.isLoading;
+      console.log("isLoading", isLoading);
+      setIsLoading(isLoading);
+    };
+
+    document.addEventListener(
+      "AssignmentLoadingStateChange",
+      handleLoadingChange as EventListener,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "AssignmentLoadingStateChange",
+        handleLoadingChange as EventListener,
+      );
+    };
+  }, []);
+
   const handleSaveLectureClick = () => {
     setIsLoading(true);
     const eventSaveLecture = new CustomEvent("saveLecture");
     window.dispatchEvent(eventSaveLecture);
   };
 
-  const handleCancelLectureClick = () => {
-    navigate(`/class/${code}/lecture`, {
-      state: { ...state, title: "Lecture", display: null },
-    });
+  const handleSaveAssignmentClick = () => {
+    setIsLoading(true);
+    const eventSaveAssignment = new CustomEvent("SaveAssignment");
+    window.dispatchEvent(eventSaveAssignment);
   };
 
-  const lectureContent = (
+  const toggleCreateLecture = () => {
+    const newState = !isCreatingLecture;
+    setIsCreatingLecture(newState);
+    if (newState) {
+      navigate(`/class/${code}/lecture-details`, {
+        state: {
+          ...state,
+          title: "Lecture",
+          module: "Lecture",
+          display: "Create Lecture",
+          lecture: null,
+        },
+      });
+    } else {
+      navigate(`/class/${code}/lecture`, {
+        state: {
+          ...state,
+          module: "Lecture",
+          title: "Lecture",
+          display: null,
+        },
+      });
+    }
+  };
+
+  const assignmentContent = (
     <>
-      <div className="flex h-full items-center">
-        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
-          {display ? display : title}
-        </h1>
-      </div>
-      {display ? (
-        <>
+      {isCreatingAssignment ? (
+        role === "Teacher" && (
           <TopBarTab active className="ml-4 pt-1">
             Detail
           </TopBarTab>
-          <div className="h-full w-full" />
-          <div className="flex h-full items-center">
+        )
+      ) : (
+        <>
+          <TopBarTab
+            className="ml-4 pt-1"
+            onClick={handleClickClasswork}
+            active={assignmentButtonClick === "classwork"}
+          >
+            Classwork
+          </TopBarTab>
+          <TopBarTab
+            className="ml-4 pt-1"
+            onClick={handleClickGrade}
+            active={assignmentButtonClick === "grade"}
+          >
+            Grade
+          </TopBarTab>
+        </>
+      )}
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center justify-center gap-4">
+        {isCreatingAssignment ? (
+          <>
             <Button
               primary
-              className="mr-4 w-20 truncate"
-              onClick={handleSaveLectureClick}
+              small
+              className="w-16"
               disabled={isLoading}
+              onClick={handleSaveAssignmentClick}
             >
-              {isLoading ? "Saving..." : "Save"}
+              Save
             </Button>
-            <Button
-              secondary
-              className="mr-4 w-20"
-              onClick={handleCancelLectureClick}
-            >
-              Close
+            <Button secondary small onClick={toggleCreateAssignment}>
+              Cancel
             </Button>
-          </div>
-        </>
-      ) : null}
+          </>
+        ) : (
+          <Button secondary small onClick={toggleCreateAssignment}>
+            <RiEditBoxFill className="mr-2" />
+            <label className="truncate text-sm">New Assignment</label>
+          </Button>
+        )}
+      </div>
     </>
   );
 
+  const lectureContent = (
+    <>
+      {isCreatingLecture ? (
+        <TopBarTab active className="ml-4 pt-1">
+          Detail
+        </TopBarTab>
+      ) : null}
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center gap-4">
+        {isCreatingLecture ? (
+          <>
+            <Button
+              primary
+              small
+              className="mr-4 w-20"
+              onClick={handleSaveLectureClick}
+              disabled={isLoading}
+            >
+              Save
+            </Button>
+            <Button
+              secondary
+              small
+              className="mr-4 w-20"
+              onClick={toggleCreateLecture}
+            >
+              Close
+            </Button>
+          </>
+        ) : (
+          <Button
+            secondary
+            small
+            className="mr-4"
+            onClick={toggleCreateLecture}
+          >
+            <RiEditBoxFill className="mr-2" />
+            <label className="truncate text-sm">New Lecture</label>
+          </Button>
+        )}
+      </div>
+    </>
+  );
 
   return (
-    <div className="flex h-[60px] flex-row border-b border-fg-border bg-bg-soft">
+    <div className="flex h-[60px] flex-row items-center border-b border-fg-border bg-bg-soft">
       <div className="flex h-full flex-shrink-0 items-center">
         <img
           src={image}
           alt={className}
-          className="ml-4 h-8 w-8 rounded object-cover flex-shrink-0"
+          className="ml-4 h-8 w-8 flex-shrink-0 rounded object-cover"
         />
+        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
+          {display ? display : title}
+        </h1>
       </div>
 
-      {title === "Assignment" ? (
-        assignmentContent
-      ) : title === "Lecture" ? (
-        lectureContent
-      ) : (
-        <div className="flex h-full items-center">
-
-          <h1 className="ml-4 text-lg font-bold">{title}</h1>
-        </div>
-      )}
+      {module === "Assignment"
+        ? assignmentContent
+        : module === "Lecture"
+          ? lectureContent
+          : null}
     </div>
   );
 }
