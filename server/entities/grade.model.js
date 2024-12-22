@@ -27,7 +27,7 @@ const Grade = sequelize.define(
       allowNull: true,
       defaultValue: "Not Submitted",
     },
-    time: {
+    submittedOn: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
