@@ -20,6 +20,10 @@ class EventDB {
       const existingRecord = await Event_Person.findOne({
         where: { eventID, personID },
       });
+
+      if (existingRecord) {
+        return;
+      }
       const event_person = await Event_Person.create({ eventID, personID });
       return event_person;
     } catch (err) {
@@ -28,7 +32,7 @@ class EventDB {
   };
 
   getEventByID = async (eventID) => {
-    const event = Event.findByPk(eventID);
+    const event = await Event.findByPk(eventID);
     return event;
   };
 

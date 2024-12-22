@@ -7,6 +7,9 @@ class AuthController {
     try {
       const { email, password } = req.body;
       const { token, refreshToken, user } = await AuthService.loginUser(email, password);
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+      });
       res.header("auth-token", token);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -45,6 +48,9 @@ class AuthController {
         avatar,
         childEmail
       );
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+      });
       res.header("auth-token", token);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -127,7 +133,6 @@ class AuthController {
 
   refreshToken = async (req, res) => {
     try {
-      console.log("meomeo: ", req.cookies)
       if (!req.cookies.refreshToken) {
         throw new ErrorHandler(401, "Token missing");
       }

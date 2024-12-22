@@ -3,22 +3,22 @@ module.exports = {
     "tags": [
       "Notifications"
     ],
-    "description": "View all notifications for a specific user",
-    "summary": "Retrieve all notifications for a given user",
+    "description": "Retrieve all notifications for a specific user",
+    "summary": "View all notifications by user ID",
     "parameters": [
       {
-        "name": "userId", // Đảm bảo tên tham số là userId
-        "in": "path", // Đảm bảo tham số nằm trong phần đường dẫn (path)
+        "name": "userId",
+        "in": "path",
         "required": true,
-        "description": "User's ID to get notifications",
+        "description": "The ID of the user to retrieve notifications for",
         "schema": {
-          "type": "integer"  // Đảm bảo kiểu dữ liệu là integer
+          "type": "integer"
         }
       }
     ],
     "responses": {
       "200": {
-        "description": "Notifications retrieved successfully",
+        "description": "List of notifications retrieved successfully",
         "content": {
           "application/json": {
             "schema": {
@@ -40,20 +40,16 @@ module.exports = {
                   },
                   "type": {
                     "type": "string",
-                    "description": "Type of notification (post, comment, etc.)"
-                  },
-                  "targetId": {
-                    "type": "integer",
-                    "description": "The ID of the user who is the recipient"
+                    "description": "Notification type (e.g., post, comment)"
                   },
                   "statusRead": {
                     "type": "boolean",
-                    "description": "Status of the notification (true if read, false if unread)"
+                    "description": "Read status of the notification"
                   },
                   "createdAt": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Date and time when the notification was created"
+                    "description": "Date and time the notification was created"
                   }
                 }
               }
@@ -62,7 +58,7 @@ module.exports = {
         }
       },
       "404": {
-        "description": "User's notifications not found"
+        "description": "No notifications found for the given user ID"
       },
       "500": {
         "description": "Internal server error"
