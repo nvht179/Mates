@@ -3,6 +3,7 @@ import { RiEditBoxFill, RiEditBoxLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import { useState, useEffect } from "react";
+import ClassInfo from "./ClassInfo";
 
 interface ClassCardListProps {
   classes: ClassState[];
@@ -50,7 +51,8 @@ function ClassCardList({ classes }: ClassCardListProps) {
           </p>
         </div>
         <div className="text flex flex-row items-center">
-          <div
+          <ClassInfo 
+            cla={cla}
             className="ml-0.5 mr-4 mt-4 cursor-pointer text-2xl font-light text-fg-soft hover:text-primary-default"
             onMouseEnter={() => setHoveredIcon(`${cla.classID}_info`)}
             onMouseLeave={() => setHoveredIcon("")}
@@ -60,7 +62,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
             ) : (
               <MdInfoOutline />
             )}
-          </div>
+          </ClassInfo>
           <div
             className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl text-fg-soft hover:text-primary-default"
             onMouseEnter={() => setHoveredIcon(`${cla.classID}_edit`)}
