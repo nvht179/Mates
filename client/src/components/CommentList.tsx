@@ -11,7 +11,9 @@ function CommentList({ post }: CommentListProps) {
   const [showComment, setShowComment] = useState(false);
   const { data } = useViewCommentsQuery({ postId: post.id });
 
-  const comments = data?.data || [];
+  const comments = [...(data?.data || [])];
+  comments.sort((a, b) => a.id - b.id);
+  
   if (comments.length === 0) {
     return <div></div>;
   }

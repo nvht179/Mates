@@ -9,7 +9,8 @@ function DiscussionPage() {
   const { cla } = state as { cla: ClassState };
   const { data } = useViewPostsQuery({ classID: cla.classID });
 
-  const posts = data?.data ?? [];
+  const posts = [...(data?.data ?? [])];
+  posts.sort((a, b) => a.id - b.id);
 
   return (
     <div>

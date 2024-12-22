@@ -30,6 +30,7 @@ function CommentCard({ comment }: { comment: Comment}) {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (formEl.current && !formEl.current.contains(e.target as Node)) {
+        setContent(comment.content);
         setIsEditing(false);
       }
     };
@@ -38,7 +39,7 @@ function CommentCard({ comment }: { comment: Comment}) {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [comment]);
 
   const {data} = useGetUserByIdQuery(comment.personID);
 
