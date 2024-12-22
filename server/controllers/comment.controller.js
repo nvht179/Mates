@@ -67,8 +67,9 @@ class CommentController {
       if (!comments || comments.length === 0) {
         return res.status(404).json({
           message: "No comments found for this post.",
+          data: [],
         });
-      }
+      };
 
       return res.status(200).json({
         message: "Comments retrieved successfully.",
