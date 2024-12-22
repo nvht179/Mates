@@ -6,6 +6,7 @@ const userComponent = require("./user");
 const commentComponent = require("./comment");
 const attachmentComponent = require('./attachment')
 const eventComponent = require('./event')
+const gradeComponent = require('./grade')
 
 module.exports = {
   components: {
@@ -17,7 +18,8 @@ module.exports = {
       ...userComponent.schemas,
       ...commentComponent.schemas,
       ...eventComponent.schemas,
-      ...attachmentComponent.schemas
+      ...attachmentComponent.schemas,
+      ...gradeComponent.schemas
     }
   }
 };
