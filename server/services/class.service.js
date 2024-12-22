@@ -253,13 +253,19 @@ class ClassService {
     }
   };
 
-  editClassInfo = async (classID, className, code, description) => {
+  editClassInfo = async (classID, className, code, description, events) => {
     try {
       const updatedClass = await ClassDB.editClassInfo(classID, className, code, description);
       if (!updatedClass) {
         throw new ErrorHandler(403, "Can not update class");
       }
-      return updatedClass;
+      const updatedEvents = [];
+      for (const event of events) {
+        const { eventID, title, description, repeatTime, startTime, endTime } = event;
+        const updatedEvent = await EventDB.updateEvent(eventID, title, description, repeatTime, startTime, endTime);
+        updatedEvents.push(updatedEvent);
+      }
+      return { updatedClass, updatedEvents };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }

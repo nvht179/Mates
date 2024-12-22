@@ -120,10 +120,10 @@ class ClassController {
 
   editClassInfo = async (req, res) => {
     try {
-      const { classID, className, code, description } = req.body;
-      const updatedClass = await ClassService.editClassInfo(classID, className, code, description);
+      const { classID, className, code, description, events } = req.body;
+      const { updatedClass, updatedEvents } = await ClassService.editClassInfo(classID, className, code, description, events);
       const message = "Successful";
-      res.status(200).json({ message, updatedClass });
+      res.status(200).json({ message, updatedClass, updatedEvents });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });
