@@ -259,11 +259,44 @@ class ClassService {
       if (!updatedClass) {
         throw new ErrorHandler(403, "Can not update class");
       }
+
+      const allEventsClass = await EventDB.getAllEventByClassID(classID);
+      const allMembersID = [];
+      for (const eventClass of allEventsClass) {
+        const eventID = eventClass.eventID;
+        // Delete all the events of the students in that class
+        const studentClassInfo = await this.viewAllStudentsInClass(classID);
+        for (const student of studentClassInfo) {
+          const personID = student.id;
+          allMembersID.push(personID);
+          await EventDB.removePersonEvent(eventID, personID);
+        }
+
+        // Delete all the events of the teachers in that class
+        const teacherClassInfo = await this.viewAllTeachersInClass(classID);
+        for (const teacher of teacherClassInfo) {
+          const personID = teacher.id;
+          allMembersID.push(personID);
+          await EventDB.removePersonEvent(eventID, personID);
+        }
+
+        await EventDB.removeEvent(eventID);
+      }
+
       const updatedEvents = [];
-      for (const event of events) {
-        const { eventID, title, description, repeatTime, startTime, endTime } = event;
-        const updatedEvent = await EventDB.updateEvent(eventID, title, description, repeatTime, startTime, endTime);
-        updatedEvents.push(updatedEvent);
+      for (const newEvent of events) {
+        const { repeatTime, startTime, endTime } = newEvent;
+        const title = className;
+        // Create the event for class
+        const event = await EventDB.createEventForClass(title, description, repeatTime, startTime, endTime, classID);
+        const eventID = event.eventID;
+
+        for (const memberID of allMembersID) {
+          const personID = memberID;
+          const event_person = await EventDB.addPersonToEvent(eventID, personID);
+        }
+
+        updatedEvents.push(event);
       }
       return { updatedClass, updatedEvents };
     } catch (err) {
