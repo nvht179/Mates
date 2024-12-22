@@ -150,6 +150,28 @@ class AssignmentDB {
       throw new ErrorHandler(500, `Error retrieving assignments from DB: ${error.message}`);
     }
   }
+
+  async getAssignmentByTitle(title) {
+    return await Assignment.findOne({
+      where: { title },
+    });
+  }
+
+  // Method to add a new assignment with attachments
+  async addNewAssignmentWithAttachments({ title, description, startTime, endTime, attachments, weight, classID }) {
+    // Transaction logic for creating assignment and its attachments
+    const newAssignment = await Assignment.create({
+      title,
+      description,
+      startTime,
+      endTime,
+      weight,
+      classID,
+    });
+
+    // Optionally handle adding attachments here
+    return newAssignment;
+  }
 }
 
 module.exports = new AssignmentDB();

@@ -1,25 +1,30 @@
 module.exports = {
   "delete": {
     "tags": [
-      "Lectures"
+      "Notifications"
     ],
-    "description": "Delete lecture with attachments",
-    "summary": "Delete lecture with attachments",
+    "description": "Remove a specific notification by its ID",
+    "summary": "Delete a notification",
     "parameters": [
       {
-        "name": "lectureId",
+        "name": "notificationId",
         "in": "path",
         "required": true,
-        "description": "Lecture's ID",
-        "type": "integer",
+        "description": "The ID of the notification to remove",
+        "schema": {
+          "type": "integer"
+        }
       }
     ],
     "responses": {
       "200": {
-        "description": "Delete lecture with attachments successfully",
+        "description": "Notification deleted successfully"
       },
       "404": {
-        "description": "Lectures not found"
+        "description": "Notification not found"
+      },
+      "500": {
+        "description": "Internal server error"
       }
     }
   }
