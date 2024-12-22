@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { IoMdNotificationsOutline } from "react-icons/io";
 import UserModal from "./UserModal";
 import MatesLogo from "../assets/mates.svg";
 import Input from "./Input";
 import defaultAvatar from "../assets/default-avatar.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import Notification from "./Notification";
 
 export default function TopBar() {
   const [showModal, setShowModal] = useState(false);
@@ -33,8 +33,7 @@ export default function TopBar() {
         <div className="mr-2 ml-auto flex items-center space-x-4">
           {/* Notification Icon */}
           <div className="relative">
-            <span className="absolute right-0 top-0 inline-block h-2 w-2 rounded-full bg-red-default"></span>
-            <IoMdNotificationsOutline className="mt-1 cursor-pointer text-2xl active:opacity-30" />
+            <Notification />
           </div>
 
           <div
