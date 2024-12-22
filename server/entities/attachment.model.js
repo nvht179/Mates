@@ -4,6 +4,7 @@ const sequelize = require("../config/db");
 const Assignment = require("./assignment.model");
 const Post = require("./post.model");
 const Lecture = require("./lecture.model");
+const Grade = require("./grade.model");
 
 const Attachment = sequelize.define(
   "Attachment",
@@ -42,6 +43,14 @@ const Attachment = sequelize.define(
       references: {
         model: Lecture,
         key: "id",
+      },
+    },
+    gradeID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Grade,
+        key: "gradeId",
       },
     }
   },

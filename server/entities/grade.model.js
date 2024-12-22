@@ -20,15 +20,17 @@ const Grade = sequelize.define(
     },
     grade100: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
-    classID: {
-      type: DataTypes.INTEGER,
+    status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: "Not Submitted",
+    },
+    time: {
+      type: DataTypes.DATE,
       allowNull: false,
-      references: {
-        model: Class,
-        key: "classID",
-      },
+      defaultValue: DataTypes.NOW,
     },
     assignmentID: {
       type: DataTypes.INTEGER,
