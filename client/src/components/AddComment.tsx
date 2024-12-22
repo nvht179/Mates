@@ -41,9 +41,9 @@ function AddComment({ post }: PostListProps) {
           src={user.avatar ? user.avatar : defaultAvatar}
           alt={user.name || "Unknown"}
         />
-        <form onSubmit={onsubmitAddComment} className="w-full">
+        <form onSubmit={onsubmitAddComment} className="mx-4 w-full">
           <Input
-            className="ml-4 w-full"
+            className="w-full"
             type="text"
             placeholder="Add comment"
             value={currentComment}

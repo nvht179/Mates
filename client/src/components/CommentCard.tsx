@@ -49,7 +49,6 @@ function CommentCard({ comment }: { comment: Comment}) {
       ? DefaultAvatar
       : (user?.avatar ?? DefaultAvatar);
 
-  console.log(user);
   const handleEditClick = () => {
     setIsEditing(true);
   };

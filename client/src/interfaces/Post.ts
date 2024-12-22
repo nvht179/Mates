@@ -94,7 +94,7 @@ interface EditPostResponse {
 }
 
 interface DeletePostRequest {
-  postID: number;
+  postId: number;
 }
 
 interface DeletePostResponse {

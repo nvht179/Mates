@@ -27,7 +27,7 @@ const postApi = createApi({
   endpoints: (builder) => ({
     createPost: builder.mutation<CreatePostResponse, CreatePostRequest>({
       invalidatesTags: (_result, _error, arg) => [
-        { type: "ClassPost", id: arg.classID },
+        { type: "ClassPost", id: arg.get("classID")?.toString() },
       ],
       query: (newPost) => {
         return {
@@ -41,9 +41,9 @@ const postApi = createApi({
       providesTags: (result, _error, arg) => {
         const tags = (result?.data ?? []).map((post) => ({
           type: "Post" as const,
-          id: post.id,
+          id: post.id.toString(),
         }));
-        tags.push({ type: "ClassPost" as const, id: arg.classID });
+        tags.push({ type: "ClassPost" as const, id: arg.classID.toString() });
         return tags;
       },
       query: (cla) => {
@@ -58,11 +58,11 @@ const postApi = createApi({
     }),
     editPost: builder.mutation<EditPostResponse, EditPostRequest>({
       invalidatesTags: (_result, _error, arg) => [
-        { type: "Post", id: arg.postID },
+        { type: "Post", id: arg.get("PostID")?.toString() },
       ],
       query: (newPost) => {
         return {
-          url: `/posts/edit/${newPost.postID}`,
+          url: `/posts/edit/`,
           method: "PUT",
           body: newPost,
         };
@@ -70,11 +70,11 @@ const postApi = createApi({
     }),
     deletePost: builder.mutation<DeletePostResponse, DeletePostRequest>({
       invalidatesTags: (_result, _error, arg) => [
-        { type: "Post", id: arg.postID },
+        { type: "Post", id: arg.postId.toString() },
       ],
       query: (post) => {
         return {
-          url: `/posts/remove/${post.postID}`,
+          url: `/posts/remove/${post.postId}`,
           method: "DELETE",
           body: post,
         };

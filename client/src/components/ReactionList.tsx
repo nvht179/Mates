@@ -50,7 +50,6 @@ function ReactionList({ post }: ReactionListProps) {
 
   useEffect(() => {
     if (isEditSuccess) {
-      console.log(editReactionData);
       setReactionType(editReactionData?.data.type);
       setReactionId(editReactionData?.data.id);
     }
@@ -77,7 +76,7 @@ function ReactionList({ post }: ReactionListProps) {
       // Logic to edit the reaction
       editReaction({
         id: ReactionId as number,
-        type,
+        newType: type,
       });
     }
   };

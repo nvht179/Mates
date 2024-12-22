@@ -16,7 +16,7 @@ interface CreateReactionResponse {
 
 interface EditReactionRequest {
   id: number;
-  type: string;
+  newType: string;
 }
 
 interface EditReactionResponse {

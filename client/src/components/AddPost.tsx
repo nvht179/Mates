@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../components/Button";
@@ -19,11 +19,20 @@ function AddPost() {
   const [postContent, setPostContent] = useState("");
   const [fileList, setFileList] = useState<FileList | null>(null);
 
-  const [createPost] = useCreatePostMutation();
+  const [createPost, { isSuccess, isLoading }] = useCreatePostMutation();
 
   const user = useSelector((state: RootState) => state.user);
   const { state } = useLocation();
   const { cla } = state as { cla: ClassState };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setSubject("");
+      setPostContent("");
+      setFileList(null);
+      setAddPostActive(false);
+    }
+  }, [isSuccess]);
 
   const addPostButton = () => {
     return (
@@ -42,7 +51,6 @@ function AddPost() {
   };
 
   const handleSavePost = () => {
-    setAddPostActive(false);
     const formData = new FormData();
     formData.append("classID", cla.classID.toString());
     formData.append("title", subject);
@@ -105,9 +113,13 @@ function AddPost() {
             multiple
             onChange={(e) => handleFilesChange(e)}
           />
-          <Button onClick={handleSavePost} className="w-36">
-            Post
-          </Button>
+          {isLoading ? (
+            <Button disabled>Loading...</Button>
+          ) : (
+            <Button onClick={handleSavePost} className="w-36">
+              Post
+            </Button>
+          )}
         </div>
       </Panel>
     );

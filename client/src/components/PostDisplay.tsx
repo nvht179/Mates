@@ -27,7 +27,7 @@ function PostDisplay({ post }: PostListProps) {
   const [attachments, setAttachments] = useState(post.attachments);
 
   const user = useSelector((state: RootState) => state.user);
-  const [editPost, {data, isSuccess}] = useEditPostMutation();
+  const [editPost, {data, isSuccess, isLoading}] = useEditPostMutation();
   const [deletePost] = useDeletePostMutation();
 
   const divEl = useRef<HTMLDivElement>(null);
@@ -81,7 +81,7 @@ function PostDisplay({ post }: PostListProps) {
   };
 
   const handleDeleteClick = () => {
-    deletePost({ postID: post.id });
+    deletePost({ postId: post.id });
   };
 
   const viewPostContentRendered = (
@@ -118,7 +118,7 @@ function PostDisplay({ post }: PostListProps) {
 
   const handleSavePostClick = () => {
     const formData = new FormData();
-    formData.append("postID", post.id.toString());
+    formData.append("postId", post.id.toString());
     formData.append("title", title);
     formData.append("content", content);
     if (fileList) {
@@ -126,6 +126,7 @@ function PostDisplay({ post }: PostListProps) {
         formData.append("files", file);
       });
     }
+    console.log(formData);
     editPost(formData);
   };
 
@@ -155,10 +156,14 @@ function PostDisplay({ post }: PostListProps) {
             multiple
             onChange={(e) => handleFilesChange(e)}
           />
-          <Button primary className="w-20" onClick={handleSavePostClick}>
-            Save
-          </Button>
-          <Button secondary className="ml-4 w-20" onClick={handleCancelClick}>
+            {isLoading ? (
+            <Button disabled className="w-24">Loading...</Button>
+            ) : (
+            <Button primary className="w-24" onClick={handleSavePostClick}>
+              Save
+            </Button>
+            )}
+          <Button secondary className="ml-4 w-24" onClick={handleCancelClick}>
             Cancel
           </Button>
         </div>
