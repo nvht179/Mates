@@ -62,8 +62,7 @@ class PostController {
    // Edit a post
    editPost = async (req, res) => {
     try {
-      const { postId } = req.params;
-      const { title, content } = req.body;
+      const { title, content,postId } = req.body;
 
   
       const currentPost = await PostService.getPostById(postId);
@@ -110,7 +109,10 @@ class PostController {
   
       res.status(200).json({
         message: "Post updated successfully with new attachments",
-        data: updatedPost,
+        data: {
+          post: updatedPost.post,
+          attachments: updatedPost.attachments, // Return full attachment details including ID
+        },
       });
     } catch (err) {
       res.status(403).json({ error: err.message });
