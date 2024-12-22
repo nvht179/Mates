@@ -13,6 +13,7 @@ class AssignmentService {
         endTime,
         attachments,
         weight,
+        classID
       });
 
       return newAssignment;

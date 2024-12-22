@@ -135,8 +135,9 @@ class PostDB {
           );
         }
       }
-
-      
+      if (!attachments || attachments.length == 0) {
+        await AttachmentDB.removeAttachmentsByPostId(postId, { transaction });
+      }
 
       await transaction.commit();
       const updatedAttachments = await Attachment.findAll({

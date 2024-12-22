@@ -1,5 +1,6 @@
 const AssignmentService = require("../services/assignment.service");
 const supabase = require("../config/supabase");
+const { Comment, Reaction, Person, Attachment } = require("../entities");
 
 class AssignmentController {
   // Add a new assignment
@@ -49,12 +50,17 @@ class AssignmentController {
         startTime,
         endTime,
         attachments,
-        weight
+        weight,
+        classID
       });
-
+      const updatedAttachments = await Attachment.findAll({
+        where: { assignmentId: newAssignment.id }, // Ensure this uses the correct column
+        attributes: ["id", "link", "linkTitle"], // Include necessary attributes
+    });
       res.status(200).json({
         message: "Assignment and attachments created successfully",
         data: newAssignment,
+        attachments: updatedAttachments,
       });
     } catch (err) {
       const message = err.message || "An error occurred";
@@ -111,12 +117,17 @@ class AssignmentController {
         startTime: startTime || currentAssignment.startTime,
         endTime: endTime || currentAssignment.endTime,
         weight: weight || currentAssignment.weight,
-        attachments: attachments || currentAssignment.attachments
+        attachments
       });
 
+      const updatedAttachments = await Attachment.findAll({
+        where: { assignmentId: updatedAssignment.id }, // Ensure this uses the correct column
+        attributes: ["id", "link", "linkTitle"], // Include necessary attributes
+    });
       res.status(200).json({
-        message: "Assignment updated successfully with new attachments",
+        message: "Assignment and attachments updated successfully",
         data: updatedAssignment,
+        attachments: updatedAttachments,
       });
     } catch (err) {
       const message = err.message || "An error occurred";
