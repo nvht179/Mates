@@ -3,6 +3,7 @@ const viewSubmissionStudent = require("./viewSubmissionStudent");
 const viewGradeDetails = require("./viewGradeDetails");
 const viewGradeAssignmentsTeacher = require("./viewGradeAssignmentsTeacher");
 const gradeAssignmentTeacher = require("./gradeAssignmentTeacher");
+const deleteSubmission = require("./deleteSubmission");
 
 module.exports = {
   "/grades/submit-assignment": {
@@ -19,5 +20,8 @@ module.exports = {
   },
   "/grades/grade-assignment-teacher": {
     ...gradeAssignmentTeacher
+  },
+  "/grades/delete-submission/{personID}/{assignmentID}": {
+    ...deleteSubmission
   },
 };

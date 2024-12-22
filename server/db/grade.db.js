@@ -45,7 +45,7 @@ class GradeDB {
 
   findAllSubmissionsAssignment = async (assignmentID) => {
     const allSubmissions = await Grade.findAll({
-      where: {assignmentID}
+      where: { assignmentID }
     });
     return allSubmissions;
   };
@@ -64,6 +64,22 @@ class GradeDB {
     submissionDetail.comment = comment;
     submissionDetail.save();
     return submissionDetail;
+  };
+
+  removeSubmission = async (assignmentID, personID) => {
+    try {
+      const studentID = personID;
+      const submissionDetail = await this.getSubmissionByAssignmentIDAndStudentID(assignmentID, studentID);
+      const grade100 = submissionDetail.grade100;
+      if (grade100 != null) {
+        throw new ErrorHandler(403, "You can not delete the submission because your teacher has been graded");
+      }
+      const gradeID = submissionDetail.gradeId;
+      await AttachmentDB.removeAttachmentsByGradeId(gradeID);
+      await submissionDetail.destroy();
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
   };
 }
 

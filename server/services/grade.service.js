@@ -130,6 +130,14 @@ class GradeService {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  removeSubmission = async (assignmentID, personID) => {
+    try {
+      await GradeDB.removeSubmission(assignmentID, personID);
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
 }
 
 module.exports = new GradeService();
