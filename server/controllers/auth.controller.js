@@ -7,9 +7,6 @@ class AuthController {
     try {
       const { email, password } = req.body;
       const { token, refreshToken, user } = await AuthService.loginUser(email, password);
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-      });
       res.header("auth-token", token);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -48,9 +45,6 @@ class AuthController {
         avatar,
         childEmail
       );
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-      });
       res.header("auth-token", token);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
