@@ -122,6 +122,15 @@ class AttachmentDB {
     });
     return deletedAttachments;
   };
+
+  removeAttachmentsByGradeId = async (gradeID) => {
+    const deletedAttachments = await Attachment.destroy({
+      where: {
+        gradeID: gradeID 
+      }
+    });
+    return deletedAttachments;
+  };
 }
 
 module.exports = new AttachmentDB();

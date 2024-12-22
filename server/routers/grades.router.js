@@ -9,6 +9,6 @@ router.get('/view-submission-student/:personID', GradeController.viewGradesInTha
 router.get('/view-grade-details/:personID/:assignmentID', GradeController.viewGradeDetailStudent);
 router.get('/view-grade-assignments-teacher/:assignmentID', GradeController.viewGradeAssignmentsTeacher);
 router.put('/grade-assignment-teacher', GradeController.gradeAssignmentTeacher);
-// router.delete('/delete-event/:eventID', EventController.removeEvent);
+router.delete('/delete-submission/:personID/:assignmentID', GradeController.removeSubmission);
 
 module.exports = router;

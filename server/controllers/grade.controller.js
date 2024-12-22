@@ -88,6 +88,18 @@ class GradeController {
       res.status(403).json({ message });
     }
   };
+
+  removeSubmission = async (req, res) => {
+    try {
+      const { assignmentID, personID } = req.params;
+      await GradeService.removeSubmission(assignmentID, personID);
+      const message = "Successful";
+      res.status(200).json({ message });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
 }
 
 module.exports = new GradeController();
