@@ -101,7 +101,9 @@ class AssignmentDB {
           );
         }
       }
-
+      if (!attachments || attachments.length == 0) {
+        await AttachmentDB.removeAttachmentsByAssignmentId(assignmentId, { transaction });
+      }
       await transaction.commit();
       return assignment;
     } catch (error) {
