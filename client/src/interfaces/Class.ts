@@ -22,7 +22,7 @@ interface CreateClassRequest {
   className: string;
   code: string;
   description: string;
-  events: Array<{ startTime: string; endTime: string; frequency: string }>;
+  events: Array<{ startTime: string; endTime: string; repeatTime: string }>;
   userID: string;
   role: string;
 }

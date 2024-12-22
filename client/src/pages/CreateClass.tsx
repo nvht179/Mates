@@ -85,7 +85,7 @@ export default function CreateClass() {
     return {
       startTime: startTime.toISOString(),
       endTime: endTime.toISOString(),
-      frequency,
+      repeatTime: frequency,
     };
   });
 
@@ -93,7 +93,6 @@ export default function CreateClass() {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault();
-
     await createClassMutation({
       className,
       code: classCode,
