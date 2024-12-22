@@ -10,7 +10,7 @@ module.exports = {
   "/posts/classID/{classID}": {  
     ...postClass
   },
-  "/posts/edit/{postId}": {
+  "/posts/edit/": {
     ...postEdit
   },
   "/posts/remove/{postId}": {

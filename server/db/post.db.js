@@ -35,11 +35,20 @@ class PostDB {
           );
         }
       }
-
-      // Commit transaction nếu không có lỗi
       await transaction.commit();
+
+      const addedAttachments = await Attachment.findAll({
+        where: { postId: newPost.id },
+        attributes: ["id", "link", "linkTitle"], // Lấy các trường cần thiết
+      });
+
+      
+      // Commit transaction nếu không có lỗi
       // Trả về post đã tạo
-      return newPost;
+      return {
+        ...newPost.toJSON(),
+        attachments: addedAttachments, // Đính kèm thông tin đầy đủ của attachments
+      };
 
     } catch (error) {
       if (transaction) await transaction.rollback(); // Rollback nếu có lỗi
@@ -127,8 +136,16 @@ class PostDB {
         }
       }
 
+      const updatedAttachments = await Attachment.findAll({
+        where: { postId },
+        attributes: ["id", "link", "linkTitle"], // Include necessary attributes
+      });
+
       await transaction.commit();
-      return post;
+      return {
+        post,
+        attachments: updatedAttachments,
+      };
     } catch (error) {
       if (transaction) await transaction.rollback(); // Rollback transaction on error
       throw new ErrorHandler("Error editing post", error);
