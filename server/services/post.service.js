@@ -26,11 +26,6 @@ class PostService {
    getPostsByClassId = async (classID) => {
     try {
       const posts = await PostDB.getPostsByClassId(classID);
-  
-      if (!posts || posts.length === 0) {
-        throw new Error(`No posts found for class ID ${classID}.`);
-      }
-  
       return posts;
     } catch (error) {
       throw new Error(
