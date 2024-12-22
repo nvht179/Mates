@@ -74,7 +74,7 @@ const postApi = createApi({
       ],
       query: (post) => {
         return {
-          url: `/posts/delete/${post.postID}`,
+          url: `/posts/remove/${post.postID}`,
           method: "DELETE",
           body: post,
         };

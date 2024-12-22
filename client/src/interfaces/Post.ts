@@ -48,12 +48,15 @@ interface ViewPostsResponse {
   data: Post[];
 }
 
-interface CreatePostRequest {
-  classID: number;
-  title: string;
-  content: string;
-  personID: number;
-}
+// interface CreatePostRequest {
+//   classID: number;
+//   title: string;
+//   content: string;
+//   personID: number;
+//   files: File[];
+// }
+
+type CreatePostRequest = FormData;
 
 interface CreatePostResponse {
   message: string;
@@ -67,12 +70,14 @@ interface CreatePostResponse {
   };
 }
 
-interface EditPostRequest {
-  postID: number;
-  title: string;
-  content: string;
-  files: File[];
-}
+// interface EditPostRequest {
+//   postID: number;
+//   title: string;
+//   content: string;
+//   files: File[];
+// }
+
+type EditPostRequest = FormData;
 
 interface EditPostResponse {
   message: string;
@@ -81,6 +86,7 @@ interface EditPostResponse {
     title: string;
     content: string;
     attachments: {
+      id: number;
       link: string;
       linkTitle: string;
     }[];
