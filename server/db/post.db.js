@@ -136,12 +136,13 @@ class PostDB {
         }
       }
 
+      
+
+      await transaction.commit();
       const updatedAttachments = await Attachment.findAll({
         where: { postId },
         attributes: ["id", "link", "linkTitle"], // Include necessary attributes
       });
-
-      await transaction.commit();
       return {
         post,
         attachments: updatedAttachments,
