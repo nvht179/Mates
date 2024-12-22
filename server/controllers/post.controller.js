@@ -159,15 +159,12 @@ class PostController {
     try {
       const { classID } = req.params;
   
-      // Kiểm tra classID có được truyền vào không
       if (!classID) {
         return res.status(400).json({ message: "classID is required." });
       }
   
-      // Lấy danh sách bài viết từ service
       let posts = await PostService.getPostsByClassId(classID);
-  
-      // Kiểm tra xem có bài viết nào không
+      
       if (!posts || posts.length === 0) {
         return res.status(200).json({ message: "No posts found", data: [] });
       }
