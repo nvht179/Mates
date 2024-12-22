@@ -2,6 +2,7 @@ const Assignment = require("../entities/assignment.model");
 const { ErrorHandler } = require("../helpers/error");
 const AttachmentDB = require("./attachment.db");
 const sequelize = require("../config/db");
+const { Comment, Reaction, Person, Attachment } = require("../entities");
 
 class AssignmentDB {
   // Add new assignment with attachments
@@ -140,14 +141,21 @@ class AssignmentDB {
    
   async viewAllAssignmentsInClass(classID) {
     try {
-      // Truy vấn tất cả assignments của lớp học với classID
+      // Query assignments with attachments
       const assignments = await Assignment.findAll({
         where: { classID },
+        include: [
+          {
+            model: Attachment,
+            as: 'attachments', // Alias được định nghĩa trong quan hệ ở model
+            attributes: ['id', 'link', 'linkTitle'], // Chọn các cột cần thiết từ attachments
+          },
+        ],
       });
-
+  
       return assignments;
-    } catch (error) {
-      throw new ErrorHandler(500, `Error retrieving assignments from DB: ${error.message}`);
+    } catch (err) {
+      throw new Error(`Error fetching assignments: ${err.message}`);
     }
   }
 
