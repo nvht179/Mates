@@ -62,7 +62,7 @@ export default function CreateClass() {
   };
 
   const addTimeSlot = () => {
-    setSchedule([...schedule, { day: "Monday", startTime: "", endTime: "" }]);
+    setSchedule([...schedule, { day: "Monday", startTime: "13:30", endTime: "15:10" }]);
   };
 
   // const handleScheduleChange = (index: number, field: string, value: string) => {
@@ -257,7 +257,7 @@ export default function CreateClass() {
           >
             <option value="Weekly">Weekly</option>
             <option value="Bi-Weekly">Bi-Weekly</option>
-            <option value="Monthly">Bi-Weekly</option>
+            <option value="Monthly">Monthly</option>
           </select>
         </div>
 

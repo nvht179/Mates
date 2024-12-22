@@ -46,6 +46,35 @@ interface CreateClassResponse {
   }>;
 }
 
+interface EditClassRequest {
+  classID: number;
+  className: string;
+  code: string;
+  description: string;
+  events: Array<{ startTime: string; endTime: string; frequency: string }>;
+  userID: string;
+  role: string;
+}
+
+interface EditClassResponse {
+  message: string;
+  updatedClass: {
+    classID: number;
+    className: string;
+    code: string;
+    description: string;
+  };
+  updatedEvents: Array<{
+    eventID: number;
+    title: string;
+    description: string;
+    repeatTime: string | null;
+    startTime: string;
+    endTime: string;
+    classID: number;
+  }>;
+}
+
 interface ViewAllStudentInClassResponse {
   message: string;
   studentClassInfo: Array<{
@@ -144,6 +173,15 @@ interface ViewClassInfoResponse {
     code: string;
     description: string;
   };
+  classEvents: Array<{
+    eventID: number;
+    title: string;
+    description: string;
+    repeatTime: string | null;
+    startTime: string;
+    endTime: string;
+    classID: number;
+  }>;
 }
 
 type RemoveClassRequest = string;
@@ -171,4 +209,6 @@ export type {
   ViewClassInfoResponse,
   RemoveClassRequest,
   RemoveClassResponse,
+  EditClassRequest,
+  EditClassResponse,
 };
