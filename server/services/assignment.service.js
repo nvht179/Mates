@@ -5,6 +5,12 @@ class AssignmentService {
   // Add a new assignment with attachments
   addNewAssignmentWithAttachments = async ({ title, description, startTime, endTime, attachments, classID, weight }) => {
     try {
+      // Check if an assignment with the same title already exists
+      const existingAssignment = await AssignmentDB.getAssignmentByTitle(title);
+      if (existingAssignment) {
+        throw new ErrorHandler(403, "Assignment with the same title already exists");
+      }
+
       // Call DB layer to create assignment with attachments
       const newAssignment = await AssignmentDB.addNewAssignmentWithAttachments({
         title,
@@ -19,10 +25,7 @@ class AssignmentService {
       return newAssignment;
     } catch (err) {
       console.error(err);
-      throw new ErrorHandler(
-        500,
-        `Error in creating assignment with attachments in service: ${err.message}`
-      );
+      throw new ErrorHandler(err.status || 500, err.message || "Error creating assignment");
     }
   };
 
