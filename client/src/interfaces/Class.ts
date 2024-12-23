@@ -47,21 +47,21 @@ interface CreateClassResponse {
 }
 
 interface EditClassRequest {
-  classID: number;
+  classID: string;
   className: string;
   code: string;
   description: string;
   events: Array<{ 
     startTime: string; 
     endTime: string; 
-    frequency: string 
+    repeatTime: string 
   }>;
-  userID: string;
-  role: string;
+  // userID: string;
+  // role: string;
 }
 
 interface EditClassResponse {
-  message: string;
+  message: number;
   updatedClass: {
     classID: number;
     className: string;

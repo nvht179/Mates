@@ -71,7 +71,7 @@ export default function EditClass() {
         useEditClassMutation();
 
     const navigate = useNavigate();
-    const { id, role } = useSelector((state: RootState) => state.user);
+    // const { id, role } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         responseErrorHandler(
@@ -126,7 +126,7 @@ export default function EditClass() {
         return {
             startTime: startTime.toISOString(),
             endTime: endTime.toISOString(),
-            frequency,
+            repeatTime: frequency,
         };
     });
 
@@ -134,15 +134,25 @@ export default function EditClass() {
         e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
     ) => {
         e.preventDefault();
+        
+        console.log({
+            classIDnum,
+            className,
+            classCode,
+            description,
+            events,
+            // id,
+            // role,
+        });
 
         await editClassMutation({
-            classID: classIDnum,
+            classID,
             className,
             code: classCode,
             description,
             events,
-            userID: String(id),
-            role: role ?? "student",
+            // userID: String(id),
+            // role: role ?? "student",
         });
     };
 
