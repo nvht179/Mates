@@ -1,4 +1,4 @@
-interface Notification {
+interface NotificationType {
   id: number;
   title: string;
   content: string;
@@ -17,7 +17,7 @@ interface ViewNotificationRequest {
 
 interface ViewNotificationResponse {
   message: string;
-  notifications: Notification[];
+  notifications: NotificationType[];
 }
 
 interface DeleteNotificationRequest {
@@ -37,7 +37,7 @@ interface MarkAsReadResponse {
 }
 
 export type {
-  Notification,
+  NotificationType,
   ViewNotificationRequest,
   ViewNotificationResponse,
   DeleteNotificationRequest,

@@ -80,5 +80,9 @@ const notiApi = createApi({
   }),
 });
 
-export const { useViewNotificationsQuery, useDeleteNotificationMutation, useMarkAsreadNotificationMutation } = notiApi;
+export const {
+  useLazyViewNotificationsQuery,
+  useDeleteNotificationMutation,
+  useMarkAsreadNotificationMutation,
+} = notiApi;
 export default notiApi;
