@@ -113,13 +113,14 @@ function AddPost() {
             multiple
             onChange={(e) => handleFilesChange(e)}
           />
-          {isLoading ? (
-            <Button disabled>Loading...</Button>
-          ) : (
-            <Button onClick={handleSavePost} className="w-36">
-              Post
-            </Button>
-          )}
+
+          <Button
+            onClick={handleSavePost}
+            disabled={isLoading}
+            className="w-36"
+          >
+            Post
+          </Button>
         </div>
       </Panel>
     );
