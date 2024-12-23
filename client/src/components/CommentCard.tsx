@@ -24,7 +24,7 @@ function CommentCard({ comment }: { comment: Comment}) {
   const [content, setContent] = useState(comment.content);
   const formEl = useRef<HTMLFormElement>(null);
 
-  const [editComment] = useEditCommentMutation();
+  const [editComment, {isLoading}] = useEditCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function CommentCard({ comment }: { comment: Comment}) {
                 value={content}
                 onChange={handleContentChange}
               />
-              <Button primary className="ml-4 w-20" onClick={handleSaveComment}>
+              <Button primary disabled={isLoading} className="ml-4 w-20" onClick={handleSaveComment}>
                 Save
               </Button>
               <Button

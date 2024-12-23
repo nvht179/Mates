@@ -145,7 +145,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
                 .map((event) => (
                   <div
                     key={event.eventID}
-                    className="absolute left-1 right-1 truncate rounded border-2 border-fg-alt bg-primary-default px-2 py-1 text-sm text-white"
+                    className="absolute left-1 right-1 truncate rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm"
                     style={getEventStyles(event)}
                     title={event.description}
                   >
@@ -168,7 +168,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
                       Description: {event.description}
                     </p>
                     {event.repeatTime && (
-                      <p className="text-xs italic text-fg-disabled">
+                      <p className="text-xs italic font-light">
                         Repeats: {event.repeatTime}
                       </p>
                     )}

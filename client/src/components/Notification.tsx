@@ -75,13 +75,13 @@ function Notification() {
           />
         )}
       </div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className="absolute right-0 z-10 mt-3 w-96 rounded-md border border-fg-border bg-bg-darker text-black shadow-lg">
-          {isActivated && <div>{renderedNotifications}</div>}
-        </div>
-      )}
+      <div className="absolute right-0 z-10 mt-3 w-96 rounded-md border border-fg-border bg-bg-darker text-black shadow-lg">
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          isActivated && <div>{renderedNotifications}</div>
+        )}
+      </div>
     </div>
   );
 }
