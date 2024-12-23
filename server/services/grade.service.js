@@ -57,7 +57,7 @@ class GradeService {
         const grade = submission.grade100;
         const assignmentWeight = assignment.weight;
 
-        allSubmissionsStudent.push({ assignmentTitle, status, submittedOn, comment, weight, grade, assignmentWeight });
+        allSubmissionsStudent.push({ assignmentTitle, status, submittedOn, comment, assignmentWeight, grade });
       }
       return allSubmissionsStudent;
     } catch (err) {
@@ -105,6 +105,7 @@ class GradeService {
         const id = submission.studentID;
         const user = await UserDB.getUserByIdDB(id);
         const name = user.name;
+        const avatar = user.avatar
 
         const assignmentTitle = assignment.title;
         const status = submission.status;
@@ -114,7 +115,7 @@ class GradeService {
         const grade = submission.grade100;
         const assignmentWeight = assignment.weight;
 
-        allSubmissionAssignment.push({ id, name, assignmentTitle, status, submittedOn, comment, weight, grade, assignmentWeight });
+        allSubmissionAssignment.push({ id, avatar, name, assignmentTitle, status, submittedOn, comment, assignmentWeight, grade });
       }
       return allSubmissionAssignment;
     } catch (err) {

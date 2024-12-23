@@ -1,7 +1,7 @@
 const removeNotification = require('./removeNotification');
 const viewAllNotification = require('./viewAllNotification')
 const markAsRead = require('./markAsRead');
-const markAsRead = require('./markAsUnread');
+const markAsUnread = require('./markAsUnread');
 
 
 module.exports = {
