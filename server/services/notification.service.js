@@ -25,7 +25,6 @@ class NotificationService {
     }
   }
 
-  // Đánh dấu một notification là đã đọc
   async markAsRead(notificationId) {
     try {
       const updatedNotification = await NotificationDB.updateNotificationStatus(notificationId, true);
@@ -35,6 +34,18 @@ class NotificationService {
       return updatedNotification;
     } catch (err) {
       throw new ErrorHandler(500, `Error in NotificationService - markAsRead: ${err.message}`);
+    }
+  }
+
+  async markAsUnRead(notificationId) {
+    try {
+      const updatedNotification = await NotificationDB.updateNotificationStatus(notificationId, false);
+      if (!updatedNotification) {
+        throw new ErrorHandler(404, "Notification not found");
+      }
+      return updatedNotification;
+    } catch (err) {
+      throw new ErrorHandler(500, `Error in NotificationService - markAsUnRead: ${err.message}`);
     }
   }
 }
