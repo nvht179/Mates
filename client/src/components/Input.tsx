@@ -4,6 +4,7 @@ import className from "classnames";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   small?: boolean;
   medium?: boolean;
+  ref?: React.Ref<HTMLInputElement>;
 }
 export default function Input({
   small,

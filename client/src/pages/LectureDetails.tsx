@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react"; // Add useRef import
 import { useLocation, useNavigate } from "react-router-dom";
 import { LuPencil } from "react-icons/lu";
 import { BiDetail } from "react-icons/bi";
@@ -7,6 +7,8 @@ import Textarea from "../components/TextArea";
 import { useCreateLectureMutation, useEditLectureMutation } from "../store";
 import { ClassState } from "../interfaces/Class";
 import { Lecture } from "../interfaces/Lecture";
+import { MdAttachment } from "react-icons/md";
+import FileList from "../components/FileList";
 
 function LectureDetails() {
   const { state } = useLocation();
@@ -24,6 +26,7 @@ function LectureDetails() {
     useCreateLectureMutation();
   const [editLecture, { isSuccess: isEditLectureSuccess }] =
     useEditLectureMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null); // Add ref
 
   useEffect(() => {
     if (lecture?.attachments) {
@@ -89,9 +92,31 @@ function LectureDetails() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFileList(e.target.files);
+      const dataTransfer = new DataTransfer();
+      
+      // Add existing files if any
+      if (fileList) {
+        Array.from(fileList).forEach(file => {
+          dataTransfer.items.add(file);
+        });
+      }
+      
+      // Add new files
+      Array.from(e.target.files).forEach(file => {
+        dataTransfer.items.add(file);
+      });
+
+      setFileList(dataTransfer.files);
+    }
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
+
+  const fileNumber = fileList?.length || 0;
+
+  console.log("fileList", fileList);
 
   return (
     <div className="flex h-full w-full flex-col p-12 px-20 pr-72">
@@ -113,42 +138,28 @@ function LectureDetails() {
           placeholder="Add content"
         />
       </div>
-      <div className="ml-8 mt-8">
+      <div className="my-4 flex items-center">
+        <MdAttachment className="text-xl text-fg-soft" />
+        <label
+          htmlFor="attachment"
+          className="cursor-pointer select-none text-primary-default mx-4"
+        >
+          Attach files
+        </label>
         <input
-          id="fileInput"
-          className="hidden w-64"
+          ref={fileInputRef} // Add ref to input
+          id="attachment"
+          className="bg-bg-dark"
           type="file"
           multiple
+          hidden
           onChange={(e) => handleFileChange(e)}
         />
-        <label
-          htmlFor="fileInput"
-          className="w-64 cursor-pointer text-primary-default active:text-fg-default"
-        >
-          Select Files
-        </label>
-        <div className="mt-4">
-          {fileList &&
-            Array.from(fileList).map((file, index) => (
-              <div key={index} className="mt-2 flex items-center">
-                <span>{file.name}</span>
-                <button
-                  className="ml-2 text-red-500"
-                  onClick={() => {
-                    const newFileList = Array.from(fileList).filter(
-                      (_, i) => i !== index,
-                    );
-                    const dataTransfer = new DataTransfer();
-                    newFileList.forEach((file) => dataTransfer.items.add(file));
-                    setFileList(dataTransfer.files);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-        </div>
+        {fileNumber > 0 && (
+          <p className="ml-4 select-none text-primary-default">{fileNumber}</p>
+        )}
       </div>
+        {fileList && <FileList fileList={fileList} setFileList={setFileList} className="ml-8"/>}
     </div>
   );
 }

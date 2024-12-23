@@ -61,7 +61,7 @@ function Notification() {
     );
 
   return (
-    <div ref={divEl} className="relative">
+    <div ref={divEl} className="relative select-none">
       <div>
         {isActivated ? (
           <IoIosNotifications
@@ -75,7 +75,7 @@ function Notification() {
           />
         )}
       </div>
-      <div className="absolute right-0 z-10 mt-3 w-96 rounded-md border border-fg-border bg-bg-darker text-black shadow-lg">
+      <div className="absolute right-0 z-50 mt-3 w-96 rounded-md border border-fg-border bg-bg-darker text-black shadow-lg select-text">
         {isLoading ? (
           <div>Loading...</div>
         ) : (

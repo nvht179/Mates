@@ -23,6 +23,7 @@ import LectureDetails from "./pages/LectureDetails";
 import CalendarPage from "./pages/CalendarPage";
 import EventDetails from "./pages/EventDetails";
 import EditClass from "./pages/EditClass";
+import EditAssignment from "./pages/EditAssignment";
 
 export default function App() {
   return (
@@ -54,6 +55,7 @@ export default function App() {
             <Route path="lecture-details" element={<LectureDetails />} />
             <Route path="assignment" element={<AssignmentPage />} />
             <Route path="create-assignment" element={<CreateAssignment />} />
+            <Route path="edit-assignment" element={<EditAssignment />} />
             <Route path="grade" element={<ToGradePage />} />
             <Route path="discussion" element={<DiscussionPage />} />
           </Route>

@@ -10,7 +10,7 @@ type Assignment = {
     id: number;
     link: string;
     linkTitle: string;
-  }>
+  }>;
 };
 
 type GetAllAssignmentsRequest = string;
@@ -40,10 +40,36 @@ type CreateAssignmentResponse = {
   }>;
 };
 
+type RemoveAssignmentRequest = string;
+
+type RemoveAssignmentResponse = {
+  message: string;
+};
+
+type EditAssignmentRequest = {
+  assignmentId: number;
+  data: FormData;
+}
+
+type EditAssignmentResponse = {
+  message: string;
+  data: Assignment;
+  attachments: Array<{
+    id: number;
+    link: string;
+    linkTitle: string;
+  }>;
+}
+
+
 export type {
   Assignment,
   GetAllAssignmentsRequest,
   GetAllAssignmentsResponse,
   CreateAssignmentRequest,
   CreateAssignmentResponse,
+  RemoveAssignmentRequest,
+  RemoveAssignmentResponse,
+  EditAssignmentRequest,
+  EditAssignmentResponse,
 };

@@ -12,6 +12,7 @@ type Module = "Assignment" | "Lecture" | "Discussion";
 
 function ClassTopBar() {
   const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
+  const [isEditingAssignment, setIsEditingAssignment] = useState(false);
   const [isCreatingLecture, setIsCreatingLecture] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [assignmentButtonClick, setAssignmentButtonClick] =
@@ -37,6 +38,9 @@ function ClassTopBar() {
     if (pathname.includes("create-assignment")) {
       setIsCreatingAssignment(true);
     }
+    if (pathname.includes("edit-assignment")) {
+      setIsEditingAssignment(true);
+    }
     if (pathname.includes("lecture")) {
       setIsCreatingLecture(false);
     }
@@ -57,6 +61,18 @@ function ClassTopBar() {
     }
   };
 
+  const toggleEditAssignment = () => {
+    const newState = !isEditingAssignment;
+    setIsEditingAssignment(newState);
+    if (newState) {
+      navigate(`/class/${code}/edit-assignment`, {
+        state: { ...state, module: "Assignment", title: "Edit Assignment" },
+      });
+    } else {
+      handleClickClasswork();
+    }
+  };
+
   const handleClickClasswork = () => {
     navigate(`/class/${code}/assignment`, {
       state: { ...state, module: "Assignment", title: "Assignment" },
@@ -71,8 +87,6 @@ function ClassTopBar() {
     setAssignmentButtonClick("grade");
   };
 
-  console.log(isCreatingLecture);
-
   useEffect(() => {
     const handleSaveSuccess = () => {
       setIsLoading(false);
@@ -84,9 +98,18 @@ function ClassTopBar() {
   }, []);
 
   useEffect(() => {
+    const handleEditSuccess = () => {
+      setIsLoading(false);
+    };
+    window.addEventListener("EditAssignmentSuccess", handleEditSuccess);
+    return () => {
+      window.removeEventListener("EditAssignmentSuccess", handleEditSuccess);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleLoadingChange = (e: CustomEvent) => {
       const isLoading = e.detail.isLoading;
-      console.log("isLoading", isLoading);
       setIsLoading(isLoading);
     };
 
@@ -95,9 +118,18 @@ function ClassTopBar() {
       handleLoadingChange as EventListener,
     );
 
+    document.addEventListener(
+      "EditAssignmentLoadingStateChange",
+      handleLoadingChange as EventListener,
+    );
+
     return () => {
       document.removeEventListener(
         "AssignmentLoadingStateChange",
+        handleLoadingChange as EventListener,
+      );
+      document.removeEventListener(
+        "EditAssignmentLoadingStateChange",
         handleLoadingChange as EventListener,
       );
     };
@@ -113,6 +145,12 @@ function ClassTopBar() {
     setIsLoading(true);
     const eventSaveAssignment = new CustomEvent("SaveAssignment");
     window.dispatchEvent(eventSaveAssignment);
+  };
+
+  const handleSaveEditAssignmentClick = () => {
+    setIsLoading(true);
+    const eventSaveEditAssignment = new CustomEvent("SaveEditAssignment");
+    window.dispatchEvent(eventSaveEditAssignment);
   };
 
   const toggleCreateLecture = () => {
@@ -180,6 +218,21 @@ function ClassTopBar() {
               Save
             </Button>
             <Button secondary small onClick={toggleCreateAssignment}>
+              Cancel
+            </Button>
+          </>
+        ) : isEditingAssignment ? (
+          <>
+            <Button
+              primary
+              small
+              className="w-16"
+              disabled={isLoading}
+              onClick={handleSaveEditAssignmentClick}
+            >
+              Save
+            </Button>
+            <Button secondary small onClick={toggleEditAssignment}>
               Cancel
             </Button>
           </>

@@ -1,11 +1,12 @@
-import { RootState, useGetAllAssignmentsQuery } from "../store";
+import { RootState, useGetAllAssignmentsQuery, useRemoveAssignmentMutation } from "../store";
 import Button from "../components/Button";
 import OptionDropdown from "../components/OptionDropdown";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { useEffect, useState } from "react";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { Assignment } from "../interfaces/Assignment";
 
 function AssignmentPage() {
   const { state } = useLocation();
@@ -13,24 +14,35 @@ function AssignmentPage() {
   const { data, error, isLoading, isError, isSuccess } =
     useGetAllAssignmentsQuery(state.cla.classID);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [removeAssignment, {isError: isRemoveAssignmentError, error: removeAssignmentError}] = useRemoveAssignmentMutation();
 
-  const handleDeleteClick = () => {
-    console.log("Delete clicked");
+  const handleDeleteClick = (a: Assignment) => {
+    removeAssignment(a.id.toString());
   };
 
-  const handleEditClick = () => {
-    console.log("Edit clicked");
+  const handleEditClick = (assignment: Assignment) => {
+    navigate(`/class/${state.cla.code}/edit-assignment`, {
+      state: { ...state, assignment},
+    });
   };
 
   useEffect(() => {
-    if (isError) {
-      responseErrorHandler(
-        isError,
-        error as FetchBaseQueryError,
-        setErrorMessage,
-      );
-    }
-  }, [error, isError]);
+    responseErrorHandler(isRemoveAssignmentError, removeAssignmentError as FetchBaseQueryError, setErrorMessage);
+  }, [isRemoveAssignmentError, removeAssignmentError]);
+
+  if (errorMessage)
+    console.error("AssignmentPage Error: ", errorMessage);
+
+  // useEffect(() => {
+  //   if (isError) {
+  //     responseErrorHandler(
+  //       isError,
+  //       error as FetchBaseQueryError,
+  //       setErrorMessage,
+  //     );
+  //   }
+  // }, [error, isError]);
 
   const assignments = (isSuccess && data?.data) || [];
 
@@ -52,8 +64,8 @@ function AssignmentPage() {
             </div>
           </div>
           <OptionDropdown
-            handleDeleteClick={handleDeleteClick}
-            handleEditClick={handleEditClick}
+            handleDeleteClick={() => handleDeleteClick(assignment)}
+            handleEditClick={() => handleEditClick(assignment)}
           />
         </div>
         <div className="mt-2 border-b-2" />

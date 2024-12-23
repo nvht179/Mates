@@ -4,12 +4,16 @@ import {
   CreateAssignmentRequest,
   CreateAssignmentResponse,
   GetAllAssignmentsRequest,
-  GetAllAssignmentsResponse
+  GetAllAssignmentsResponse,
+  RemoveAssignmentRequest,
+  RemoveAssignmentResponse,
+  EditAssignmentRequest,
+  EditAssignmentResponse,
 } from "../../interfaces/Assignment";
 
 const assignmentApi = createApi({
   reducerPath: "assignment",
-  tagTypes: ["Assignment"],
+  tagTypes: ["Assignment", "AssignmentClass"],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080/api",
     prepareHeaders: async (headers) => {
@@ -25,7 +29,14 @@ const assignmentApi = createApi({
       GetAllAssignmentsResponse,
       GetAllAssignmentsRequest
     >({
-      providesTags: (_result, _error, request) => [{ type: "Assignment", id: request }],
+      providesTags: (result, _error, request) => {
+        const tags = [{ type: "AssignmentClass", id: request }];
+        result?.data.forEach((assignment) => {
+          tags.push({ type: "Assignment", id: assignment.id.toString() });
+        });
+        console.log("tags: ", tags)
+        return tags;
+      },
       query: (classId) => {
         return {
           url: `/assignments/class/${classId}`,
@@ -40,13 +51,32 @@ const assignmentApi = createApi({
         method: "POST",
         body
       }),
-      invalidatesTags: (_result, _error, request) => [{ type: "Assignment", id: request.get("classID")?.toString() }]
+      invalidatesTags: (_result, _error, request) => [{ type: "AssignmentClass", id: request.get("classID")?.toString() }]
+    }),
+
+    removeAssignment: builder.mutation<RemoveAssignmentResponse, RemoveAssignmentRequest>({
+      query: (assignmentId) => ({
+        url: `/assignments/remove/${assignmentId}`,
+        method: "DELETE"
+      }),
+      invalidatesTags: (_result, _error, request) => [{ type: "Assignment", id: request}]
+    }),
+
+    editAssignment: builder.mutation<EditAssignmentResponse, EditAssignmentRequest>({
+      query: (request) => ({
+        url: `/assignments/edit/${request.assignmentId}`,
+        method: "PUT",
+        body: request.data
+      }),
+      invalidatesTags: (_result, _error, request) => [{ type: "Assignment", id: request.assignmentId.toString() }]
     })
   })
 });
 
 export const {
   useGetAllAssignmentsQuery,
-  useCreateAssignmentMutation
+  useCreateAssignmentMutation,
+  useEditAssignmentMutation,
+  useRemoveAssignmentMutation,
 } = assignmentApi;
 export default assignmentApi;
