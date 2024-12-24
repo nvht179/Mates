@@ -48,7 +48,7 @@ class GradeService {
       for (const submission of allSubmissions) {
         const assignmentID = submission.assignmentID;
         const assignment = await AssignmentDB.getAssignmentById(assignmentID);
-
+      
         const assignmentTitle = assignment.title;
         const status = submission.status;
         const submittedOn = submission.submittedOn;
@@ -57,7 +57,7 @@ class GradeService {
         const grade = submission.grade100;
         const assignmentWeight = assignment.weight;
 
-        allSubmissionsStudent.push({ assignmentTitle, status, submittedOn, comment, assignmentWeight, grade });
+        allSubmissionsStudent.push({ assignmentTitle, status, submittedOn, comment, assignmentWeight, grade, assignmentID });
       }
       return allSubmissionsStudent;
     } catch (err) {
