@@ -11,6 +11,7 @@ import lectureApi from "./services/lectureApi";
 import eventApi from "./services/eventApi";
 import commentApi from "./services/commentApi";
 import notiApi from "./services/notiApi";
+import gradeApi from "./services/gradeApi";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [classApi.reducerPath]: classApi.reducer,
     [assignmentApi.reducerPath]: assignmentApi.reducer,
+    [gradeApi.reducerPath]: gradeApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
     [reactionApi.reducerPath]: reactionApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer,
@@ -32,6 +34,7 @@ export const store = configureStore({
       .concat(userApi.middleware)
       .concat(classApi.middleware)
       .concat(assignmentApi.middleware)
+      .concat(gradeApi.middleware)
       .concat(postApi.middleware)
       .concat(reactionApi.middleware)
       .concat(commentApi.middleware)
@@ -48,6 +51,7 @@ export { authApi, classApi, postApi, reactionApi, userApi };
 export * from "./services/authApi";
 export * from "./services/userApi";
 export * from "./services/classApi";
+export * from "./services/gradeApi";
 export * from "./services/postApi";
 export * from "./services/reactionApi";
 export * from "./services/commentApi";

@@ -1,30 +1,87 @@
 interface Grade {
+  id: number; // personID
+  avatar: string;
   name: string;
-  assignment: string;
+  assignmentTitle: string;
   status: string;
   submittedOn: string;
-  feedback: string;
-  weight: number;
-  score: string;
+  comment: string;
+  assignmentWeight: number;
+  grade: number;
 }
 
-// Required properties:
-// - studentID: string
-// - assignmentID: string
-// - files: File[]
-type SubmitAssginmentRequest = FormData;
+interface GradeDetails {
+  gradeId: number;
+  comment: string;
+  grade100: number;
+  status: string;
+  submittedOn: string;
+  assignmentID: number;
+  studentID: number;
+}
 
-type SubmitAssignmentResponse = {
+interface Attachment{
+  id: number;
+  link: string;
+  linkTitle: string;
+  assignmentId: number | null;
+  postId: number | null;
+  lectureId: number | null;
+  gradeID: number;
+}
+
+
+interface ViewGradeAssignmentByTeacherRequest {
+  assignmentID: number;
+}
+
+interface ViewGradeAssignmentByTeacherResponse {
   message: string;
-  data: {
-    assignmentID: string;
-    studentID: string;
-    files: Array<{
-      id: string;
-      link: string;
-      linkTitle: string;
-    }>;
-  };
-};
+  allSubmissionAssignment: Grade[];
+}
 
-export default Grade;
+interface ViewGradeDetailsRequest {
+  personID: number;
+  assignmentID: number;
+}
+
+interface ViewGradeDetailsResponse {
+  message: string;
+  submissionDetail: GradeDetails;
+  attachments: Attachment[];
+}
+
+interface ViewSubmissionByStudentRequest {
+  personID: number;
+}
+
+interface ViewSubmissionByStudentResponse {
+  message: string;
+  allSubmissionAssignment: Grade[];
+}
+
+interface GradingAssignmentRequest {
+  assignmentID: number;
+  personID: number;
+  grade100: number;
+  comment: string;
+}
+
+interface GradingAssignmentResponse {
+  message: string;
+  submissionDetail: GradeDetails;
+}
+
+export type {
+  Grade,
+  GradeDetails,
+  Attachment,
+  ViewGradeAssignmentByTeacherRequest,
+  ViewGradeAssignmentByTeacherResponse,
+  ViewGradeDetailsRequest,
+  ViewGradeDetailsResponse,
+  ViewSubmissionByStudentRequest,
+  ViewSubmissionByStudentResponse,
+  GradingAssignmentRequest,
+  GradingAssignmentResponse,
+};

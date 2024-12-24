@@ -17,12 +17,13 @@ import EmailInput from "./components/EmailInput";
 import CreateClass from "./pages/CreateClass";
 import ForgetPasswordOtp from "./pages/ForgetPasswordOtp";
 import ForgetPasswordReset from "./pages/ForgetPasswordReset";
-import ToGradePage from "./pages/ToGradePage";
+import GradePage from "./pages/GradePage";
 import CreateAssignment from "./pages/CreateAssignment";
 import LectureDetails from "./pages/LectureDetails";
 import CalendarPage from "./pages/CalendarPage";
 import EventDetails from "./pages/EventDetails";
 import EditClass from "./pages/EditClass";
+import GradeDetailsPage from "./pages/GradingPage";
 import EditAssignment from "./pages/EditAssignment";
 
 export default function App() {
@@ -56,7 +57,8 @@ export default function App() {
             <Route path="assignment" element={<AssignmentPage />} />
             <Route path="create-assignment" element={<CreateAssignment />} />
             <Route path="edit-assignment" element={<EditAssignment />} />
-            <Route path="grade" element={<ToGradePage />} />
+            <Route path="grade" element={<GradePage />} />
+            <Route path="grade-details" element={<GradeDetailsPage />} />
             <Route path="discussion" element={<DiscussionPage />} />
           </Route>
           <Route path="/calendar" element={<CalendarPage />} />
