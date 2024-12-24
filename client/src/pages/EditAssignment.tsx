@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Input from "../components/Input";
 import { LuPencilLine } from "react-icons/lu";
@@ -31,20 +31,41 @@ export default function EditAssignment() {
     endTime,
     weight: initialWeight,
     attachments,
-    ...restState
   } = assignment;
-
   const code = cla.code;
-
   const [assignmentTitle, setAssignmentTitle] = useState(title || "");
   const [description, setDescription] = useState(initialDescription || "");
   const [attachment, setAttachment] = useState<FileList | null>(null);
-  // const [initialAttachments, setInitialAttachments] = useState(attachments);
   const [weight, setWeight] = useState(initialWeight || 1);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [editAssignment, { isLoading, isError, error, isSuccess }] =
     useEditAssignmentMutation();
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const dataTransfer = new DataTransfer();
+      
+      // Add existing files if any
+      if (attachment) {
+        Array.from(attachment).forEach(file => {
+          dataTransfer.items.add(file);
+        });
+      }
+      
+      // Add new files
+      Array.from(e.target.files).forEach(file => {
+        dataTransfer.items.add(file);
+      });
+
+      setAttachment(dataTransfer.files);
+    }
+    // Reset input
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  };
 
   useEffect(() => {
     if (attachments) {
@@ -265,7 +286,7 @@ export default function EditAssignment() {
           hidden
           onChange={(e) => {
             if (e.target.files) {
-              setAttachment(e.target.files);
+              handleFileChange(e);
             }
           }}
         />

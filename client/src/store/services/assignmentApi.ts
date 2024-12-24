@@ -11,6 +11,8 @@ import {
   EditAssignmentResponse,
 } from "../../interfaces/Assignment";
 
+type Tag = { type: "Assignment" | "AssignmentClass"; id: string };
+
 const assignmentApi = createApi({
   reducerPath: "assignment",
   tagTypes: ["Assignment", "AssignmentClass"],
@@ -30,11 +32,10 @@ const assignmentApi = createApi({
       GetAllAssignmentsRequest
     >({
       providesTags: (result, _error, request) => {
-        const tags = [{ type: "AssignmentClass", id: request }];
+        const tags: Tag[] = [{ type: "AssignmentClass", id: request }];
         result?.data.forEach((assignment) => {
           tags.push({ type: "Assignment", id: assignment.id.toString() });
         });
-        console.log("tags: ", tags)
         return tags;
       },
       query: (classId) => {

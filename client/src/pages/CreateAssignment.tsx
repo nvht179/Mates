@@ -224,7 +224,6 @@ export default function CreateAssignment() {
         </label>
         <Input
           id="attachment"
-          className="bg-bg-dark"
           type="file"
           multiple
           hidden

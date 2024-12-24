@@ -236,7 +236,7 @@ function ClassTopBar() {
               Cancel
             </Button>
           </>
-        ) : (
+        ) : role === "Teacher" && (
           <Button secondary small onClick={toggleCreateAssignment}>
             <RiEditBoxFill className="mr-2" />
             <label className="truncate text-sm">New Assignment</label>
