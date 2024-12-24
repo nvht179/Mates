@@ -8,6 +8,7 @@ import { ClassState } from "../interfaces/Class";
 import { useGetAllAssignmentsQuery } from "../store";
 import { useLazyViewGradeAssignmentByTeacherQuery } from "../store";
 import Dropdown from "../components/Dropdown";
+import { formatDate } from "../utils/date";
 
 interface ConfigItem {
   label: string;
@@ -65,7 +66,7 @@ function GradePage() {
     // }
     viewGradeAssignmentByTeacherQuery({ assignmentID: selectedAssignmentID });
     const grades = gradesQuery?.allSubmissionAssignment || [];
-    grades.sort((a, b) => a.id - b.id);
+    grades.sort((a, b) => a.gradeId - b.gradeId);
     setGrades(grades);
   }, [
     selectedAssignmentID,
@@ -85,16 +86,6 @@ function GradePage() {
         grade: grade,
       },
     });
-  };
-
-  const formatDate = (isoDate: string) => {
-    const date = new Date(isoDate);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
   const teacherConfig: ConfigItem[] = [
@@ -134,8 +125,8 @@ function GradePage() {
     },
     {
       label: "Grade",
-      render: (grade) => grade.grade,
-      sortValue: (grade) => grade.grade,
+      render: (grade) => grade.grade100,
+      sortValue: (grade) => grade.grade100,
     },
     {
       label: "Assignment Weight",
@@ -218,7 +209,7 @@ function GradePage() {
         <GradeTable
           data={gradesToDisplay}
           config={teacherConfig}
-          keyFn={(grade) => grade.id} // fix this
+          keyFn={(grade) => grade.gradeId}
           onRowClick={handleNavigateGradeDetailsClick}
         />
       )}

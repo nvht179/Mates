@@ -1,5 +1,6 @@
 interface Grade {
-  id: number; // personID
+  gradeId: number;
+  personID: number; // personID
   avatar: string;
   name: string;
   assignmentTitle: string;
@@ -7,7 +8,7 @@ interface Grade {
   submittedOn: string;
   comment: string;
   assignmentWeight: number;
-  grade: number;
+  grade100: number;
 }
 
 interface GradeDetails {

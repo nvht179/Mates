@@ -8,6 +8,7 @@ import DefaultAvatar from "../assets/default-avatar.png";
 import Textarea from "../components/TextArea";
 import { useViewGradeDetailsQuery } from "../store";
 import { Grade } from "../interfaces/Grade";
+import { formatDate } from "../utils/date";
 
 function GradeDetailsPage() {
   const { state } = useLocation();
@@ -21,7 +22,7 @@ function GradeDetailsPage() {
   const [feedback, setFeedback] = useState("");
   const [score, setScore] = useState<number | null>(null);
 
-  const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({ assignmentID, personID: grade.id });
+  const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({ assignmentID, personID: grade.personID });
   const gradeDetails = gradeDetailsQuery?.submissionDetail;
   const attachments = gradeDetailsQuery?.attachments || [];
 
@@ -44,7 +45,7 @@ function GradeDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex w-1/2 flex-row">
               <h1 className="mr-5 font-semibold">Submission</h1>
-              <h1>Turned in {gradeDetails?.submittedOn}</h1>
+              <h1>Turned in {formatDate(gradeDetails?.submittedOn || "")}</h1>
             </div>
           </div>
 
