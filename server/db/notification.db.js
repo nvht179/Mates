@@ -27,16 +27,14 @@ class NotificationDB {
     }
   };
 
-  // Cập nhật trạng thái "đã đọc" của notification
   updateNotificationStatus = async (notificationId, statusRead) => {
     try {
       const notification = await Notification.findByPk(notificationId);
-      if (!notification) return null; // Nếu không tìm thấy notification
+      if (!notification) return null; 
 
-      // Cập nhật trạng thái
       notification.statusRead = statusRead;
       await notification.save();
-      return notification; // Trả về thông báo đã được cập nhật
+      return notification; 
     } catch (err) {
       throw new Error("Error updating notification status: " + err.message);
     }

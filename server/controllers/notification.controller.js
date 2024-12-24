@@ -40,6 +40,18 @@ class NotificationController {
       res.status(403).json({ message });
     }
   };
+
+  markAsUnRead = async (req, res) => {
+    try {
+      const { notificationId } = req.params;
+      const updatedNotification = await NotificationService.markAsUnRead(notificationId);
+      const message = "Notification marked as unread";
+      res.status(200).json({ message, updatedNotification });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
 }
 
 module.exports = new NotificationController();

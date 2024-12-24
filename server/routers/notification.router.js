@@ -12,4 +12,6 @@ router.delete("/remove/:notificationId", NotificationController.deleteNotificati
 // Mark notification as read
 router.put("/mark-as-read/:notificationId/mark-as-read", NotificationController.markAsRead);
 
+router.put("/mark-as-unread/:notificationId/mark-as-unread", NotificationController.markAsUnRead);
+
 module.exports = router;
