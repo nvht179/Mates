@@ -11,12 +11,6 @@ interface Grade {
   grade100: number;
 }
 
-// Required properties:
-// - studentID: string
-// - assignmentID: string
-// - files: File[]
-type SubmitAssignmentRequest = FormData;
-
 interface GradeDetails {
   gradeId: number;
   comment: string;
@@ -26,25 +20,6 @@ interface GradeDetails {
   assignmentID: number;
   studentID: number;
 }
-
-type SubmitAssignmentResponse = {
-  message: string;
-};
-
-type DeleteSubmissionResponse = {
-  message: string;
-};
-
-// for getting the submitted assignment and its grading details
-type ViewGradeDetailsRequest = {
-  personID: string;
-  assignmentID: string;
-};
-
-type DeleteSubmissionRequest = {
-  personID: string;
-  assignmentID: string;
-};
 
 interface Attachment{
   id: number;
@@ -64,6 +39,12 @@ interface ViewGradeAssignmentByTeacherResponse {
   message: string;
   allSubmissionAssignment: Grade[];
 }
+
+// for getting the submitted assignment and its grading details
+type ViewGradeDetailsRequest = {
+  personID: string;
+  assignmentID: string;
+};
 
 interface ViewGradeDetailsResponse {
   message: string;
@@ -91,6 +72,25 @@ interface GradingAssignmentResponse {
   message: string;
   submissionDetail: GradeDetails;
 }
+
+// Required properties:
+// - studentID: string
+// - assignmentID: string
+// - files: File[]
+type SubmitAssignmentRequest = FormData;
+
+type SubmitAssignmentResponse = {
+  message: string;
+};
+
+type DeleteSubmissionRequest = {
+  personID: string;
+  assignmentID: string;
+};
+
+type DeleteSubmissionResponse = {
+  message: string;
+};
 
 export type {
   Grade,

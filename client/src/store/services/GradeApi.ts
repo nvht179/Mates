@@ -99,8 +99,8 @@ const gradeApi = createApi({
       GradingAssignmentRequest
     >({
       query: (grading) => ({
-        url: "grades/grading-assignment",
-        method: "POST",
+        url: "grades/grade-assignment-teacher",
+        method: "PUT",
         body: grading,
       }),
     }),

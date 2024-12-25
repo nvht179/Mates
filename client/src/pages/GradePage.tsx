@@ -22,11 +22,11 @@ function GradePage() {
   const defaultAvatar = DefaultAvatar;
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { cla } = state as { cla: ClassState };
+  const { cla, assignmentID } = state as { cla: ClassState, assignmentID: number | null };
 
   const [buttonClicked, setButtonClicked] =
     useState<ButtonClicked>("GradeList");
-  const [selectedAssignmentID, setSelectedAssignmentID] = useState<number>(-1);
+  const [selectedAssignmentID, setSelectedAssignmentID] = useState<number>(assignmentID || -1);
   const [grades, setGrades] = useState<Grade[]>([]);
 
   const { data: assignmentQuery } = useGetAllAssignmentsQuery(
@@ -80,7 +80,7 @@ function GradePage() {
       state: {
         ...state,
         title: "Assignment",
-        module: null,
+        module: "Grade",
         display: "Grade details",
         assignmentID: selectedAssignmentID,
         grade: grade,

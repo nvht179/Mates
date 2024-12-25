@@ -7,27 +7,30 @@ import { RiEditBoxFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
-type AssignmentTopBarTab = "classwork" | "grade";
-type Module = "Assignment" | "Lecture" | "Discussion";
+type AssignmentTopBarTab = "Classwork" | "Grade";
+type Module = "Assignment" | "Lecture" | "Discussion" | "Grade";
 
 function ClassTopBar() {
-  const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
-  const [isEditingAssignment, setIsEditingAssignment] = useState(false);
-  const [isCreatingLecture, setIsCreatingLecture] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [assignmentButtonClick, setAssignmentButtonClick] =
-    useState<AssignmentTopBarTab>("classwork");
   const role = useSelector((state: RootState) => state.user.role);
   const { state, pathname } = useLocation();
-  const { cla, image, module, title, display } = state as {
+  const { cla, image, module, title, display, tab } = state as {
     cla: ClassState;
     image: string;
     module: Module;
     title: string;
     display: string | null;
+    tab: AssignmentTopBarTab | null;
   };
   const { className, code } = cla;
   const navigate = useNavigate();
+
+  const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
+  const [isEditingAssignment, setIsEditingAssignment] = useState(false);
+  const [isCreatingLecture, setIsCreatingLecture] = useState(false);
+  const [isGrading, setIsGrading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [assignmentButtonClick, setAssignmentButtonClick] =
+    useState<AssignmentTopBarTab>(tab || "Classwork");
 
   // safe check for manual url change
   // only a workaround, because the required state passed from the previous page is missing
@@ -46,6 +49,12 @@ function ClassTopBar() {
     }
     if (pathname.includes("lecture-details")) {
       setIsCreatingLecture(true);
+    }
+    if (pathname.includes("grade")) {
+      setIsGrading(false);
+    }
+    if (pathname.includes("grade-details")) {
+      setIsGrading(true);
     }
   }, [pathname]);
 
@@ -77,14 +86,14 @@ function ClassTopBar() {
     navigate(`/class/${code}/assignment`, {
       state: { ...state, module: "Assignment", title: "Assignment" },
     });
-    setAssignmentButtonClick("classwork");
+    setAssignmentButtonClick("Classwork");
   };
 
   const handleClickGrade = () => {
     navigate(`/class/${code}/grade`, {
-      state: { ...state, module: "Assignment", title: "Assignment" },
+      state: { ...state, module: "Grade", title: "Assignment" },
     });
-    setAssignmentButtonClick("grade");
+    setAssignmentButtonClick("Grade");
   };
 
   useEffect(() => {
@@ -191,14 +200,14 @@ function ClassTopBar() {
           <TopBarTab
             className="ml-4 pt-1"
             onClick={handleClickClasswork}
-            active={assignmentButtonClick === "classwork"}
+            active={assignmentButtonClick === "Classwork"}
           >
             Classwork
           </TopBarTab>
           <TopBarTab
             className="ml-4 pt-1"
             onClick={handleClickGrade}
-            active={assignmentButtonClick === "grade"}
+            active={assignmentButtonClick === "Grade"}
           >
             Grade
           </TopBarTab>
@@ -290,6 +299,78 @@ function ClassTopBar() {
     </>
   );
 
+  const handleSaveGradeClick = () => {
+    setIsLoading(true);
+    const event = new CustomEvent("SaveGrade");
+    window.dispatchEvent(event);
+  };
+
+  const handleCancelGradeClick = () => {
+    setIsGrading(false);
+    handleClickGrade();
+  };
+
+  useEffect(() => {
+    const handleGradingSuccess = () => {
+      setIsLoading(false);
+    };
+    window.addEventListener("SaveGradingSuccess", handleGradingSuccess);
+    return () => {
+      window.removeEventListener("SaveGradingSuccess", handleGradingSuccess);
+    };
+  }, []);
+
+  const gradingContent = (
+    <>
+      {isGrading ? (
+        <TopBarTab active className="ml-4 pt-1">
+          Details
+        </TopBarTab>
+      ) : (
+        <>
+          <TopBarTab
+            className="ml-4 pt-1"
+            onClick={handleClickClasswork}
+            active={assignmentButtonClick === "Classwork"}
+          >
+            Classwork
+          </TopBarTab>
+          <TopBarTab
+            className="ml-4 pt-1"
+            onClick={handleClickGrade}
+            active={assignmentButtonClick === "Grade"}
+          >
+            Grade
+          </TopBarTab>
+        </>
+      )}
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center gap-4">
+        {isGrading ? (
+          <>
+        <Button
+          primary
+          small
+          className="mr-4 w-20"
+          onClick={handleSaveGradeClick}
+          disabled={isLoading}
+        >
+          Save
+        </Button>
+        <Button
+          secondary
+          small
+          className="mr-4 w-20"
+          onClick={handleCancelGradeClick}
+        >
+          Close
+        </Button>
+          </>
+        ) : null}
+      </div>
+    </>
+  );
+
   return (
     <div className="flex h-[60px] flex-row items-center border-b border-fg-border bg-bg-soft">
       <div className="flex h-full flex-shrink-0 items-center">
@@ -307,7 +388,9 @@ function ClassTopBar() {
         ? assignmentContent
         : module === "Lecture"
           ? lectureContent
-          : null}
+          : module === "Grade"
+            ? gradingContent
+            : null}
     </div>
   );
 }

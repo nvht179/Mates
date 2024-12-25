@@ -1,30 +1,65 @@
 import Button from "../components/Button";
 import { GrTextAlignFull } from "react-icons/gr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../components/Input";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import DefaultAvatar from "../assets/default-avatar.png";
 import Textarea from "../components/TextArea";
-import { useViewGradeDetailsQuery } from "../store";
+import {
+  useViewGradeDetailsQuery,
+  useGradingAssignmentMutation,
+} from "../store";
 import { Grade } from "../interfaces/Grade";
 import { formatDate } from "../utils/date";
 
 function GradeDetailsPage() {
+  const navigate = useNavigate();
   const { state } = useLocation();
-  const { assignmentID, grade } = state as {
+  const { cla, assignmentID, grade } = state as {
     cla: ClassState;
     assignmentID: number;
-    grade: Grade
+    grade: Grade;
   };
   const defaultAvatar = DefaultAvatar;
 
-  const [feedback, setFeedback] = useState("");
-  const [score, setScore] = useState<number | null>(null);
-
-  const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({ assignmentID, personID: grade.personID });
+  
+  const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({
+    assignmentID,
+    personID: grade.personID,
+  });
   const gradeDetails = gradeDetailsQuery?.submissionDetail;
   const attachments = gradeDetailsQuery?.attachments || [];
+  
+  const [feedback, setFeedback] = useState(gradeDetails?.comment || "");
+  const [score, setScore] = useState<number | null>(gradeDetails?.grade100 || null);
+
+  const [gradingAssignment, { isSuccess: isGradingSuccess }] =
+    useGradingAssignmentMutation();
+
+  useEffect(() => {
+    const handleSaveGrading = () => {
+      gradingAssignment({
+        assignmentID: assignmentID,
+        personID: grade.personID,
+        grade100: score || 0,
+        comment: feedback,
+      });
+    };
+    window.addEventListener("SaveGrade", handleSaveGrading);
+    return () => {
+      window.removeEventListener("SaveGrade", handleSaveGrading);
+    };
+  }, [gradingAssignment, assignmentID, grade.personID, score, feedback]);
+
+  useEffect(() => {
+    if (isGradingSuccess) {
+      window.dispatchEvent(new CustomEvent("SaveGradingSuccess"));
+      navigate(`/class/${cla.code}/grade`, {
+        state: { ...state, module: "Grade", title: "Assignment", tab: "Grade" },
+      });
+    }
+  }, [isGradingSuccess, navigate, cla.code, state]);
 
   return (
     <div className="max-w">
