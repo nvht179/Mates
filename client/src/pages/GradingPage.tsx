@@ -25,8 +25,8 @@ function GradeDetailsPage() {
 
   
   const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({
-    assignmentID,
-    personID: grade.personID,
+    assignmentID: assignmentID.toString(),
+    personID: grade.personID.toString(),
   });
   const gradeDetails = gradeDetailsQuery?.submissionDetail;
   const attachments = gradeDetailsQuery?.attachments || [];
