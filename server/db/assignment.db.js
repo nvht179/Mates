@@ -3,6 +3,7 @@ const { ErrorHandler } = require("../helpers/error");
 const AttachmentDB = require("./attachment.db");
 const sequelize = require("../config/db");
 const { Comment, Reaction, Person, Attachment } = require("../entities");
+const GradeDB = require("./grade.db");
 
 class AssignmentDB {
   // Add new assignment with attachments
@@ -127,6 +128,9 @@ class AssignmentDB {
 
       // Remove associated attachments
       await AttachmentDB.removeAttachmentsByAssignmentId(assignmentId, { transaction });
+
+      // Remove the associated grades by assignmentID
+      await GradeDB.removeGradeByAssignmentID(assignmentId);
 
       // Remove the assignment itself
       await assignment.destroy({ transaction });

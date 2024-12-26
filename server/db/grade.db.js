@@ -88,6 +88,13 @@ class GradeDB {
       throw new ErrorHandler(err.statusCode, err.message);
     }
   };
+
+  removeGradeByAssignmentID = async (assignmentID) => {
+    const grades = await this.findAllSubmissionsAssignment(assignmentID);
+    for (const grade of grades) {
+      await grade.destroy();
+    }
+  };
 }
 
 module.exports = new GradeDB();
