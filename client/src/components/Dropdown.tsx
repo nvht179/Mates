@@ -46,14 +46,14 @@ function Dropdown({ options, value, onChanged }: DropdownProps) {
   return (
     <div ref={divEl} className="relative w-full">
       <div
-        className="flex cursor-pointer items-center justify-between rounded-md border border-fg-border p-2 shadow-sm"
+        className="flex cursor-pointer items-center justify-between border-fg-alt bg-fg-alt rounded-md border p-2 shadow-sm"
         onClick={handleClick}
       >
         {value || "Select..."}{" "}
         <GoChevronDown className="text-xl text-fg-soft" />
       </div>
       {isOpen && (
-        <div className="absolute top-full z-10 mt-1 w-full rounded-md border border-fg-border bg-bg-default pl-1 shadow-lg">
+        <div className="absolute top-full z-10 mt-1 w-full rounded-md border bg-bg-default pl-1 shadow-lg">
           {renderedOptions}
         </div>
       )}

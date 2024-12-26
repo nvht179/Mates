@@ -123,7 +123,7 @@ function LectureDetails() {
       <div className="flex w-full flex-row items-center">
         <LuPencil className="text-xl" />
         <Input
-          className="ml-4 w-full py-2"
+          className="ml-4 w-full py-2 border-fg-alt bg-bg-dark"
           onChange={(e) => handleTitleChange(e)}
           value={title}
           placeholder="Lecture title"
@@ -132,7 +132,7 @@ function LectureDetails() {
       <div className="mt-8 flex w-full flex-row items-start">
         <BiDetail className="mt-1 text-xl" />
         <Textarea
-          className="ml-4 h-44"
+          className="ml-4 h-44 border-fg-alt bg-fg-alt"
           onChange={(e) => handleContentChange(e)}
           value={content}
           placeholder="Add content"

@@ -129,7 +129,7 @@ function EventDetails() {
         <LuPencil className="mr-4 text-xl" />
         <Input
           placeholder="Event Title"
-          className="w-full"
+          className="w-full border-fg-alt bg-fg-alt"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -140,14 +140,14 @@ function EventDetails() {
           <div className="flex w-full flex-row items-center gap-4">
             <Input
               placeholder="Start Date"
-              className="flex-1"
+              className="flex-1 border-fg-alt bg-fg-alt"
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
             <Input
               placeholder="Start Time"
-              className="flex-1"
+              className="flex-1 border-fg-alt bg-fg-alt"
               type="time"
               value={startTime.slice(0, 5)} // Display only HH:MM
               onChange={(e) => setStartTime(e.target.value)}
@@ -155,14 +155,14 @@ function EventDetails() {
             <FaArrowRightLong className="mx-4 text-2xl font-thin" />
             <Input
               placeholder="End Date"
-              className="flex-1"
+              className="flex-1 border-fg-alt bg-fg-alt"
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
             <Input
               placeholder="End Time"
-              className="flex-1"
+              className="flex-1 border-fg-alt bg-fg-alt" 
               type="time"
               value={endTime.slice(0, 5)} // Display only HH:MM
               onChange={(e) => setEndTime(e.target.value)}
@@ -182,7 +182,7 @@ function EventDetails() {
             <BiDetail className="mr-4 mt-2 text-xl" />
             <Textarea
               placeholder="Description"
-              className="h-64"
+              className="h-64 border-fg-alt bg-fg-alt"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
