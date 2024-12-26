@@ -161,7 +161,7 @@ export default function EditClass() {
             <div className="flex items-center justify-between mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
                 <div className="flex items-center pr-20">
                     {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
-                    <LuPencilLine className="mx-4 text-2xl" />
+                    <LuPencilLine className="mx-4 ml-5 text-2xl" />
                     <Input
                         className="border-fg-alt bg-fg-alt w-full"
                         type="text"
@@ -188,9 +188,9 @@ export default function EditClass() {
             </div>
             <div className="mx-auto mr-20 pb-5 pl-10 pr-20">
                 {/* Class Code */}
-                <div className="mb-4 flex w-1/4 items-center">
+                <div className="mb-4 flex items-center w-1/4">
                     {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
-                    <IoMdCode className="mx-3 text-3xl" />
+                    <IoMdCode className="flex-none mx-3 text-3xl" />
                     <Input
                         className="border-fg-alt bg-fg-alt"
                         type="text"
@@ -206,7 +206,7 @@ export default function EditClass() {
                     {schedule.map((slot, index) => (
                         <div key={index} className="mb-2 flex items-center space-x-4">
                             {/* Day */}
-                            <FaRegClock className="ml-4 mr-1 text-5xl" />
+                            <FaRegClock className="flex-none ml-4 mr-1 text-xl" />
                             <select
                                 value={slot.day}
                                 onChange={(e) =>
@@ -237,7 +237,7 @@ export default function EditClass() {
                                 }
                                 className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
                             />
-                            <HiArrowLongRight className="h-auto text-8xl" />
+                            <HiArrowLongRight className="flex-none h-auto text-4xl" />
 
                             {/* End Time */}
                             <Input
@@ -298,7 +298,7 @@ export default function EditClass() {
                 {/* Frequency */}
                 <div className="mb-4 flex w-full items-center pr-20">
                     {/* <label className="block text-gray-700 mb-1">Frequency</label> */}
-                    <RxLoop className="ml-3 mr-4 text-2xl" />
+                    <RxLoop className="flex-none mx-4 text-2xl" />
                     <select
                         value={frequency}
                         onChange={(e) => setFrequency(e.target.value)}
@@ -313,7 +313,7 @@ export default function EditClass() {
                 {/* Description */}
                 <div className="mb-6 flex w-full items-center pr-20">
                     {/* <label className="block text-gray-700 mb-1">Description</label> */}
-                    <GrTextAlignFull className="ml-3 mr-4 text-2xl" />
+                    <GrTextAlignFull className="flex-none mx-4 text-2xl" />
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}

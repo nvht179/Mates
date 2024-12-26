@@ -154,9 +154,9 @@ export default function CreateClass() {
         <div className="mb-2 flex-col items-center pr-20">
           {/* <label className="block text-gray-700 mb-2">Schedule</label> */}
           {schedule.map((slot, index) => (
-            <div key={index} className="mb-2 flex items-center space-x-4 w-full">
+            <div key={index} className="mb-2 flex items-center gap-4 w-full">
               {/* Day */}
-              <FaRegClock className="ml-4 mr-1 text-5xl resize-none" />
+              <FaRegClock className="flex-none ml-4 mr-1 text-xl max-w" />
               <select
                 value={slot.day}
                 onChange={(e) =>
@@ -185,9 +185,9 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "startTime", e.target.value)
                 }
-                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-1 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
-              <HiArrowLongRight className="text-8xl" />
+              <HiArrowLongRight className="flex-none h-auto text-4xl" />
 
               {/* End Time */}
               <Input
@@ -196,7 +196,7 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "endTime", e.target.value)
                 }
-                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-1 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
 
               {/* Remove Time Slot */}
@@ -248,7 +248,7 @@ export default function CreateClass() {
         {/* Frequency */}
         <div className="mb-4 flex w-full items-center pr-20">
           {/* <label className="block text-gray-700 mb-1">Frequency</label> */}
-          <RxLoop className="ml-3 mr-4 text-2xl" />
+          <RxLoop className="flex-none ml-3 mr-4 text-2xl" />
           <select
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
@@ -263,7 +263,7 @@ export default function CreateClass() {
         {/* Description */}
         <div className="mb-6 flex w-full items-center pr-20">
           {/* <label className="block text-gray-700 mb-1">Description</label> */}
-          <GrTextAlignFull className="ml-3 mr-4 text-2xl" />
+          <GrTextAlignFull className="flex-none ml-3 mr-4 text-2xl" />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}

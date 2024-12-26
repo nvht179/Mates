@@ -187,7 +187,7 @@ export default function EditAssignment() {
       <div className="mb-6 flex items-center">
         <LuPencilLine className="mx-4 text-xl text-fg-soft" />
         <Input
-          className="bg-bg-dark"
+          className="bg-fg-alt border-fg-alt"
           type="text"
           value={assignmentTitle}
           placeholder="Assignment title"
@@ -199,7 +199,7 @@ export default function EditAssignment() {
       <div className="mb-6 flex items-center">
         <LuWeight className="mx-4 text-xl text-fg-soft" />
         <Input
-          className="bg-bg-dark"
+          className="bg-bg-dark border-fg-alt"
           type="number"
           value={weight}
           placeholder="Weight"
@@ -212,7 +212,7 @@ export default function EditAssignment() {
         {/* Start Day */}
         <FaRegClock className="ml-4 text-xl" />
         <Input
-          className="bg-bg-dark"
+          className="bg-bg-dark border-fg-alt"
           type="date"
           value={schedule.startDate}
           min={new Date().toISOString().slice(0, 10)}
@@ -221,7 +221,7 @@ export default function EditAssignment() {
 
         {/* Start Time */}
         <Input
-          className="bg-bg-dark"
+          className="bg-bg-dark border-fg-alt"
           type="time"
           value={schedule.startTime}
           min={
@@ -238,7 +238,7 @@ export default function EditAssignment() {
 
         {/* End Day */}
         <Input
-          className="bg-bg-dark"
+          className="bg-bg-dark border-fg-alt"
           type="date"
           value={schedule.endDate}
           min={schedule.startDate}
@@ -247,7 +247,7 @@ export default function EditAssignment() {
 
         {/* End Time */}
         <Input
-          className="bg-bg-dark"
+          className="bg-bg-dark border-fg-alt"
           type="time"
           value={schedule.endTime}
           min={
@@ -263,7 +263,7 @@ export default function EditAssignment() {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full rounded border-2 border-fg-border bg-bg-dark px-3 py-2 transition focus:border-b-primary-default focus:outline-none"
+          className="w-full rounded border-2 border-fg-alt bg-bg-dark px-3 py-2 transition focus:border-b-primary-default focus:outline-none"
           placeholder="Description"
           rows={4}
         />
