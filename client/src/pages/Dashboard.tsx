@@ -10,6 +10,7 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 function Dashboard() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const role = useSelector((state: RootState) => state.user.role);
 
   const user = useSelector((state: RootState) => state.user);
   const { data, isError, isLoading, error } = useViewAllClassesQuery({
@@ -34,13 +35,13 @@ function Dashboard() {
     <div>
       <div className="flex h-[60px] flex-row items-center justify-between">
         <p className="ml-8 text-lg font-bold text-fg-default">My classes</p>
-        <Button
+        {role === "Teacher" && <Button
           secondary
           onClick={handleCreateClass}
           className="mx-4 my-2 text-sm font-semibold text-fg-default"
         >
           Create Class
-        </Button>
+        </Button>}
       </div>
       <div className="border-b-2"></div>
       {isLoading ? (

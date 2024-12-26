@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import { useState, useEffect } from "react";
 import ClassInfo from "./ClassInfo";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 interface ClassCardListProps {
   classes: ClassState[];
@@ -12,6 +14,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
   const navigate = useNavigate();
   const [hoveredIcon, setHoveredIcon] = useState<string>("");
   const [classImages, setClassImages] = useState<{ [key: string]: string }>({});
+  const role = useSelector((state: RootState) => state.user.role);
 
   useEffect(() => {
     const images: { [key: string]: string } = {};
@@ -65,7 +68,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
             ></ClassInfo>
           </div>
 
-          <div
+          {role === "Teacher" && <div
             className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl"
             onMouseEnter={() => setHoveredIcon(`${cla.classID}_edit`)}
             onMouseLeave={() => setHoveredIcon("")}
@@ -76,7 +79,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
             ) : (
               <RiEditBoxLine className="text-fg-soft" />
             )}
-          </div>
+          </div>}
         </div>
       </div>
     );

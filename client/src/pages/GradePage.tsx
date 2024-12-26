@@ -9,9 +9,13 @@ import { useGetAllAssignmentsQuery } from "../store";
 import {
   useLazyViewGradeAssignmentByTeacherQuery,
   useLazyViewAllGradeInClassQuery,
+  useLazyViewSubmissionByStudentQuery,
+  useCheckUserByEmailQuery,
 } from "../store";
 import Dropdown from "../components/Dropdown";
 import { formatDate } from "../utils/date";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 interface ConfigItem {
   label: string;
@@ -29,6 +33,7 @@ function GradePage() {
     cla: ClassState;
     assignmentID: number | null;
   };
+  const user = useSelector((state: RootState) => state.user);
 
   const [buttonClicked, setButtonClicked] =
     useState<ButtonClicked>("GradeList");
@@ -48,6 +53,13 @@ function GradePage() {
     viewAllGradeInClassQuery,
     { data: gradesInClass, isLoading: loadingGradesInClass },
   ] = useLazyViewAllGradeInClassQuery();
+  const [
+    viewAllSubmissionByStudent,
+    { data: submissionByStudent, isLoading: isLoadingSubmissionByStudent },
+  ] = useLazyViewSubmissionByStudentQuery();
+  const { data: childData, isError: childError } = useCheckUserByEmailQuery({
+    email: user?.childEmail || "",
+  });
 
   const assignments = assignmentQuery?.data || [];
   const assignmentTitles = assignments.map((assignment) => assignment.title);
@@ -81,7 +93,46 @@ function GradePage() {
     gradesQuery,
   ]);
 
+  useEffect(() => {
+    if (user.role === "Student") {
+      viewAllSubmissionByStudent({
+        personID: user?.id ?? 0,
+        classID: cla.classID,
+      });
+    } else if (user.role === "Parent" && !childError) {
+      viewAllSubmissionByStudent({
+        personID: childData?.user.id ?? 0,
+        classID: cla.classID,
+      });
+      const grades = gradesInClass?.allSubmissionInClass || [];
+      grades.sort((a, b) => a.gradeId - b.gradeId);
+      setGrades(grades);
+    }
+  }, [
+    childData?.user.id,
+    childError,
+    cla.classID,
+    gradesInClass?.allSubmissionInClass,
+    isLoadingSubmissionByStudent,
+    submissionByStudent,
+    user?.id,
+    user.role,
+    viewAllSubmissionByStudent,
+  ]);
+
   const handleNavigateGradeDetailsClick = (grade: Grade) => {
+    if (user.role === "Student" || user.role === "Parent") {
+      navigate(`/class/${cla.code}/grade-details`, {
+        state: {
+          ...state,
+          title: "Assignment",
+          module: "Grade",
+          display: "Grade details",
+          grade: grade,
+        },
+      });
+      return;
+    }
     navigate(`/class/${cla.code}/grade-details`, {
       state: {
         ...state,
@@ -175,20 +226,24 @@ function GradePage() {
         >
           Grade List
         </TopBarTab>
-        <TopBarTab
-          className="border-b-fg-softer"
-          onClick={handleClickToGrade}
-          active={buttonClicked === "ToGrade"}
-        >
-          To Grade
-        </TopBarTab>
-        <TopBarTab
-          className="border-b-fg-softer"
-          onClick={handleClickGraded}
-          active={buttonClicked === "Graded"}
-        >
-          Graded
-        </TopBarTab>
+        {user.role === "Teacher" && (
+          <>
+            <TopBarTab
+              className="border-b-fg-softer"
+              onClick={handleClickToGrade}
+              active={buttonClicked === "ToGrade"}
+            >
+              To Grade
+            </TopBarTab>
+            <TopBarTab
+              className="border-b-fg-softer"
+              onClick={handleClickGraded}
+              active={buttonClicked === "Graded"}
+            >
+              Graded
+            </TopBarTab>
+          </>
+        )}
       </div>
       <div className="mb-4">
         <div className="flex flex-row items-center justify-between space-x-4">

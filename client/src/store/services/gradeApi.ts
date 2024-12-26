@@ -141,7 +141,7 @@ export const {
   useLazyViewGradeAssignmentByTeacherQuery,
   useLazyViewAllGradeInClassQuery,
   useViewGradeDetailsQuery,
-  useViewSubmissionByStudentQuery,
+  useLazyViewSubmissionByStudentQuery,
   useGradingAssignmentMutation,
 } = gradeApi;
 export default gradeApi;

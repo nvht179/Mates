@@ -5,14 +5,13 @@ import authApi from "./services/authApi";
 import userApi from "./services/userApi";
 import classApi from "./services/classApi";
 import assignmentApi from "./services/assignmentApi";
-import gradeApi from "./services/GradeApi";
+import gradeApi from "./services/gradeApi";
 import postApi from "./services/postApi";
 import reactionApi from "./services/reactionApi";
 import lectureApi from "./services/lectureApi";
 import eventApi from "./services/eventApi";
 import commentApi from "./services/commentApi";
 import notiApi from "./services/notiApi";
-import gradeApi from "./services/gradeApi";
 
 export const store = configureStore({
   reducer: {
@@ -59,6 +58,5 @@ export * from "./services/commentApi";
 export * from "./services/lectureApi";
 export * from "./services/eventApi";
 export * from "./services/assignmentApi";
-export * from "./services/GradeApi";
 export * from "./services/notiApi";
 export * from "./slices/userSlice";

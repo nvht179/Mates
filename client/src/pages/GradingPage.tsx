@@ -2,16 +2,18 @@ import Button from "../components/Button";
 import { GrTextAlignFull } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import Input from "../components/Input";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import DefaultAvatar from "../assets/default-avatar.png";
 import Textarea from "../components/TextArea";
 import {
   useViewGradeDetailsQuery,
   useGradingAssignmentMutation,
+  RootState,
 } from "../store";
 import { Grade } from "../interfaces/Grade";
 import { formatDate } from "../utils/date";
+import { useSelector } from "react-redux";
 
 function GradeDetailsPage() {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ function GradeDetailsPage() {
     grade: Grade;
   };
   const defaultAvatar = DefaultAvatar;
+  const role = useSelector((state: RootState) => state.user.role);
 
   const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({
     assignmentID: grade.assignmentID.toString(),
@@ -28,9 +31,11 @@ function GradeDetailsPage() {
   });
   const gradeDetails = gradeDetailsQuery?.submissionDetail;
   const attachments = gradeDetailsQuery?.attachments || [];
-  
+
   const [feedback, setFeedback] = useState(gradeDetails?.comment || "");
-  const [score, setScore] = useState<number | null>(gradeDetails?.grade100 || null);
+  const [score, setScore] = useState<number | null>(
+    gradeDetails?.grade100 || null,
+  );
 
   const [gradingAssignment, { isSuccess: isGradingSuccess }] =
     useGradingAssignmentMutation();
@@ -89,17 +94,23 @@ function GradeDetailsPage() {
 
           <div className="max-w flex items-center">
             <h1 className="mr-12 pr-5 font-semibold">Point</h1>
-            <Input
-              className="w-16 border-fg-alt bg-fg-alt text-left"
-              type="number"
-              value={score || ""}
-              onChange={(e) => {
-                const value = e.target.value ? parseInt(e.target.value) : null;
-                if (value === null || (value >= 0 && value <= 100)) {
-                  setScore(value);
-                }
-              }}
-            />
+            {role === "Teacher" ? (
+              <Input
+                className="w-16 border-fg-alt bg-fg-alt text-left"
+                type="number"
+                value={score || ""}
+                onChange={(e) => {
+                  const value = e.target.value
+                    ? parseInt(e.target.value)
+                    : null;
+                  if (value === null || (value >= 0 && value <= 100)) {
+                    setScore(value);
+                  }
+                }}
+              />
+            ) : (
+              <p className="font-semibold">{gradeDetails?.grade100}</p>
+            )}
             <h1 className="font-semibold">/100</h1>
           </div>
         </div>
@@ -124,13 +135,17 @@ function GradeDetailsPage() {
       {/* Description */}
       <div className="my-10 flex px-10">
         <GrTextAlignFull className="mr-10 mt-2 flex-shrink-0 text-xl" />
-        <Textarea
-          value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
-          className="ml-11 w-full bg-fg-alt p-2 px-3"
-          placeholder="Feed back for this submission"
-          rows={4}
-        />
+        {role === "Teacher" ? (
+          <Textarea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            className="ml-11 w-full bg-fg-alt p-2 px-3"
+            placeholder="Feed back for this submission"
+            rows={4}
+          />
+        ) : (
+          <p className="ml-11 text">{gradeDetails?.comment}</p>
+        )}
       </div>
     </div>
   );

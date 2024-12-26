@@ -1,9 +1,10 @@
 const express = require("express");
 const GradeController = require("../controllers/grade.controller");
 const upload = require("../middleware/upload.middleware");
-
+const verifyToken = require("../middleware/verifyToken.middleware");
 const router = express.Router();
 
+router.use(verifyToken);
 router.post('/submit-assignment', upload, GradeController.submitAssignment);
 router.get('/view-submission-student/:personID/:classID', GradeController.viewGradesInThatAssignmentStudent);
 router.get('/view-grade-details/:personID/:assignmentID', GradeController.viewGradeDetailStudent);

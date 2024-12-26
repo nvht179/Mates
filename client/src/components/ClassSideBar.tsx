@@ -7,6 +7,8 @@ import ClassMemberList from "./ClassMemberList";
 import AddMemberDropDown from "./AddMemberDropDown";
 import ClassSettingsDropDown from "./ClassSettingsDropDown";
 import ClassInfo from "./ClassInfo";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
@@ -16,6 +18,7 @@ function ClassSideBar() {
   const { className, code, classID } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
   const [infoHovered, setInfoHovered] = useState("");
+  const role = useSelector((state: RootState) => state.user.role);
 
   useEffect(() => {
     // Then handle specific routes
@@ -102,33 +105,35 @@ function ClassSideBar() {
         </div>
       </div>
       <div className="mx-1 mt-4 flex h-full flex-col">
-        <ClassSideBarTab
+        {role !== "Parent" && <ClassSideBarTab
           onClick={handleClickLecture}
           active={buttonClicked === "lecture"}
         >
           Lecture
-        </ClassSideBarTab>
+        </ClassSideBarTab>}
         <ClassSideBarTab
           onClick={handleClickAssignment}
           active={buttonClicked === "assignment"}
         >
           Assignment
         </ClassSideBarTab>
-        <ClassSideBarTab
+        {role !== "Parent" && <ClassSideBarTab
           onClick={handleClickDiscussion}
           active={buttonClicked === "discussion"}
         >
           Discussion
-        </ClassSideBarTab>
+        </ClassSideBarTab>}
         <ClassMemberList type="students" id={String(cla.classID)} />
         <ClassMemberList type="teachers" id={String(cla.classID)} />
       </div>
-      <div className="mx-4 flex flex-row items-center border-t border-fg-border px-1 py-1">
-        <AddMemberDropDown memberType="student" classID={String(classID)} />
-        <AddMemberDropDown memberType="teacher" classID={String(classID)} />
-        <div className="mr-auto" />
-        <ClassSettingsDropDown cla={cla} image={image} />
-      </div>
+      {role === "Teacher" && (
+        <div className="mx-4 flex flex-row items-center border-t border-fg-border px-1 py-1">
+          <AddMemberDropDown memberType="student" classID={String(classID)} />
+          <AddMemberDropDown memberType="teacher" classID={String(classID)} />
+          <div className="mr-auto" />
+          <ClassSettingsDropDown cla={cla} image={image} />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import TopBarTab from "./TopBarTab";
@@ -32,6 +32,19 @@ function ClassTopBar() {
   const [assignmentButtonClick, setAssignmentButtonClick] =
     useState<AssignmentTopBarTab>("Classwork");
 
+  const handleClickGrade = useCallback(() => {
+    navigate(`/class/${code}/grade`, {
+      state: {
+        ...state,
+        module: "Grade",
+        title: "Assignment",
+        assignmentID: null,
+      },
+    });
+    setAssignmentButtonClick("Grade");
+    setIsGrading(false);
+  }, [navigate, code, state]);
+
   // safe check for manual url change
   // only a workaround, because the required state passed from the previous page is missing
   useEffect(() => {
@@ -39,6 +52,10 @@ function ClassTopBar() {
     if (pathname === `/class/${code}/assignment`) {
       setIsCreatingAssignment(false);
       setIsEditingAssignment(false);
+      setAssignmentButtonClick("Classwork");
+      if (role === "Parent") {
+        handleClickGrade();
+      }
       return;
     }
 
@@ -51,14 +68,21 @@ function ClassTopBar() {
       setIsCreatingAssignment(false);
       setIsEditingAssignment(true);
     }
-    
+
     if (pathname.includes("grade-details")) {
       setIsGrading(true);
     }
     if (pathname.includes("grade")) {
       setAssignmentButtonClick("Grade");
     }
-  }, [pathname, code, isCreatingAssignment, isEditingAssignment]);
+  }, [
+    pathname,
+    code,
+    isCreatingAssignment,
+    isEditingAssignment,
+    role,
+    handleClickGrade,
+  ]);
 
   const toggleCreateAssignment = () => {
     const newState = !isCreatingAssignment;
@@ -84,19 +108,6 @@ function ClassTopBar() {
       state: { ...state, module: "Assignment", title: "Assignment" },
     });
     setAssignmentButtonClick("Classwork");
-  };
-
-  const handleClickGrade = () => {
-    navigate(`/class/${code}/grade`, {
-      state: {
-        ...state,
-        module: "Grade",
-        title: "Assignment",
-        assignmentID: null,
-      },
-    });
-    setAssignmentButtonClick("Grade");
-    setIsGrading(false)
   };
 
   useEffect(() => {
@@ -192,29 +203,29 @@ function ClassTopBar() {
 
   const assignmentContent = (
     <>
-      {(isCreatingAssignment || isEditingAssignment) ? (
-      <TopBarTab active className="ml-4 pt-1">
-        Detail
-      </TopBarTab>
+      {isCreatingAssignment || isEditingAssignment ? (
+        <TopBarTab active className="ml-4 pt-1">
+          Detail
+        </TopBarTab>
       ) : (
-      <>
-        {role !== "Parent" && (
+        <>
+          {role !== "Parent" && (
+            <TopBarTab
+              className="ml-4 pt-1"
+              onClick={handleClickClasswork}
+              active={assignmentButtonClick === "Classwork"}
+            >
+              Classwork
+            </TopBarTab>
+          )}
           <TopBarTab
             className="ml-4 pt-1"
-            onClick={handleClickClasswork}
-            active={assignmentButtonClick === "Classwork"}
+            onClick={handleClickGrade}
+            active={assignmentButtonClick === "Grade"}
           >
-            Classwork
+            Grade
           </TopBarTab>
-        )}
-        <TopBarTab
-          className="ml-4 pt-1"
-          onClick={handleClickGrade}
-          active={assignmentButtonClick === "Grade"}
-        >
-          Grade
-        </TopBarTab>
-      </>
+        </>
       )}
       <div className="h-full w-full" />
       <div className="mr-4 flex h-full items-center justify-center gap-4">
@@ -290,15 +301,17 @@ function ClassTopBar() {
             </Button>
           </>
         ) : (
-          <Button
-            secondary
-            small
-            className="mr-4"
-            onClick={toggleCreateLecture}
-          >
-            <RiEditBoxFill className="mr-2" />
-            <label className="truncate text-sm">New Lecture</label>
-          </Button>
+          role === "Teacher" && (
+            <Button
+              secondary
+              small
+              className="mr-4"
+              onClick={toggleCreateLecture}
+            >
+              <RiEditBoxFill className="mr-2" />
+              <label className="truncate text-sm">New Lecture</label>
+            </Button>
+          )
         )}
       </div>
     </>
@@ -312,7 +325,16 @@ function ClassTopBar() {
 
   const handleCancelGradeClick = () => {
     setIsGrading(false);
-    handleClickGrade();
+    navigate(`/class/${code}/grade`, {
+      state: {
+        ...state,
+        module: "Grade",
+        title: "Assignment",
+        assignmentID: null,
+      },
+    });
+    setAssignmentButtonClick("Grade");
+    setIsGrading(false);
   };
 
   useEffect(() => {
@@ -328,34 +350,34 @@ function ClassTopBar() {
   const gradingContent = (
     <>
       {isGrading ? (
-      <TopBarTab active className="ml-4 pt-1">
-        Detail
-      </TopBarTab>
+        <TopBarTab active className="ml-4 pt-1">
+          Detail
+        </TopBarTab>
       ) : (
-      <>
-        {role !== "Parent" && (
+        <>
+          {role !== "Parent" && (
+            <TopBarTab
+              className="ml-4 pt-1"
+              onClick={handleClickClasswork}
+              active={assignmentButtonClick === "Classwork"}
+            >
+              Classwork
+            </TopBarTab>
+          )}
           <TopBarTab
             className="ml-4 pt-1"
-            onClick={handleClickClasswork}
-            active={assignmentButtonClick === "Classwork"}
+            onClick={handleClickGrade}
+            active={assignmentButtonClick === "Grade"}
           >
-            Classwork
+            Grade
           </TopBarTab>
-        )}
-        <TopBarTab
-          className="ml-4 pt-1"
-          onClick={handleClickGrade}
-          active={assignmentButtonClick === "Grade"}
-        >
-          Grade
-        </TopBarTab>
-      </>
+        </>
       )}
       <div className="h-full w-full" />
       <div className="mr-4 flex h-full items-center gap-4">
         {isGrading && (
           <>
-            <Button
+            {role === "Teacher" && <Button
               primary
               small
               className="mr-4 w-20"
@@ -363,7 +385,7 @@ function ClassTopBar() {
               disabled={isLoading}
             >
               Save
-            </Button>
+            </Button>}
             <Button
               secondary
               small
