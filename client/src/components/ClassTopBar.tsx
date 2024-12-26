@@ -30,9 +30,7 @@ function ClassTopBar() {
   const [isGrading, setIsGrading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [assignmentButtonClick, setAssignmentButtonClick] =
-    useState<AssignmentTopBarTab>(tab || "Classwork");
-
-  console.log("path: ", pathname);
+    useState<AssignmentTopBarTab>("Classwork");
 
   // safe check for manual url change
   // only a workaround, because the required state passed from the previous page is missing
@@ -43,7 +41,7 @@ function ClassTopBar() {
       setIsEditingAssignment(false);
       return;
     }
-  
+
     // Then handle specific routes
     if (pathname.includes("create-assignment") && !isCreatingAssignment) {
       setIsCreatingAssignment(true);
@@ -52,6 +50,13 @@ function ClassTopBar() {
     if (pathname.includes("edit-assignment") && !isEditingAssignment) {
       setIsCreatingAssignment(false);
       setIsEditingAssignment(true);
+    }
+    
+    if (pathname.includes("grade-details")) {
+      setIsGrading(true);
+    }
+    if (pathname.includes("grade")) {
+      setAssignmentButtonClick("Grade");
     }
   }, [pathname, code, isCreatingAssignment, isEditingAssignment]);
 
@@ -83,9 +88,15 @@ function ClassTopBar() {
 
   const handleClickGrade = () => {
     navigate(`/class/${code}/grade`, {
-      state: { ...state, module: "Grade", title: "Assignment", assignmentID: null},
+      state: {
+        ...state,
+        module: "Grade",
+        title: "Assignment",
+        assignmentID: null,
+      },
     });
     setAssignmentButtonClick("Grade");
+    setIsGrading(false)
   };
 
   useEffect(() => {
@@ -181,14 +192,13 @@ function ClassTopBar() {
 
   const assignmentContent = (
     <>
-      {role === "Teacher" ? (
-        (isCreatingAssignment || isEditingAssignment) && (
-          <TopBarTab active className="ml-4 pt-1">
-            Detail
-          </TopBarTab>
-        )
+      {(isCreatingAssignment || isEditingAssignment) ? (
+      <TopBarTab active className="ml-4 pt-1">
+        Detail
+      </TopBarTab>
       ) : (
-        <>
+      <>
+        {role !== "Parent" && (
           <TopBarTab
             className="ml-4 pt-1"
             onClick={handleClickClasswork}
@@ -196,14 +206,15 @@ function ClassTopBar() {
           >
             Classwork
           </TopBarTab>
-          <TopBarTab
-            className="ml-4 pt-1"
-            onClick={handleClickGrade}
-            active={assignmentButtonClick === "Grade"}
-          >
-            Grade
-          </TopBarTab>
-        </>
+        )}
+        <TopBarTab
+          className="ml-4 pt-1"
+          onClick={handleClickGrade}
+          active={assignmentButtonClick === "Grade"}
+        >
+          Grade
+        </TopBarTab>
+      </>
       )}
       <div className="h-full w-full" />
       <div className="mr-4 flex h-full items-center justify-center gap-4">
@@ -317,11 +328,12 @@ function ClassTopBar() {
   const gradingContent = (
     <>
       {isGrading ? (
-        <TopBarTab active className="ml-4 pt-1">
-          Details
-        </TopBarTab>
+      <TopBarTab active className="ml-4 pt-1">
+        Detail
+      </TopBarTab>
       ) : (
-        <>
+      <>
+        {role !== "Parent" && (
           <TopBarTab
             className="ml-4 pt-1"
             onClick={handleClickClasswork}
@@ -329,18 +341,19 @@ function ClassTopBar() {
           >
             Classwork
           </TopBarTab>
-          <TopBarTab
-            className="ml-4 pt-1"
-            onClick={handleClickGrade}
-            active={assignmentButtonClick === "Grade"}
-          >
-            Grade
-          </TopBarTab>
-        </>
+        )}
+        <TopBarTab
+          className="ml-4 pt-1"
+          onClick={handleClickGrade}
+          active={assignmentButtonClick === "Grade"}
+        >
+          Grade
+        </TopBarTab>
+      </>
       )}
       <div className="h-full w-full" />
       <div className="mr-4 flex h-full items-center gap-4">
-        {isGrading ? (
+        {isGrading && (
           <>
             <Button
               primary
@@ -360,7 +373,7 @@ function ClassTopBar() {
               Close
             </Button>
           </>
-        ) : null}
+        )}
       </div>
     </>
   );

@@ -28,6 +28,12 @@ function ClassSideBar() {
     if (pathname.includes("lecture")) {
       setButtonClicked("lecture");
     }
+    if (pathname.includes("grade-details")) {
+      setButtonClicked("assignment");
+    }
+    if (pathname.includes("grade")) {
+      setButtonClicked("assignment");
+    }
   }, [pathname]);
 
   const navigate = useNavigate();
