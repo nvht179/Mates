@@ -1,7 +1,7 @@
 import { MdOutlineSchool, MdSchool } from "react-icons/md";
 import { TiCalendar, TiCalendarOutline } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import SideBarTab from "./SideBarTab.tsx";
 
 type buttonClicked = "class" | "calendar";
@@ -12,6 +12,14 @@ export default function SideBar() {
     null,
   );
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Then handle specific routes
+    if (pathname.includes("calendar")) {
+      setButtonClicked("calendar");
+    }
+  }, [pathname]);
 
   const handleClickClass = () => {
     navigate("/");

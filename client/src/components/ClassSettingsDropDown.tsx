@@ -41,6 +41,8 @@ const ClassSettingsDropDown = ({
     setIsOpen((prev) => !prev);
   };
 
+  console.log("state huhu: ", state);
+
   const handleRemove = () => {
     removeClass(cla.classID.toString());
     navigate("/");

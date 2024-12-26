@@ -1,22 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClassSideBarTab from "./ClassSideBarTab";
 import { ClassState } from "../interfaces/Class";
 import ClassMemberList from "./ClassMemberList";
 import AddMemberDropDown from "./AddMemberDropDown";
-import { MdInfo, MdInfoOutline } from "react-icons/md";
 import ClassSettingsDropDown from "./ClassSettingsDropDown";
+import ClassInfo from "./ClassInfo";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
 function ClassSideBar() {
-  const { state } = useLocation();
+  const { state, pathname } = useLocation();
   const { cla, image } = state as { cla: ClassState; image: string };
   const { className, code, classID } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
+  const [infoHovered, setInfoHovered] = useState("");
 
-  const [infoHovered, setInfoHovered] = useState(false);
+  useEffect(() => {
+    // Then handle specific routes
+    if (pathname.includes("assignment")) {
+      setButtonClicked("assignment");
+    }
+    if (pathname.includes("discussion")) {
+      setButtonClicked("discussion");
+    }
+    if (pathname.includes("lecture")) {
+      setButtonClicked("lecture");
+    }
+  }, [pathname]);
 
   const navigate = useNavigate();
   const handleClickAllClasses = () => {
@@ -74,16 +86,13 @@ function ClassSideBar() {
             </p>
           </div>
         </div>
-        <div
-          className="mr-6 flex flex-row items-center"
-          onMouseEnter={() => setInfoHovered(true)}
-          onMouseLeave={() => setInfoHovered(false)}
-        >
-          {infoHovered ? (
-            <MdInfo className="text-xl text-primary-default active:opacity-30" />
-          ) : (
-            <MdInfoOutline className="text-xl text-fg-softer active:opacity-30" />
-          )}
+        <div className="mr-4">
+          <ClassInfo
+            cla={cla}
+            hoveredIcon={infoHovered}
+            onMouseEnter={() => setInfoHovered(`${cla.classID}_info`)}
+            onMouseLeave={() => setInfoHovered("")}
+          ></ClassInfo>
         </div>
       </div>
       <div className="mx-1 mt-4 flex h-full flex-col">

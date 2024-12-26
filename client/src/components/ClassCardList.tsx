@@ -1,4 +1,3 @@
-import { MdInfo, MdInfoOutline } from "react-icons/md";
 import { RiEditBoxFill, RiEditBoxLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
@@ -29,6 +28,12 @@ function ClassCardList({ classes }: ClassCardListProps) {
     });
   };
 
+  const handleEditClassClick = (cla: ClassState, image: string) => {
+    navigate(`/class/${cla.code}/edit-class`, {
+      state: { cla, title: "Edit Class", image },
+    });
+  };
+
   const renderedClassCard = classes.map((cla: ClassState) => {
     const randomImage = classImages[cla.classID];
 
@@ -51,27 +56,25 @@ function ClassCardList({ classes }: ClassCardListProps) {
           </p>
         </div>
         <div className="text flex flex-row items-center">
-          <ClassInfo 
-            cla={cla}
-            className="ml-0.5 mr-4 mt-4 cursor-pointer text-2xl font-light text-fg-soft hover:text-primary-default"
-            onMouseEnter={() => setHoveredIcon(`${cla.classID}_info`)}
-            onMouseLeave={() => setHoveredIcon("")}
-          >
-            {hoveredIcon === `${cla.classID}_info` ? (
-              <MdInfo className="text-primary-default"/>
-            ) : (
-              <MdInfoOutline className="text-fg-soft"/>
-            )}
-          </ClassInfo>
+          <div className="ml-0.5 mr-4 mt-3 pt-1">
+            <ClassInfo
+              cla={cla}
+              hoveredIcon={hoveredIcon}
+              onMouseEnter={() => setHoveredIcon(`${cla.classID}_info`)}
+              onMouseLeave={() => setHoveredIcon("")}
+            ></ClassInfo>
+          </div>
+
           <div
             className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl"
             onMouseEnter={() => setHoveredIcon(`${cla.classID}_edit`)}
             onMouseLeave={() => setHoveredIcon("")}
+            onClick={() => handleEditClassClick(cla, randomImage)}
           >
             {hoveredIcon === `${cla.classID}_edit` ? (
-              <RiEditBoxFill className="text-primary-default"/>
+              <RiEditBoxFill className="text-primary-default" />
             ) : (
-              <RiEditBoxLine className="text-fg-soft"/>
+              <RiEditBoxLine className="text-fg-soft" />
             )}
           </div>
         </div>
