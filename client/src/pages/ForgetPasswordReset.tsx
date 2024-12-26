@@ -98,7 +98,7 @@ export default function ForgetPasswordReset() {
         <Input
           placeholder={DATA.inputs[0].placeholder}
           autoFocus
-          className="mb-2"
+          className="mb-2 w-full"
           onChange={handleChangePassword}
           type="password"
         />
@@ -107,7 +107,7 @@ export default function ForgetPasswordReset() {
         <p className="mx-1 mb-2 mt-1 text-sm">{DATA.inputs[1].description}</p>
         <Input
           placeholder={DATA.inputs[1].placeholder}
-          className="mb-2"
+          className="mb-2 w-full"
           onChange={handleChangePasswordConfirm}
           type="password"
         />

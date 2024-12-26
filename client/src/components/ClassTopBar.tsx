@@ -1,71 +1,115 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import TopBarTab from "./TopBarTab";
 import Button from "./Button";
 import { RiEditBoxFill } from "react-icons/ri";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
-type buttonClicked = "classwork" | "grade";
+type AssignmentTopBarTab = "Classwork" | "Grade";
+type Module = "Assignment" | "Lecture" | "Discussion" | "Grade";
 
 function ClassTopBar() {
-  const { state } = useLocation();
-  const { cla, image, title, display } = state as {
+  const role = useSelector((state: RootState) => state.user.role);
+  const { state, pathname } = useLocation();
+  const { cla, image, module, title, display, tab } = state as {
     cla: ClassState;
     image: string;
+    module: Module;
     title: string;
     display: string | null;
+    tab: AssignmentTopBarTab | null;
   };
   const { className, code } = cla;
-
-  const [buttonClicked, setButtonClicked] =
-    useState<buttonClicked>("classwork");
   const navigate = useNavigate();
+
+  const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
+  const [isEditingAssignment, setIsEditingAssignment] = useState(false);
+  const [isCreatingLecture, setIsCreatingLecture] = useState(false);
+  const [isGrading, setIsGrading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [assignmentButtonClick, setAssignmentButtonClick] =
+    useState<AssignmentTopBarTab>("Classwork");
+
+  const handleClickGrade = useCallback(() => {
+    navigate(`/class/${code}/grade`, {
+      state: {
+        ...state,
+        module: "Grade",
+        title: "Assignment",
+        assignmentID: null,
+      },
+    });
+    setAssignmentButtonClick("Grade");
+    setIsGrading(false);
+  }, [navigate, code, state]);
+
+  // safe check for manual url change
+  // only a workaround, because the required state passed from the previous page is missing
+  useEffect(() => {
+    // Explicitly handle the base assignment route first
+    if (pathname === `/class/${code}/assignment`) {
+      setIsCreatingAssignment(false);
+      setIsEditingAssignment(false);
+      setAssignmentButtonClick("Classwork");
+      if (role === "Parent") {
+        handleClickGrade();
+      }
+      return;
+    }
+
+    // Then handle specific routes
+    if (pathname.includes("create-assignment") && !isCreatingAssignment) {
+      setIsCreatingAssignment(true);
+      setIsEditingAssignment(false);
+    }
+    if (pathname.includes("edit-assignment") && !isEditingAssignment) {
+      setIsCreatingAssignment(false);
+      setIsEditingAssignment(true);
+    }
+
+    if (pathname.includes("grade-details")) {
+      setIsGrading(true);
+    }
+    if (pathname.includes("grade")) {
+      setAssignmentButtonClick("Grade");
+    }
+  }, [
+    pathname,
+    code,
+    isCreatingAssignment,
+    isEditingAssignment,
+    role,
+    handleClickGrade,
+  ]);
+
+  const toggleCreateAssignment = () => {
+    const newState = !isCreatingAssignment;
+    setIsCreatingAssignment(newState);
+    if (newState) {
+      navigate(`/class/${code}/create-assignment`, {
+        state: { ...state, module: "Assignment", title: "New Assignment" },
+      });
+    } else {
+      handleClickClasswork();
+    }
+  };
+
+  const handleCancelEditAssignment = () => {
+    setIsEditingAssignment(false);
+    navigate(`/class/${code}/assignment`, {
+      state: { ...state, module: "Assignment", title: "Assignment" },
+    });
+  };
 
   const handleClickClasswork = () => {
     navigate(`/class/${code}/assignment`, {
-      state: { ...state, title: "Assignment" },
+      state: { ...state, module: "Assignment", title: "Assignment" },
     });
-    setButtonClicked("classwork");
-  };
-  const handleClickGrade = () => {
-    navigate(`/class/${code}/grade`, {
-      state: { ...state, title: "Assignment" },
-    });
-    setButtonClicked("grade");
+    setAssignmentButtonClick("Classwork");
   };
 
-  const assignmentContent = (
-    <>
-      <div className="flex h-full items-center">
-        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
-          {title}
-        </h1>
-      </div>
-      <TopBarTab
-        className="ml-4 pt-1"
-        onClick={handleClickClasswork}
-        active={buttonClicked === "classwork"}
-      >
-        Classwork
-      </TopBarTab>
-      <TopBarTab
-        className="ml-4 pt-1"
-        onClick={handleClickGrade}
-        active={buttonClicked === "grade"}
-      >
-        Grade
-      </TopBarTab>
-      <div className="h-full w-full" />
-      <div className="flex h-full items-center">
-        <Button className="mr-4" secondary>
-          <RiEditBoxFill className="mr-2" />
-          <label className="truncate text-sm">New Assignment</label>
-        </Button>
-      </div>
-    </>
-  );
-
-  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const handleSaveSuccess = () => {
       setIsLoading(false);
@@ -75,70 +119,307 @@ function ClassTopBar() {
       window.removeEventListener("SaveLectureSuccess", handleSaveSuccess);
     };
   }, []);
+
+  useEffect(() => {
+    const handleEditSuccess = () => {
+      setIsLoading(false);
+    };
+    window.addEventListener("EditAssignmentSuccess", handleEditSuccess);
+    return () => {
+      window.removeEventListener("EditAssignmentSuccess", handleEditSuccess);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleLoadingChange = (e: CustomEvent) => {
+      const isLoading = e.detail.isLoading;
+      setIsLoading(isLoading);
+    };
+
+    document.addEventListener(
+      "AssignmentLoadingStateChange",
+      handleLoadingChange as EventListener,
+    );
+
+    document.addEventListener(
+      "EditAssignmentLoadingStateChange",
+      handleLoadingChange as EventListener,
+    );
+
+    return () => {
+      document.removeEventListener(
+        "AssignmentLoadingStateChange",
+        handleLoadingChange as EventListener,
+      );
+      document.removeEventListener(
+        "EditAssignmentLoadingStateChange",
+        handleLoadingChange as EventListener,
+      );
+    };
+  }, []);
+
   const handleSaveLectureClick = () => {
     setIsLoading(true);
     const eventSaveLecture = new CustomEvent("saveLecture");
     window.dispatchEvent(eventSaveLecture);
   };
 
-  const handleCancelLectureClick = () => {
-    navigate(`/class/${code}/lecture`, {
-      state: { ...state, title: "Lecture", display: null },
-    });
+  const handleSaveAssignmentClick = () => {
+    setIsLoading(true);
+    const eventSaveAssignment = new CustomEvent("SaveAssignment");
+    window.dispatchEvent(eventSaveAssignment);
   };
+
+  const handleSaveEditAssignmentClick = () => {
+    setIsLoading(true);
+    const eventSaveEditAssignment = new CustomEvent("SaveEditAssignment");
+    window.dispatchEvent(eventSaveEditAssignment);
+  };
+
+  const toggleCreateLecture = () => {
+    const newState = !isCreatingLecture;
+    setIsCreatingLecture(newState);
+    if (newState) {
+      navigate(`/class/${code}/lecture-details`, {
+        state: {
+          ...state,
+          title: "Lecture",
+          module: "Lecture",
+          display: "Create Lecture",
+          lecture: null,
+        },
+      });
+    } else {
+      navigate(`/class/${code}/lecture`, {
+        state: {
+          ...state,
+          module: "Lecture",
+          title: "Lecture",
+          display: null,
+        },
+      });
+    }
+  };
+
+  const assignmentContent = (
+    <>
+      {isCreatingAssignment || isEditingAssignment ? (
+        <TopBarTab active className="ml-4 pt-1">
+          Detail
+        </TopBarTab>
+      ) : (
+        <>
+          {role !== "Parent" && (
+            <TopBarTab
+              className="ml-4 pt-1"
+              onClick={handleClickClasswork}
+              active={assignmentButtonClick === "Classwork"}
+            >
+              Classwork
+            </TopBarTab>
+          )}
+          <TopBarTab
+            className="ml-4 pt-1"
+            onClick={handleClickGrade}
+            active={assignmentButtonClick === "Grade"}
+          >
+            Grade
+          </TopBarTab>
+        </>
+      )}
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center justify-center gap-4">
+        {isCreatingAssignment ? (
+          <>
+            <Button
+              primary
+              small
+              className="w-16"
+              disabled={isLoading}
+              onClick={handleSaveAssignmentClick}
+            >
+              Save
+            </Button>
+            <Button secondary small onClick={toggleCreateAssignment}>
+              Cancel
+            </Button>
+          </>
+        ) : isEditingAssignment ? (
+          <>
+            <Button
+              primary
+              small
+              className="w-16"
+              disabled={isLoading}
+              onClick={handleSaveEditAssignmentClick}
+            >
+              Save
+            </Button>
+            <Button secondary small onClick={handleCancelEditAssignment}>
+              Cancel
+            </Button>
+          </>
+        ) : (
+          role === "Teacher" && (
+            <Button secondary small onClick={toggleCreateAssignment}>
+              <RiEditBoxFill className="mr-2" />
+              <label className="truncate text-sm">New Assignment</label>
+            </Button>
+          )
+        )}
+      </div>
+    </>
+  );
 
   const lectureContent = (
     <>
-      <div className="flex h-full items-center">
-        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
-          {display ? display : title}
-        </h1>
-      </div>
-      {display ? (
-        <>
-          <TopBarTab active className="ml-4 pt-1">
-            Detail
-          </TopBarTab>
-          <div className="h-full w-full" />
-          <div className="flex h-full items-center">
+      {isCreatingLecture ? (
+        <TopBarTab active className="ml-4 pt-1">
+          Detail
+        </TopBarTab>
+      ) : null}
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center gap-4">
+        {isCreatingLecture ? (
+          <>
             <Button
               primary
-              className="mr-4 w-20 truncate"
+              small
+              className="mr-4 w-20"
               onClick={handleSaveLectureClick}
               disabled={isLoading}
             >
-              {isLoading ? "Saving..." : "Save"}
+              Save
             </Button>
             <Button
               secondary
+              small
               className="mr-4 w-20"
-              onClick={handleCancelLectureClick}
+              onClick={toggleCreateLecture}
             >
               Close
             </Button>
-          </div>
+          </>
+        ) : (
+          role === "Teacher" && (
+            <Button
+              secondary
+              small
+              className="mr-4"
+              onClick={toggleCreateLecture}
+            >
+              <RiEditBoxFill className="mr-2" />
+              <label className="truncate text-sm">New Lecture</label>
+            </Button>
+          )
+        )}
+      </div>
+    </>
+  );
+
+  const handleSaveGradeClick = () => {
+    setIsLoading(true);
+    const event = new CustomEvent("SaveGrade");
+    window.dispatchEvent(event);
+  };
+
+  const handleCancelGradeClick = () => {
+    setIsGrading(false);
+    navigate(`/class/${code}/grade`, {
+      state: {
+        ...state,
+        module: "Grade",
+        title: "Assignment",
+        assignmentID: null,
+      },
+    });
+    setAssignmentButtonClick("Grade");
+    setIsGrading(false);
+  };
+
+  useEffect(() => {
+    const handleGradingSuccess = () => {
+      setIsLoading(false);
+    };
+    window.addEventListener("SaveGradingSuccess", handleGradingSuccess);
+    return () => {
+      window.removeEventListener("SaveGradingSuccess", handleGradingSuccess);
+    };
+  }, []);
+
+  const gradingContent = (
+    <>
+      {isGrading ? (
+        <TopBarTab active className="ml-4 pt-1">
+          Detail
+        </TopBarTab>
+      ) : (
+        <>
+          {role !== "Parent" && (
+            <TopBarTab
+              className="ml-4 pt-1"
+              onClick={handleClickClasswork}
+              active={assignmentButtonClick === "Classwork"}
+            >
+              Classwork
+            </TopBarTab>
+          )}
+          <TopBarTab
+            className="ml-4 pt-1"
+            onClick={handleClickGrade}
+            active={assignmentButtonClick === "Grade"}
+          >
+            Grade
+          </TopBarTab>
         </>
-      ) : null}
+      )}
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center gap-4">
+        {isGrading && (
+          <>
+            {role === "Teacher" && <Button
+              primary
+              small
+              className="mr-4 w-20"
+              onClick={handleSaveGradeClick}
+              disabled={isLoading}
+            >
+              Save
+            </Button>}
+            <Button
+              secondary
+              small
+              className="mr-4 w-20"
+              onClick={handleCancelGradeClick}
+            >
+              Close
+            </Button>
+          </>
+        )}
+      </div>
     </>
   );
 
   return (
-    <div className="flex h-[60px] flex-row border-b border-fg-border bg-bg-soft">
+    <div className="flex h-[60px] flex-row items-center border-b border-fg-border bg-bg-soft">
       <div className="flex h-full flex-shrink-0 items-center">
         <img
           src={image}
           alt={className}
-          className="ml-4 h-8 w-8 rounded object-cover flex-shrink-0"
+          className="ml-4 h-8 w-8 flex-shrink-0 rounded object-cover"
         />
+        <h1 className="ml-4 truncate text-lg font-bold text-fg-default">
+          {display ? display : title}
+        </h1>
       </div>
 
-      {title === "Assignment" ? (
-        assignmentContent
-      ) : title === "Lecture" ? (
-        lectureContent
-      ) : (
-        <h1 className="ml-4 text-lg font-bold">{title}</h1>
-      )}
+      {module === "Assignment"
+        ? assignmentContent
+        : module === "Lecture"
+          ? lectureContent
+          : module === "Grade"
+            ? gradingContent
+            : null}
     </div>
   );
 }

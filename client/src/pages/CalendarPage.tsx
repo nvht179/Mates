@@ -84,8 +84,8 @@ function CalendarPage() {
       {header}
       <div className="border-b-2" />
       {navigationBar}
-      <div className="mb-1 border-b-2" />
-      <div className="flex-1 overflow-auto">
+      {/* <div className="mb-1 border-b-2" /> */}
+      <div className="flex-1 overflow-y-scroll overflow-x-hidden">
         <Calendar displayDate={selectionDate} events={events} />
       </div>
     </div>

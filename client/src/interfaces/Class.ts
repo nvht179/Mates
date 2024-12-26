@@ -22,7 +22,7 @@ interface CreateClassRequest {
   className: string;
   code: string;
   description: string;
-  events: Array<{ startTime: string; endTime: string; frequency: string }>;
+  events: Array<{ startTime: string; endTime: string; repeatTime: string }>;
   userID: string;
   role: string;
 }
@@ -36,6 +36,39 @@ interface CreateClassResponse {
     description: string;
   };
   newEvents: Array<{
+    eventID: number;
+    title: string;
+    description: string;
+    repeatTime: string | null;
+    startTime: string;
+    endTime: string;
+    classID: number;
+  }>;
+}
+
+interface EditClassRequest {
+  classID: string;
+  className: string;
+  code: string;
+  description: string;
+  events: Array<{ 
+    startTime: string; 
+    endTime: string; 
+    repeatTime: string 
+  }>;
+  // userID: string;
+  // role: string;
+}
+
+interface EditClassResponse {
+  message: number;
+  updatedClass: {
+    classID: number;
+    className: string;
+    code: string;
+    description: string;
+  };
+  updatedEvents: Array<{
     eventID: number;
     title: string;
     description: string;
@@ -144,6 +177,15 @@ interface ViewClassInfoResponse {
     code: string;
     description: string;
   };
+  classEvents: Array<{
+    eventID: number;
+    title: string;
+    description: string;
+    repeatTime: string | null;
+    startTime: string;
+    endTime: string;
+    classID: number;
+  }>;
 }
 
 type RemoveClassRequest = string;
@@ -171,4 +213,6 @@ export type {
   ViewClassInfoResponse,
   RemoveClassRequest,
   RemoveClassResponse,
+  EditClassRequest,
+  EditClassResponse,
 };

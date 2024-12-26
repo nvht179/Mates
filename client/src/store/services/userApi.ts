@@ -61,6 +61,7 @@ const userApi = createApi({
 });
 
 export const {
+  useCheckUserByEmailQuery,
   useLazyCheckUserByEmailQuery,
   useLazyGetUserByIdQuery,
   useUpdateUserIntoMutation,

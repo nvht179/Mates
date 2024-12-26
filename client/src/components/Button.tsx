@@ -11,24 +11,25 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 
 export default function Button({
   children,
-  primary = true, // Default to primary
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  primary,
   secondary,
   disabled,
   small,
   className: additionalClassName,
   ...rest
 }: ButtonProps) {
-  const isPrimary = primary && !secondary;
-  const isSecondary = secondary;
+  // If neither primary nor secondary is specified, default to primary
+  const variant = secondary ? 'secondary' : 'primary';
 
   const buttonClassName = classNames(
     "select-none font-semibold flex rounded justify-center items-center",
     {
       "cursor-not-allowed opacity-70": disabled,
       "cursor-pointer bg-primary-default text-bg-default active:bg-primary-dark active:text-bg-alt":
-        isPrimary,
+        variant === 'primary',
       "cursor-pointer bg-bg-disabled text-fg-softer border border-fg-softer active:bg-fg-disabled active:text-bg-alt hover:bg-bg-dark":
-        isSecondary,
+        variant === 'secondary',
       "px-4 py-2": !small,
       "text-sm px-2 py-1": small,
     },
@@ -38,7 +39,6 @@ export default function Button({
   return (
     <button
       {...rest}
-      type="button"
       className={buttonClassName}
       disabled={disabled}
     >

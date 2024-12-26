@@ -34,6 +34,7 @@ function ReactionList({ post }: ReactionListProps) {
       const userReaction = reactions.find(
         (reaction: ReactionType) => reaction.personId === user.id,
       );
+      console.log(reactions, user.id);
       return userReaction ? userReaction : null;
     };
     const reaction = getCurrentUserReactionType();
@@ -50,7 +51,6 @@ function ReactionList({ post }: ReactionListProps) {
 
   useEffect(() => {
     if (isEditSuccess) {
-      console.log(editReactionData);
       setReactionType(editReactionData?.data.type);
       setReactionId(editReactionData?.data.id);
     }
@@ -67,7 +67,7 @@ function ReactionList({ post }: ReactionListProps) {
     if (reactionType === null) {
       // Logic to add the reaction
       createReaction({
-        personId: post.personID,
+        personId: user.id as number,
         type,
         postId: post.id,
       });
@@ -77,7 +77,7 @@ function ReactionList({ post }: ReactionListProps) {
       // Logic to edit the reaction
       editReaction({
         id: ReactionId as number,
-        type,
+        newType: type,
       });
     }
   };

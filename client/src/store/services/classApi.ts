@@ -3,6 +3,8 @@ import { getAuthToken } from "../../utils/getAuthToken";
 import {
   CreateClassRequest,
   CreateClassResponse,
+  EditClassRequest,
+  EditClassResponse,
   ViewAllClassesRequest,
   ViewAllClassesResponse,
   ViewAllStudentInClassResponse,
@@ -50,6 +52,7 @@ const classApi = createApi({
         };
       },
     }),
+
     viewAllStudentsInClass: builder.query<
       ViewAllStudentInClassResponse,
       string
@@ -84,6 +87,15 @@ const classApi = createApi({
           url: "/classes/create-class",
           method: "POST",
           body: newClass,
+        };
+      },
+    }),
+    editClass: builder.mutation<EditClassResponse, EditClassRequest>({
+      query: (edittedClass) => {
+        return {
+          url: "/classes/edit-class-info",
+          method: "PUT",
+          body: edittedClass,
         };
       },
     }),
@@ -179,5 +191,7 @@ export const {
   useAddTeachersToClassMutation,
   useRemoveStudentsInClassMutation,
   useRemoveTeachersInClassMutation,
+  useEditClassMutation,
+  useViewClassInfoQuery,
 } = classApi;
 export default classApi;

@@ -163,13 +163,15 @@ export default function ClassMemberList({ type, id }: ClassMemberListProps) {
                 </p>
                 <p className="text-xs text-fg-softer">{teacher.email}</p>
               </div>
-              <button
-                onClick={() => handleRemoveMember(teacher.email)}
-                disabled={isRemoveTeacherLoading}
-                className="ml-auto mr-2"
-              >
-                <MdPersonRemove className="text-lg text-fg-softer hover:text-red-default" />
-              </button>
+              {role === "Teacher" && (
+                <button
+                  onClick={() => handleRemoveMember(teacher.email)}
+                  disabled={isRemoveTeacherLoading}
+                  className="ml-auto mr-2"
+                >
+                  <MdPersonRemove className="text-lg text-fg-softer hover:text-red-default" />
+                </button>
+              )}
             </div>
           );
         })) ||

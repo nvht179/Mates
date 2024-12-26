@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import Button from "../components/Button";
@@ -11,17 +11,28 @@ import Textarea from "./TextArea";
 import { useCreatePostMutation } from "../store";
 import { useLocation } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
+import { TbLinkPlus } from "react-icons/tb";
 
 function AddPost() {
   const [addPostActive, setAddPostActive] = useState(false);
   const [subject, setSubject] = useState("");
   const [postContent, setPostContent] = useState("");
+  const [fileList, setFileList] = useState<FileList | null>(null);
 
-  const [createPost] = useCreatePostMutation();
+  const [createPost, { isSuccess, isLoading }] = useCreatePostMutation();
 
   const user = useSelector((state: RootState) => state.user);
   const { state } = useLocation();
   const { cla } = state as { cla: ClassState };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setSubject("");
+      setPostContent("");
+      setFileList(null);
+      setAddPostActive(false);
+    }
+  }, [isSuccess]);
 
   const addPostButton = () => {
     return (
@@ -32,14 +43,33 @@ function AddPost() {
     );
   };
 
-  const handleSavePost = () => {
+  const handleCancelClick = () => {
     setAddPostActive(false);
-    createPost({
-      classID: cla.classID,
-      title: subject,
-      content: postContent,
-      personID: user.id || 0,
-    });
+    setSubject("");
+    setPostContent("");
+    setFileList(null);
+  };
+
+  const handleSavePost = () => {
+    const formData = new FormData();
+    formData.append("classID", cla.classID.toString());
+    formData.append("title", subject);
+    formData.append("content", postContent);
+    if (user.id !== null && user.id !== undefined) {
+      formData.append("personID", user.id.toString());
+    }
+    if (fileList) {
+      Array.from(fileList).forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+    createPost(formData);
+  };
+
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFileList(e.target.files);
+    }
   };
 
   const addPostArea = () => {
@@ -55,7 +85,7 @@ function AddPost() {
             <p className="ml-4 font-bold">{user.name}</p>
           </div>
           <RxCross2
-            onClick={() => setAddPostActive(false)}
+            onClick={handleCancelClick}
             className="mr-4 cursor-pointer text-2xl text-fg-softer active:opacity-30"
           />
         </div>
@@ -71,8 +101,24 @@ function AddPost() {
           value={postContent}
           onChange={(e) => setPostContent(e.target.value)}
         />
-        <div className="m-4 mt-2 flex flex-col items-end">
-          <Button onClick={handleSavePost} className="w-36">
+        <div className="m-4 mt-2 flex flex-row items-center justify-end">
+          {fileList && <p className="mr-2">{fileList.length} file Selected</p>}
+          <label htmlFor="fileInput">
+            <TbLinkPlus className="mr-4 cursor-pointer text-2xl active:opacity-30" />
+          </label>
+          <Input
+            className="hidden"
+            id="fileInput"
+            type="file"
+            multiple
+            onChange={(e) => handleFilesChange(e)}
+          />
+
+          <Button
+            onClick={handleSavePost}
+            disabled={isLoading}
+            className="w-36"
+          >
             Post
           </Button>
         </div>
