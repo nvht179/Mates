@@ -36,6 +36,14 @@ interface MarkAsReadResponse {
   message: string;
 }
 
+interface MarkAsUnreadRequest {
+  notificationId: number;
+}
+
+interface MarkAsUnreadResponse {
+  message: string;
+}
+
 export type {
   NotificationType,
   ViewNotificationRequest,
@@ -44,4 +52,6 @@ export type {
   DeleteNotificationResponse,
   MarkAsReadRequest,
   MarkAsReadResponse,
+  MarkAsUnreadRequest,
+  MarkAsUnreadResponse,
 };

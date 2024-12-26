@@ -75,7 +75,7 @@ function Notification() {
           />
         )}
       </div>
-      <div className="absolute right-0 z-50 mt-3 w-96 rounded-md border border-fg-border bg-bg-darker text-black shadow-lg select-text">
+      <div className="absolute right-0 z-50 mt-3 w-96 select-text rounded-md border border-fg-border bg-bg-darker text-black shadow-lg">
         {isLoading ? (
           <div>Loading...</div>
         ) : (

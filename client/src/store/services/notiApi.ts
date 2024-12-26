@@ -27,7 +27,7 @@ const notiApi = createApi({
       ViewNotificationResponse,
       ViewNotificationRequest
     >({
-      providesTags: (result, _error, _arg) => {
+      providesTags: (result) => {
         return (result?.notifications ?? []).map((noti) => ({
           type: "Notification" as const,
           id: noti.id,
@@ -77,6 +77,23 @@ const notiApi = createApi({
         };
       },
     }),
+    markAsUnreadNotification: builder.mutation<
+      MarkAsReadResponse,
+      MarkAsReadRequest
+    >({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "Notification", id: arg.notificationId },
+      ],
+      query: (notification) => {
+        return {
+          url: `/notifications/mark-as-unread/${notification.notificationId}/mark-as-unread`,
+          params: {
+            notificationId: notification.notificationId,
+          },
+          method: "PUT",
+        };
+      },
+    }),
   }),
 });
 
@@ -84,5 +101,6 @@ export const {
   useLazyViewNotificationsQuery,
   useDeleteNotificationMutation,
   useMarkAsreadNotificationMutation,
+  useMarkAsUnreadNotificationMutation,
 } = notiApi;
 export default notiApi;
