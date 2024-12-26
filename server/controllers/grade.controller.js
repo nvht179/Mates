@@ -43,8 +43,8 @@ class GradeController {
 
   viewGradesInThatAssignmentStudent = async (req, res) => {
     try {
-      const { personID } = req.params;
-      const allSubmissionsStudent = await GradeService.viewGradesInThatAssignmentStudent(personID);
+      const { personID, classID } = req.params;
+      const allSubmissionsStudent = await GradeService.viewGradesInThatAssignmentStudent(personID, classID);
       const message = "Successful";
       res.status(200).json({ message, allSubmissionsStudent });
     } catch (err) {
@@ -95,6 +95,18 @@ class GradeController {
       await GradeService.removeSubmission(assignmentID, personID);
       const message = "Successful";
       res.status(200).json({ message });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  viewAllGradesInClass = async (req, res) => {
+    try {
+      const { classID } = req.params;
+      const allSubmissionInClass = await GradeService.viewAllGradesInClass(classID);
+      const message = "Successful";
+      res.status(200).json({ message, allSubmissionInClass });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });

@@ -180,6 +180,15 @@ class AssignmentDB {
     // Optionally handle adding attachments here
     return newAssignment;
   }
+
+  getAllAssignmentsInClass = async (classID) => {
+    const assignments = await Assignment.findAll({
+      where: {
+        classID: classID
+     }
+    });
+    return assignments;
+  };
 }
 
 module.exports = new AssignmentDB();
