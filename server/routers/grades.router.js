@@ -5,9 +5,10 @@ const upload = require("../middleware/upload.middleware");
 const router = express.Router();
 
 router.post('/submit-assignment', upload, GradeController.submitAssignment);
-router.get('/view-submission-student/:personID', GradeController.viewGradesInThatAssignmentStudent);
+router.get('/view-submission-student/:personID/:classID', GradeController.viewGradesInThatAssignmentStudent);
 router.get('/view-grade-details/:personID/:assignmentID', GradeController.viewGradeDetailStudent);
 router.get('/view-grade-assignments-teacher/:assignmentID', GradeController.viewGradeAssignmentsTeacher);
+router.get('/view-all-grades-in-class/:classID', GradeController.viewAllGradesInClass);
 router.put('/grade-assignment-teacher', GradeController.gradeAssignmentTeacher);
 router.delete('/delete-submission/:personID/:assignmentID', GradeController.removeSubmission);
 
