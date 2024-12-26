@@ -11,50 +11,107 @@ const { Teacher, Student, Parent } = require("./user.model");
 const Lecture = require("./lecture.model");
 const Grade = require("./grade.model");
 const { Event, Event_Person } = require("./event.model");
-const Notification = require('./notification.model')
+const Notification = require("./notification.model");
 
 // Assignment and Attachment
-Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments" });
+Assignment.hasMany(Attachment, { foreignKey: "assignmentId", as: "attachments", onDelete: "CASCADE", hooks: true });
 Attachment.belongsTo(Assignment, { foreignKey: "assignmentId", as: "assignment" });
 
 // Person and Reaction
-Person.hasMany(Reaction, { foreignKey: "personId", as: "reactions" });
+Person.hasMany(Reaction, { foreignKey: "personId", as: "reactions", onDelete: "CASCADE", hooks: true });
 Reaction.belongsTo(Person, { foreignKey: "personId", as: "person" });
 
 // Post and Comment
-Post.hasMany(Comment, { foreignKey: "postId", as: "comments" });
+Post.hasMany(Comment, { foreignKey: "postId", as: "comments", onDelete: "CASCADE", hooks: true });
 Comment.belongsTo(Post, { foreignKey: "postId", as: "post" });
 
 // Post and Reaction
-Post.hasMany(Reaction, { foreignKey: "postId", as: "reactions" });
+Post.hasMany(Reaction, { foreignKey: "postId", as: "reactions", onDelete: "CASCADE", hooks: true });
 Reaction.belongsTo(Post, { foreignKey: "postId", as: "post" });
 
-// Post and attachment
-Post.hasMany(Attachment, { foreignKey: "postId", as: "attachments" });
+// Post and Attachment
+Post.hasMany(Attachment, { foreignKey: "postId", as: "attachments", onDelete: "CASCADE", hooks: true });
 Attachment.belongsTo(Post, { foreignKey: "postId", as: "post" });
 
 // Class and Post
-Class.hasMany(Post, { foreignKey: "classID", as: "posts" });
+Class.hasMany(Post, { foreignKey: "classID", as: "posts", onDelete: "CASCADE", hooks: true });
 Post.belongsTo(Class, { foreignKey: "classID", as: "class" });
 
 // Class and Assignment
-Class.hasMany(Assignment, { foreignKey: "classID", as: "assignments" });
+Class.hasMany(Assignment, { foreignKey: "classID", as: "assignments", onDelete: "CASCADE", hooks: true });
 Assignment.belongsTo(Class, { foreignKey: "classID", as: "class" });
 
-
 // Person and Comment
-Person.hasMany(Comment, { foreignKey: "personId", as: "comments" });
+Person.hasMany(Comment, { foreignKey: "personId", as: "comments", onDelete: "CASCADE", hooks: true });
 Comment.belongsTo(Person, { foreignKey: "personId", as: "person" });
 
+// Notification and Post
+Notification.belongsTo(Post, { foreignKey: "postId", onDelete: "CASCADE", hooks: true });
 
-// Sync all models with the database
+// Notification and Comment
+Notification.belongsTo(Comment, { foreignKey: "commentId", onDelete: "CASCADE", hooks: true });
+
+// Notification and Assignment
+Notification.belongsTo(Assignment, { foreignKey: "assignmentId", onDelete: "CASCADE", hooks: true });
+
+// Notification and Person
+Notification.belongsTo(Person, { foreignKey: "targetId", onDelete: "CASCADE", hooks: true });
+
+// Add CASCADE constraints to existing tables via raw SQL
+const addCascadeConstraints = async () => {
+  const queries = [
+    `
+      ALTER TABLE "Notifications"
+      DROP CONSTRAINT IF EXISTS "fk_post",
+      ADD CONSTRAINT "fk_post"
+      FOREIGN KEY ("postId")
+      REFERENCES "Post" ("id")
+      ON DELETE CASCADE;
+    `,
+    `
+      ALTER TABLE "Notifications"
+      DROP CONSTRAINT IF EXISTS "fk_comment",
+      ADD CONSTRAINT "fk_comment"
+      FOREIGN KEY ("commentId")
+      REFERENCES "Comment" ("id")
+      ON DELETE CASCADE;
+    `,
+    `
+      ALTER TABLE "Notifications"
+      DROP CONSTRAINT IF EXISTS "fk_assignment",
+      ADD CONSTRAINT "fk_assignment"
+      FOREIGN KEY ("assignmentId")
+      REFERENCES "Assignment" ("id")
+      ON DELETE CASCADE;
+    `,
+    `
+      ALTER TABLE "Notifications"
+      DROP CONSTRAINT IF EXISTS "fk_person",
+      ADD CONSTRAINT "fk_person"
+      FOREIGN KEY ("targetId")
+      REFERENCES "Person" ("id")
+      ON DELETE CASCADE;
+    `,
+  ];
+
+  for (const query of queries) {
+    try {
+      await sequelize.query(query);
+    } catch (err) {
+      logger.error(`Error executing query: ${query.trim()} - ${err.message}`);
+    }
+  }
+};
+
+// Sync models and apply raw SQL constraints
 sequelize
-  .sync()
+  .sync({ force: false }) // Change to `force: true` only if you want to drop and recreate all tables
   .then(async () => {
     logger.info("Database connected and models synced.");
+    await addCascadeConstraints(); // Add cascade constraints
   })
   .catch((err) => {
-    logger.error("Error syncing models: ", err);
+    logger.error("Error syncing models: ", err.message);
   });
 
 module.exports = {
@@ -75,5 +132,5 @@ module.exports = {
   Event,
   Event_Person,
   Grade,
-  Notification
+  Notification,
 };
