@@ -125,7 +125,7 @@ export default function CreateClass() {
       </div>
       <div className="mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
         {/* Class Name */}
-        <div className="mb-4 flex items-center pr-20">
+        <div className="mb-4 flex items-center pr-20 w-full">
           {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
           <LuPencilLine className="mx-4 text-2xl " />
           <Input
@@ -138,7 +138,7 @@ export default function CreateClass() {
         </div>
 
         {/* Class Code */}
-        <div className="mb-4 flex items-center pr-20">
+        <div className="mb-4 flex items-center pr-20 w-full">
           {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
           <IoMdCode className="mx-3 text-3xl" />
           <Input
@@ -154,9 +154,9 @@ export default function CreateClass() {
         <div className="mb-2 flex-col items-center pr-20">
           {/* <label className="block text-gray-700 mb-2">Schedule</label> */}
           {schedule.map((slot, index) => (
-            <div key={index} className="mb-2 flex items-center space-x-4">
+            <div key={index} className="mb-2 flex items-center space-x-4 w-full">
               {/* Day */}
-              <FaRegClock className="ml-4 mr-1 text-5xl" />
+              <FaRegClock className="ml-4 mr-1 text-5xl resize-none" />
               <select
                 value={slot.day}
                 onChange={(e) =>
@@ -187,7 +187,7 @@ export default function CreateClass() {
                 }
                 className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
-              <HiArrowLongRight className="h-auto text-8xl" />
+              <HiArrowLongRight className="text-8xl" />
 
               {/* End Time */}
               <Input
