@@ -153,7 +153,7 @@ export default function SignupParent() {
 
   return (
     <div className="flex justify-center">
-      <div className="h-2/7 min-h-150 flex w-3/5 min-w-96 flex-col rounded bg-white pl-8 pr-8 pt-4">
+      <div className="h-2/5 min-h-150 flex w-1/2 min-w-96 flex-col rounded bg-white pl-8 pr-8 pt-4">
         <div className="mb-2 flex items-center">
           <h1 className="font-sans text-2xl font-bold text-fg-soft">Sign Up</h1>
         </div>
@@ -163,6 +163,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <h1 className="text-l font-sans font-semibold">Full Name</h1>
               <Input
+                className="w-full"
                 placeholder="Enter your full name"
                 value={fullName}
                 onChange={handleFullNameChange}
@@ -175,6 +176,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">User Name</h1>
               <Input
+                className="w-full"
                 placeholder="Enter your user name"
                 value={userName}
                 onChange={handleUserNameChange}
@@ -187,6 +189,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Phone</h1>
               <Input
+                className="w-full"
                 placeholder="Enter your phone number"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
@@ -199,6 +202,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Email</h1>
               <Input
+                className="w-full"
                 placeholder="Enter email"
                 value={email}
                 onChange={handleEmailChange}
@@ -211,6 +215,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Password</h1>
               <Input
+                className="w-full"
                 placeholder="Enter password"
                 value={password}
                 onChange={handlePasswordChange}
@@ -220,6 +225,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Confirm Password</h1>
               <Input
+                className="w-full"
                 placeholder="Enter password"
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
@@ -232,6 +238,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Your Child Email</h1>
               <Input
+                className="w-full"
                 placeholder="Enter your child email"
                 value={childEmail}
                 onChange={handleChildEmailChange}

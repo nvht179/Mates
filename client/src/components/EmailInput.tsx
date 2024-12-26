@@ -68,10 +68,11 @@ export default function EmailInput() {
     };
 
     return (
-        <div className="h-2/7 min-h-150 flex w-2/6 min-w-96 flex-col rounded bg-white pl-8 pr-8 pt-4 pb-6">
+        <div className="h-2/7 min-h-150 flex w-1/3 min-w-96 flex-col rounded bg-white pl-8 pr-8 pt-4 pb-6">
             <h1 className="text-xl font-sans font-semibold">Email</h1>
             <form className="mt-1" onSubmit={handleSubmit}>
                 <Input
+                    className="w-full"
                     placeholder="Enter your email"
                     value={email}
                     onChange={handleEmailChange}

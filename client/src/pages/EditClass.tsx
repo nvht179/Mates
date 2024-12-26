@@ -9,8 +9,8 @@ import { MdAddCircleOutline } from "react-icons/md";
 import { RxLoop } from "react-icons/rx";
 import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
-import { useSelector } from "react-redux";
-import { RootState, useEditClassMutation } from "../store";
+// import { useSelector } from "react-redux";
+import { useEditClassMutation } from "../store";
 import { getNextDate, parseHours } from "../utils/date";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -161,9 +161,9 @@ export default function EditClass() {
             <div className="flex items-center justify-between mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
                 <div className="flex items-center pr-20">
                     {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
-                    <LuPencilLine className="mx-3 text-2xl" />
+                    <LuPencilLine className="mx-4 text-2xl" />
                     <Input
-                        className="border-bg-alt bg-bg-alt"
+                        className="border-fg-alt bg-fg-alt w-full"
                         type="text"
                         value={className}
                         placeholder="Enter class name"
@@ -187,24 +187,12 @@ export default function EditClass() {
                 </div>
             </div>
             <div className="mx-auto mr-20 pb-5 pl-10 pr-20">
-                {/* Class Name */}
-                {/* <div className="mb-4 flex items-center pr-20">
-                    <LuPencilLine className="mx-3 text-2xl" />
-                    <Input
-                        className="border-bg-alt bg-bg-alt"
-                        type="text"
-                        value={className}
-                        placeholder="Enter class name"
-                        onChange={(e) => setClassName(e.target.value)}
-                    />
-                </div> */}
-
                 {/* Class Code */}
                 <div className="mb-4 flex w-1/4 items-center">
                     {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
                     <IoMdCode className="mx-3 text-3xl" />
                     <Input
-                        className="border-bg-alt bg-bg-alt"
+                        className="border-fg-alt bg-fg-alt"
                         type="text"
                         value={classCode}
                         placeholder="Enter class code"
@@ -218,13 +206,13 @@ export default function EditClass() {
                     {schedule.map((slot, index) => (
                         <div key={index} className="mb-2 flex items-center space-x-4">
                             {/* Day */}
-                            <FaRegClock className="ml-4 text-5xl" />
+                            <FaRegClock className="ml-4 mr-1 text-5xl" />
                             <select
                                 value={slot.day}
                                 onChange={(e) =>
                                     handleScheduleChange(index, "day", e.target.value)
                                 }
-                                className="border-bg-alt bg-bg-alt w-2/5 rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                                className="border-fg-alt bg-fg-alt w-2/5 rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
                             >
                                 {[
                                     "Monday",
@@ -247,7 +235,7 @@ export default function EditClass() {
                                 onChange={(e) =>
                                     handleScheduleChange(index, "startTime", e.target.value)
                                 }
-                                className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
                             />
                             <HiArrowLongRight className="h-auto text-8xl" />
 
@@ -258,7 +246,7 @@ export default function EditClass() {
                                 onChange={(e) =>
                                     handleScheduleChange(index, "endTime", e.target.value)
                                 }
-                                className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
                             />
 
                             {/* Remove Time Slot */}
@@ -314,7 +302,7 @@ export default function EditClass() {
                     <select
                         value={frequency}
                         onChange={(e) => setFrequency(e.target.value)}
-                        className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                        className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
                     >
                         <option value="Weekly">Weekly</option>
                         <option value="Bi-Weekly">Bi-Weekly</option>
@@ -329,7 +317,7 @@ export default function EditClass() {
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="border-bg-alt bg-bg-alt w-full rounded border-2 border-fg-border p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                        className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
                         placeholder="Enter class description"
                         rows={4}
                     />
