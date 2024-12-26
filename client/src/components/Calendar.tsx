@@ -73,10 +73,10 @@ function Calendar({ displayDate, events }: CalendarProps) {
 
     const startHour = eventStart.getHours();
     const endHour = eventEnd.getHours();
-    const durationInHours = Math.max(endHour - startHour, 1);
+    const durationInHours = Math.max(endHour - startHour, 1.5);
 
     return {
-      top: `${startHour * HOURWIDTH}rem`, // Each hour is 5rem tall
+      marginTop: `${startHour * HOURWIDTH}rem`, // Each hour is 5rem tall
       height: `${durationInHours * HOURWIDTH}rem`,
     };
   };
@@ -87,7 +87,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
 
   const handleDeleteClick = (event: Event) => {
     deleteEvent({ eventID: event.eventID });
-  }
+  };
 
   return (
     <div className="flex h-full w-full flex-col border border-fg-border">
@@ -105,10 +105,9 @@ function Calendar({ displayDate, events }: CalendarProps) {
           ))}
         </div>
 
-        {/* Weekly Calendar */}
-        <div className="relative col-span-7 grid flex-1 grid-cols-7 divide-x-2">
+        <div className="flex-1">
           {/* Header Row for Days */}
-          <div className="absolute left-0 top-0 z-10 grid w-full grid-cols-7 bg-bg-soft">
+          <div className="sticky top-0 z-10 grid w-full grid-cols-7 bg-bg-soft">
             {weekDays.map((day, index) => (
               <div
                 key={index}
@@ -123,59 +122,65 @@ function Calendar({ displayDate, events }: CalendarProps) {
             ))}
           </div>
 
-          {/* Events Grid */}
-          {weekDays.map((day, colIndex) => (
-            <div
-              key={colIndex}
-              className="relative"
-              style={{
-                height: `${HOURWIDTH * 24}rem`,
-                marginTop: `${HOURWIDTH}rem`,
-              }}
-            >
-              {events
-                .filter(
-                  (event) =>
-                    new Date(event.startTime).toDateString() ===
-                      day.toDateString() ||
-                    new Date(event.endTime).toDateString() ===
-                      day.toDateString() ||
-                    isRecurringEvent(event, day),
-                )
-                .map((event) => (
-                  <div
-                    key={event.eventID}
-                    className="absolute left-1 right-1 truncate rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm"
-                    style={getEventStyles(event)}
-                    title={event.description}
-                  >
-                    <div className="flex items-center justify-between">
-                      <h2 className="font-semibold">{event.title}</h2>
-                      <OptionDropdown handleEditClick={() => handleEditClick(event)} handleDeleteClick={() => handleDeleteClick(event)} />
-                    </div>
-                    <p className="text-xs">
-                      {new Date(event.startTime).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}{" "}
-                      -{" "}
-                      {new Date(event.endTime).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                    <p className="mt-2 text-wrap">
-                      Description: {event.description}
-                    </p>
-                    {event.repeatTime && (
-                      <p className="text-xs italic font-light">
-                        Repeats: {event.repeatTime}
+          {/* Weekly Calendar */}
+          <div className="relative col-span-7 grid flex-1 grid-cols-7 divide-x-2">
+            {/* Events Grid */}
+            {weekDays.map((day, colIndex) => (
+              <div
+                key={colIndex}
+                className="relative"
+                style={{
+                  height: `${HOURWIDTH * 24}rem`,
+                  // marginTop: `${HOURWIDTH}rem`,
+                }}
+              >
+                {events
+                  .filter(
+                    (event) =>
+                      new Date(event.startTime).toDateString() ===
+                        day.toDateString() ||
+                      new Date(event.endTime).toDateString() ===
+                        day.toDateString() ||
+                      isRecurringEvent(event, day),
+                  )
+                  .map((event) => (
+                    <div
+                      key={event.eventID}
+                      className="rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm"
+                      style={getEventStyles(event)}
+                      title={event.description}
+                    >
+                      <div className="flex items-center justify-between">
+                        <h2 className="font-semibold">{event.title}</h2>
+                        <OptionDropdown
+                          handleEditClick={() => handleEditClick(event)}
+                          handleDeleteClick={() => handleDeleteClick(event)}
+                        />
+                      </div>
+                      <p className="text-xs">
+                        {new Date(event.startTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}{" "}
+                        -{" "}
+                        {new Date(event.endTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
-                    )}
-                  </div>
-                ))}
-            </div>
-          ))}
+                      <p className="mt-2 text-wrap">
+                        Description: {event.description}
+                      </p>
+                      {event.repeatTime && (
+                        <p className="text-xs font-light italic">
+                          Repeats: {event.repeatTime}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

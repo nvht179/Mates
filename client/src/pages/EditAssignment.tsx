@@ -92,11 +92,33 @@ export default function EditAssignment() {
     endTime: endTime.slice(11, 16),
   });
 
+  const validateAndUpdateSchedule = (field: keyof ScheduleSlot, value: string) => {
+    const now = new Date();
+    const nowDate = now.toISOString().slice(0, 10);
+    const nowTime = now.toTimeString().slice(0, 5);
+    
+    const newSchedule = { ...schedule, [field]: value };
+
+    // Validate start date/time isn't in the past
+    if (newSchedule.startDate < nowDate) {
+      newSchedule.startDate = nowDate;
+    } else if (newSchedule.startDate === nowDate && newSchedule.startTime < nowTime) {
+      newSchedule.startTime = nowTime;
+    }
+
+    // Validate end date/time isn't before start date/time
+    const startDT = new Date(`${newSchedule.startDate}T${newSchedule.startTime}`);
+    const endDT = new Date(`${newSchedule.endDate}T${newSchedule.endTime}`);
+    if (endDT <= startDT) {
+      newSchedule.endDate = newSchedule.startDate;
+      newSchedule.endTime = newSchedule.startTime;
+    }
+
+    setSchedule(newSchedule);
+  };
+
   const handleScheduleChange = (field: keyof ScheduleSlot, value: string) => {
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [field]: value,
-    }));
+    validateAndUpdateSchedule(field, value);
   };
 
   useEffect(() => {
@@ -111,28 +133,6 @@ export default function EditAssignment() {
       });
     }
   }, [isError, error, isSuccess, navigate, code, state]);
-
-  useEffect(() => {
-    const now = new Date();
-    const nowDate = now.toISOString().slice(0, 10);
-    const nowTime = now.toTimeString().slice(0, 5);
-
-    if (schedule.startDate < nowDate) {
-      setSchedule((prev) => ({ ...prev, startDate: nowDate }));
-    } else if (schedule.startDate === nowDate && schedule.startTime < nowTime) {
-      setSchedule((prev) => ({ ...prev, startTime: nowTime }));
-    }
-
-    const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
-    const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
-    if (endDT <= startDT) {
-      setSchedule((prev) => ({
-        ...prev,
-        endDate: schedule.startDate,
-        endTime: schedule.startTime,
-      }));
-    }
-  }, [schedule]);
 
   const handleSubmit = useCallback(async () => {
     const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);

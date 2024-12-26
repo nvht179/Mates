@@ -27,7 +27,7 @@ function OptionDropdown({
   }, []);
 
   return (
-    <div ref={divEl} className="relative">
+    <div ref={divEl} className="relative select-none">
       <SlOptions
         className="cursor-pointer text-sm text-fg-default active:opacity-50"
         onClick={() => setIsOpen((prev) => !prev)}

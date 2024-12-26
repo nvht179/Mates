@@ -294,9 +294,9 @@ function AssignmentPage() {
                 <a
                   key={attachment.id}
                   href={attachment.link}
-                  className="text-primary-default hover:underline"
+                  className="text-primary-default hover:underline block"
                 >
-                  {attachment.linkTitle}
+                  {attachment.linkTitle}  
                 </a>
               ))}
             </div>

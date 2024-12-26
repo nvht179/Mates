@@ -32,31 +32,28 @@ function ClassTopBar() {
   const [assignmentButtonClick, setAssignmentButtonClick] =
     useState<AssignmentTopBarTab>(tab || "Classwork");
 
+  console.log("path: ", pathname);
+
   // safe check for manual url change
   // only a workaround, because the required state passed from the previous page is missing
   useEffect(() => {
-    if (pathname.includes("assignment")) {
+    // Explicitly handle the base assignment route first
+    if (pathname === `/class/${code}/assignment`) {
       setIsCreatingAssignment(false);
+      setIsEditingAssignment(false);
+      return;
     }
-    if (pathname.includes("create-assignment")) {
+  
+    // Then handle specific routes
+    if (pathname.includes("create-assignment") && !isCreatingAssignment) {
       setIsCreatingAssignment(true);
+      setIsEditingAssignment(false);
     }
-    if (pathname.includes("edit-assignment")) {
+    if (pathname.includes("edit-assignment") && !isEditingAssignment) {
+      setIsCreatingAssignment(false);
       setIsEditingAssignment(true);
     }
-    if (pathname.includes("lecture")) {
-      setIsCreatingLecture(false);
-    }
-    if (pathname.includes("lecture-details")) {
-      setIsCreatingLecture(true);
-    }
-    if (pathname.includes("grade")) {
-      setIsGrading(false);
-    }
-    if (pathname.includes("grade-details")) {
-      setIsGrading(true);
-    }
-  }, [pathname]);
+  }, [pathname, code, isCreatingAssignment, isEditingAssignment]);
 
   const toggleCreateAssignment = () => {
     const newState = !isCreatingAssignment;
@@ -70,16 +67,11 @@ function ClassTopBar() {
     }
   };
 
-  const toggleEditAssignment = () => {
-    const newState = !isEditingAssignment;
-    setIsEditingAssignment(newState);
-    if (newState) {
-      navigate(`/class/${code}/edit-assignment`, {
-        state: { ...state, module: "Assignment", title: "Edit Assignment" },
-      });
-    } else {
-      handleClickClasswork();
-    }
+  const handleCancelEditAssignment = () => {
+    setIsEditingAssignment(false);
+    navigate(`/class/${code}/assignment`, {
+      state: { ...state, module: "Assignment", title: "Assignment" },
+    });
   };
 
   const handleClickClasswork = () => {
@@ -189,8 +181,8 @@ function ClassTopBar() {
 
   const assignmentContent = (
     <>
-      {isCreatingAssignment ? (
-        role === "Teacher" && (
+      {role === "Teacher" ? (
+        (isCreatingAssignment || isEditingAssignment) && (
           <TopBarTab active className="ml-4 pt-1">
             Detail
           </TopBarTab>
@@ -241,15 +233,17 @@ function ClassTopBar() {
             >
               Save
             </Button>
-            <Button secondary small onClick={toggleEditAssignment}>
+            <Button secondary small onClick={handleCancelEditAssignment}>
               Cancel
             </Button>
           </>
-        ) : role === "Teacher" && (
-          <Button secondary small onClick={toggleCreateAssignment}>
-            <RiEditBoxFill className="mr-2" />
-            <label className="truncate text-sm">New Assignment</label>
-          </Button>
+        ) : (
+          role === "Teacher" && (
+            <Button secondary small onClick={toggleCreateAssignment}>
+              <RiEditBoxFill className="mr-2" />
+              <label className="truncate text-sm">New Assignment</label>
+            </Button>
+          )
         )}
       </div>
     </>
@@ -348,23 +342,23 @@ function ClassTopBar() {
       <div className="mr-4 flex h-full items-center gap-4">
         {isGrading ? (
           <>
-        <Button
-          primary
-          small
-          className="mr-4 w-20"
-          onClick={handleSaveGradeClick}
-          disabled={isLoading}
-        >
-          Save
-        </Button>
-        <Button
-          secondary
-          small
-          className="mr-4 w-20"
-          onClick={handleCancelGradeClick}
-        >
-          Close
-        </Button>
+            <Button
+              primary
+              small
+              className="mr-4 w-20"
+              onClick={handleSaveGradeClick}
+              disabled={isLoading}
+            >
+              Save
+            </Button>
+            <Button
+              secondary
+              small
+              className="mr-4 w-20"
+              onClick={handleCancelGradeClick}
+            >
+              Close
+            </Button>
           </>
         ) : null}
       </div>
