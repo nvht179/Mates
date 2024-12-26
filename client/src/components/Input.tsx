@@ -14,7 +14,7 @@ export default function Input({
   const isMedium = medium && !small;
 
   const style = className(
-    "rounded border-2 border-fg-border focus:border-b-primary-default focus:outline-none transition",
+    "rounded border-2 focus:border-b-primary-default focus:outline-none transition",
     {
       "py-1 px-2": isMedium,
       "py-1 px-1": small,
