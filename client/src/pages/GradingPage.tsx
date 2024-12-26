@@ -16,16 +16,14 @@ import { formatDate } from "../utils/date";
 function GradeDetailsPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { cla, assignmentID, grade } = state as {
+  const { cla, grade } = state as {
     cla: ClassState;
-    assignmentID: number;
     grade: Grade;
   };
   const defaultAvatar = DefaultAvatar;
 
-  
   const { data: gradeDetailsQuery } = useViewGradeDetailsQuery({
-    assignmentID: assignmentID.toString(),
+    assignmentID: grade.assignmentID.toString(),
     personID: grade.personID.toString(),
   });
   const gradeDetails = gradeDetailsQuery?.submissionDetail;
@@ -40,7 +38,7 @@ function GradeDetailsPage() {
   useEffect(() => {
     const handleSaveGrading = () => {
       gradingAssignment({
-        assignmentID: assignmentID,
+        assignmentID: grade.assignmentID,
         personID: grade.personID,
         grade100: score || 0,
         comment: feedback,
@@ -50,7 +48,7 @@ function GradeDetailsPage() {
     return () => {
       window.removeEventListener("SaveGrade", handleSaveGrading);
     };
-  }, [gradingAssignment, assignmentID, grade.personID, score, feedback]);
+  }, [gradingAssignment, grade, score, feedback]);
 
   useEffect(() => {
     if (isGradingSuccess) {

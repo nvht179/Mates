@@ -1,6 +1,6 @@
 interface Grade {
   gradeId: number;
-  personID: number; // personID
+  personID: number;
   avatar: string;
   name: string;
   assignmentTitle: string;
@@ -9,6 +9,7 @@ interface Grade {
   comment: string;
   assignmentWeight: number;
   grade100: number;
+  assignmentID: number;
 }
 
 interface GradeDetails {
@@ -40,6 +41,15 @@ interface ViewGradeAssignmentByTeacherResponse {
   allSubmissionAssignment: Grade[];
 }
 
+interface ViewAllGradeInClassRequest {
+  classID: number;
+}
+
+interface ViewAllGradeInClassResponse {
+  message: string;
+  allSubmissionInClass: Grade[];
+}
+
 // for getting the submitted assignment and its grading details
 type ViewGradeDetailsRequest = {
   personID: string;
@@ -54,6 +64,7 @@ interface ViewGradeDetailsResponse {
 
 interface ViewSubmissionByStudentRequest {
   personID: number;
+  classID: number;
 }
 
 interface ViewSubmissionByStudentResponse {
@@ -98,6 +109,8 @@ export type {
   Attachment,
   ViewGradeAssignmentByTeacherRequest,
   ViewGradeAssignmentByTeacherResponse,
+  ViewAllGradeInClassRequest,
+  ViewAllGradeInClassResponse,
   ViewGradeDetailsRequest,
   ViewGradeDetailsResponse,
   ViewSubmissionByStudentRequest,

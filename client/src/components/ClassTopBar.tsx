@@ -91,7 +91,7 @@ function ClassTopBar() {
 
   const handleClickGrade = () => {
     navigate(`/class/${code}/grade`, {
-      state: { ...state, module: "Grade", title: "Assignment" },
+      state: { ...state, module: "Grade", title: "Assignment", assignmentID: null},
     });
     setAssignmentButtonClick("Grade");
   };

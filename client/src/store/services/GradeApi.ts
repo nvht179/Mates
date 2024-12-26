@@ -9,6 +9,8 @@ import {
   SubmitAssignmentResponse,
   ViewGradeAssignmentByTeacherRequest,
   ViewGradeAssignmentByTeacherResponse,
+  ViewAllGradeInClassRequest,
+  ViewAllGradeInClassResponse,
   ViewGradeDetailsRequest,
   ViewGradeDetailsResponse,
   ViewSubmissionByStudentRequest,
@@ -82,6 +84,18 @@ const gradeApi = createApi({
         method: "GET",
       }),
     }),
+    viewAllGradeInClass: builder.query<
+      ViewAllGradeInClassResponse,
+      ViewAllGradeInClassRequest
+    >({
+      query: (cla) => ({
+        url: `grades/view-all-grades-in-class/${cla.classID}`,
+        params: {
+          classID: cla.classID,
+        },
+        method: "GET",
+      }),
+    }),
     viewSubmissionByStudent: builder.query<
       ViewSubmissionByStudentResponse,
       ViewSubmissionByStudentRequest
@@ -125,6 +139,7 @@ export const {
   useSubmitAssignmentMutation,
   useDeleteSubmissionMutation,
   useLazyViewGradeAssignmentByTeacherQuery,
+  useLazyViewAllGradeInClassQuery,
   useViewGradeDetailsQuery,
   useViewSubmissionByStudentQuery,
   useGradingAssignmentMutation,

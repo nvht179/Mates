@@ -6,7 +6,10 @@ import DefaultAvatar from "../assets/default-avatar.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
 import { useGetAllAssignmentsQuery } from "../store";
-import { useLazyViewGradeAssignmentByTeacherQuery } from "../store";
+import {
+  useLazyViewGradeAssignmentByTeacherQuery,
+  useLazyViewAllGradeInClassQuery,
+} from "../store";
 import Dropdown from "../components/Dropdown";
 import { formatDate } from "../utils/date";
 
@@ -22,11 +25,16 @@ function GradePage() {
   const defaultAvatar = DefaultAvatar;
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { cla, assignmentID } = state as { cla: ClassState, assignmentID: number | null };
+  const { cla, assignmentID } = state as {
+    cla: ClassState;
+    assignmentID: number | null;
+  };
 
   const [buttonClicked, setButtonClicked] =
     useState<ButtonClicked>("GradeList");
-  const [selectedAssignmentID, setSelectedAssignmentID] = useState<number>(assignmentID || -1);
+  const [selectedAssignmentID, setSelectedAssignmentID] = useState<number>(
+    assignmentID || -1,
+  );
   const [grades, setGrades] = useState<Grade[]>([]);
 
   const { data: assignmentQuery } = useGetAllAssignmentsQuery(
@@ -36,6 +44,10 @@ function GradePage() {
     viewGradeAssignmentByTeacherQuery,
     { data: gradesQuery, isLoading: loadingGrade },
   ] = useLazyViewGradeAssignmentByTeacherQuery();
+  const [
+    viewAllGradeInClassQuery,
+    { data: gradesInClass, isLoading: loadingGradesInClass },
+  ] = useLazyViewAllGradeInClassQuery();
 
   const assignments = assignmentQuery?.data || [];
   const assignmentTitles = assignments.map((assignment) => assignment.title);
@@ -43,36 +55,30 @@ function GradePage() {
     a.localeCompare(b, undefined, { sensitivity: "base" }),
   );
   const titleToID = (title: string) => {
-    return assignments.findIndex((assignment) => assignment.title === title);
+    const assignment = assignments.find(
+      (assignment) => assignment.title === title,
+    );
+    return assignment ? assignment.id : -1;
   };
 
   useEffect(() => {
-    // if (selectedAssignmentID === -1) {
-    //   const fetchAllGrades = async () => {
-    //     const allGrades = [];
-    //     for (const assignment of assignments) {
-    //       await viewGradeAssignmentByTeacherQuery({
-    //         assignmentID: assignment.id,
-    //       }).unwrap();
-    //       if (gradesQuery) {
-    //         allGrades.push(...gradesQuery.allSubmissionAssignment);
-    //       }
-    //     }
-    //     allGrades.sort((a, b) => a.id - b.id);
-    //     setGrades(allGrades);
-    //   };
-    //   fetchAllGrades();
-    //   return;
-    // }
-    viewGradeAssignmentByTeacherQuery({ assignmentID: selectedAssignmentID });
-    const grades = gradesQuery?.allSubmissionAssignment || [];
+    let grades = [];
+    if (selectedAssignmentID === -1) {
+      viewAllGradeInClassQuery({ classID: cla.classID });
+      grades = gradesInClass?.allSubmissionInClass || [];
+    } else {
+      viewGradeAssignmentByTeacherQuery({ assignmentID: selectedAssignmentID });
+      grades = gradesQuery?.allSubmissionAssignment || [];
+    }
     grades.sort((a, b) => a.gradeId - b.gradeId);
     setGrades(grades);
   }, [
     selectedAssignmentID,
-    assignmentQuery,
-    gradesQuery,
     viewGradeAssignmentByTeacherQuery,
+    viewAllGradeInClassQuery,
+    cla.classID,
+    gradesInClass,
+    gradesQuery,
   ]);
 
   const handleNavigateGradeDetailsClick = (grade: Grade) => {
@@ -82,7 +88,6 @@ function GradePage() {
         title: "Assignment",
         module: "Grade",
         display: "Grade details",
-        assignmentID: selectedAssignmentID,
         grade: grade,
       },
     });
@@ -147,9 +152,9 @@ function GradePage() {
 
   const gradesToDisplay =
     buttonClicked === "ToGrade"
-      ? grades.filter((grade) => grade.status === "ToGrade")
+      ? grades.filter((grade) => grade.grade100 === null)
       : buttonClicked === "Graded"
-        ? grades.filter((grade) => grade.status === "Graded")
+        ? grades.filter((grade) => grade.grade100 !== null)
         : grades;
 
   const handleOnChangeAssignment = (option: string) => {
@@ -162,7 +167,7 @@ function GradePage() {
 
   const renderedGradeListHeaders = (
     <div className="flex flex-row items-end justify-between">
-      <div className="flex h-full flex-row items-center space-x-4">
+      <div className="flex h-full select-none flex-row items-center space-x-4">
         <TopBarTab
           className="border-b-fg-softer"
           onClick={handleClickGradeList}
@@ -203,7 +208,7 @@ function GradePage() {
   return (
     <div className="mx-10 mt-4 rounded-md border-fg-border">
       {renderedGradeListHeaders}
-      {loadingGrade ? (
+      {loadingGrade || loadingGradesInClass ? (
         "Loading..."
       ) : (
         <GradeTable
