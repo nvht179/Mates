@@ -23,7 +23,7 @@ class GradeService {
     }
   };
 
-  viewGradesInThatAssignmentStudent = async (personID) => {
+  viewGradesInThatAssignmentStudent = async (personID, classID) => {
     try {
       const user = await UserDB.getUserByIdDB(personID);
       if (!user) {
@@ -48,16 +48,20 @@ class GradeService {
       for (const submission of allSubmissions) {
         const assignmentID = submission.assignmentID;
         const assignment = await AssignmentDB.getAssignmentById(assignmentID);
-      
+
+        if (assignment.classID != classID) {
+          continue;
+        }
+
         const assignmentTitle = assignment.title;
         const status = submission.status;
         const submittedOn = submission.submittedOn;
         const comment = submission.comment;
         const weight = assignment.weight;
-        const grade = submission.grade100;
+        const grade100 = submission.grade100;
         const assignmentWeight = assignment.weight;
 
-        allSubmissionsStudent.push({ assignmentTitle, status, submittedOn, comment, assignmentWeight, grade, assignmentID });
+        allSubmissionsStudent.push({ assignmentTitle, status, submittedOn, comment, assignmentWeight, grade100, assignmentID });
       }
       return allSubmissionsStudent;
     } catch (err) {
@@ -137,6 +141,39 @@ class GradeService {
   removeSubmission = async (assignmentID, personID) => {
     try {
       await GradeDB.removeSubmission(assignmentID, personID);
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
+  viewAllGradesInClass = async (classID) => {
+    try {
+      const assignments = await AssignmentDB.getAllAssignmentsInClass(classID);
+
+      const allSubmissionInClass = [];
+      for (const assignment of assignments) {
+        const assignmentID = assignment.id;
+        const grade = await GradeDB.findAllSubmissionsAssignment(assignmentID);
+        if (!grade || grade.length == 0) {
+          continue;
+        }
+        const id = grade.studentID;
+        const user = await UserDB.getUserByIdDB(id);
+
+        const gradeId = grade.Id;
+        const personID = id;
+        const name = user.name;
+        const avatar = user.avatar;
+        const assignmentTitle = assignment.title;
+        const status = grade.status;
+        const submittedOn = grade.submittedOn;
+        const comment = grade.comment;
+        const assignmentWeight = assignment.weight;
+        const grade100 = grade.grade100;
+
+        allSubmissionInClass.push({ personID, avatar, name, assignmentTitle, status, submittedOn, comment, assignmentWeight, grade100, gradeId });
+      }
+      return allSubmissionInClass;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }

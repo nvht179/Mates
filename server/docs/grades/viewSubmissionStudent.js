@@ -14,6 +14,15 @@ module.exports = {
         "schema": {
           "type": "string"
         }
+      },
+      {
+        "name": "classID",
+        "in": "path",
+        "required": true,
+        "description": "Class's ID",
+        "schema": {
+          "type": "string"
+        }
       }
     ],
     "responses": {
