@@ -62,32 +62,32 @@ const addCascadeConstraints = async () => {
   const queries = [
     `
       ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "fk_post",
-      ADD CONSTRAINT "fk_post"
+      DROP CONSTRAINT IF EXISTS "Notifications_postId_fkey",
+      ADD CONSTRAINT "Notifications_postId_fkey"
       FOREIGN KEY ("postId")
       REFERENCES "Post" ("id")
       ON DELETE CASCADE;
     `,
     `
       ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "fk_comment",
-      ADD CONSTRAINT "fk_comment"
+      DROP CONSTRAINT IF EXISTS "Notifications_commentId_fkey",
+      ADD CONSTRAINT "Notifications_commentId_fkey"
       FOREIGN KEY ("commentId")
       REFERENCES "Comment" ("id")
       ON DELETE CASCADE;
     `,
     `
       ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "fk_assignment",
-      ADD CONSTRAINT "fk_assignment"
+      DROP CONSTRAINT IF EXISTS "Notifications_assignmentId_fkey",
+      ADD CONSTRAINT "Notifications_assignmentId_fkey"
       FOREIGN KEY ("assignmentId")
       REFERENCES "Assignment" ("id")
       ON DELETE CASCADE;
     `,
     `
       ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "fk_person",
-      ADD CONSTRAINT "fk_person"
+      DROP CONSTRAINT IF EXISTS "Notifications_targetId_fkey",
+      ADD CONSTRAINT "Notifications_targetId_fkey"
       FOREIGN KEY ("targetId")
       REFERENCES "Person" ("id")
       ON DELETE CASCADE;
