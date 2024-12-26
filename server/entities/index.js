@@ -66,7 +66,8 @@ const addCascadeConstraints = async () => {
       ADD CONSTRAINT "Notifications_postId_fkey"
       FOREIGN KEY ("postId")
       REFERENCES "Post" ("id")
-      ON DELETE CASCADE;
+      ON DELETE CASCADE
+      ON UPDATE CASCADE;
     `,
     `
       ALTER TABLE "Notifications"
@@ -74,7 +75,8 @@ const addCascadeConstraints = async () => {
       ADD CONSTRAINT "Notifications_commentId_fkey"
       FOREIGN KEY ("commentId")
       REFERENCES "Comment" ("id")
-      ON DELETE CASCADE;
+      ON DELETE CASCADE
+      ON UPDATE CASCADE;
     `,
     `
       ALTER TABLE "Notifications"
@@ -82,7 +84,8 @@ const addCascadeConstraints = async () => {
       ADD CONSTRAINT "Notifications_assignmentId_fkey"
       FOREIGN KEY ("assignmentId")
       REFERENCES "Assignment" ("id")
-      ON DELETE CASCADE;
+      ON DELETE CASCADE
+      ON UPDATE CASCADE;
     `,
     `
       ALTER TABLE "Notifications"
@@ -90,7 +93,8 @@ const addCascadeConstraints = async () => {
       ADD CONSTRAINT "Notifications_targetId_fkey"
       FOREIGN KEY ("targetId")
       REFERENCES "Person" ("id")
-      ON DELETE CASCADE;
+      ON DELETE CASCADE
+      ON UPDATE CASCADE;
     `,
   ];
 
