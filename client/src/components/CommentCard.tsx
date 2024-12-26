@@ -7,6 +7,7 @@ import { useEditCommentMutation, useDeleteCommentMutation } from "../store";
 import Input from "./Input";
 import Button from "./Button";
 import { useGetUserByIdQuery } from "../store";
+import { formatDate } from "../utils/date";
 
 interface Comment {
   id: number;
@@ -17,14 +18,14 @@ interface Comment {
   personID: number;
 }
 
-function CommentCard({ comment }: { comment: Comment}) {
+function CommentCard({ comment }: { comment: Comment }) {
   const currentUser = useSelector((state: RootState) => state.user);
 
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(comment.content);
   const formEl = useRef<HTMLFormElement>(null);
 
-  const [editComment, {isLoading}] = useEditCommentMutation();
+  const [editComment, { isLoading }] = useEditCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
   useEffect(() => {
@@ -41,13 +42,10 @@ function CommentCard({ comment }: { comment: Comment}) {
     };
   }, [comment]);
 
-  const {data} = useGetUserByIdQuery(comment.personID);
+  const { data } = useGetUserByIdQuery(comment.personID);
 
   const user = data?.user;
-  const avatar =
-    user?.avatar === ""
-      ? DefaultAvatar
-      : (user?.avatar ?? DefaultAvatar);
+  const avatar = user?.avatar === "" ? DefaultAvatar : user?.avatar;
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -88,7 +86,7 @@ function CommentCard({ comment }: { comment: Comment}) {
           />
           <p className="ml-4 text-sm">{user?.name}</p>
           <p className="ml-4 text-sm font-light">
-            {new Date(comment.createAt).toLocaleString()}
+            {formatDate(comment.createAt)}
           </p>
         </div>
         {user?.id == currentUser.id && (
@@ -109,7 +107,12 @@ function CommentCard({ comment }: { comment: Comment}) {
                 value={content}
                 onChange={handleContentChange}
               />
-              <Button primary disabled={isLoading} className="ml-4 w-20" onClick={handleSaveComment}>
+              <Button
+                primary
+                disabled={isLoading}
+                className="ml-4 w-20"
+                onClick={handleSaveComment}
+              >
                 Save
               </Button>
               <Button

@@ -6,6 +6,7 @@ import {
   RootState,
   useEditPostMutation,
   useDeletePostMutation,
+  useGetUserByIdQuery,
 } from "../store";
 import OptionDropdown from "./OptionDropdown";
 import Input from "./Input";
@@ -14,6 +15,7 @@ import Button from "./Button";
 import { TbLinkPlus } from "react-icons/tb";
 import FileList from "./FileList";
 import AttachmentList from "./AttachmentList";
+import { formatDate } from "../utils/date";
 
 interface PostListProps {
   post: Post;
@@ -27,6 +29,7 @@ function PostDisplay({ post }: PostListProps) {
   const [attachments, setAttachments] = useState(post.attachments);
 
   const user = useSelector((state: RootState) => state.user);
+  const {data: userProfileQuery} = useGetUserByIdQuery(post.personID);
   const [editPost, { data, isSuccess, isLoading }] = useEditPostMutation();
   const [deletePost] = useDeletePostMutation();
 
@@ -65,14 +68,15 @@ function PostDisplay({ post }: PostListProps) {
     }
   }, [isSuccess, data]);
 
+  const userProfile = userProfileQuery?.user;
   const userProfileRendered = (
     <div className="flex flex-row items-center">
       <img
         className="h-12 w-12 rounded-full object-cover"
-        src={user.avatar ? user.avatar : defaultAvatar}
-        alt={user.name || "Unknown"}
+        src={userProfile?.avatar === "" ? defaultAvatar : userProfile?.avatar}
+        alt={userProfile?.name || "Unknown"}
       />
-      <p className="ml-4">{user.name}</p>
+      <p className="ml-4">{userProfile?.name || "Unknown"}</p>
     </div>
   );
 
@@ -90,7 +94,7 @@ function PostDisplay({ post }: PostListProps) {
         <div className="flex flex-row items-center">
           {userProfileRendered}
           <p className="ml-4 font-light">
-            {new Date(post.time).toLocaleString()}
+            {formatDate(post.time)}
           </p>
         </div>
         {post.personID == user.id && (
@@ -142,7 +146,7 @@ function PostDisplay({ post }: PostListProps) {
         <div className="flex flex-row items-center">
           {userProfileRendered}
           <p className="ml-4 font-light">
-            {new Date(post.time).toLocaleString()}
+            {formatDate(post.time)}
           </p>
         </div>
         <div className="flex flex-row items-center">

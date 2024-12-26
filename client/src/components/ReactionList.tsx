@@ -34,6 +34,7 @@ function ReactionList({ post }: ReactionListProps) {
       const userReaction = reactions.find(
         (reaction: ReactionType) => reaction.personId === user.id,
       );
+      console.log(reactions, user.id);
       return userReaction ? userReaction : null;
     };
     const reaction = getCurrentUserReactionType();
@@ -66,7 +67,7 @@ function ReactionList({ post }: ReactionListProps) {
     if (reactionType === null) {
       // Logic to add the reaction
       createReaction({
-        personId: post.personID,
+        personId: user.id as number,
         type,
         postId: post.id,
       });
