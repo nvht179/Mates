@@ -28,6 +28,9 @@ export default function EnterPassword() {
       error as FetchBaseQueryError,
       setErrorMessage,
     );
+    if (isError && errorMessage === "Email is not verified") {
+       navigate("/email-input" , { state: { email: email } });
+    }
   }, [isError, error, isSuccess, data]);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
