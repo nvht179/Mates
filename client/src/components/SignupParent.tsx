@@ -215,6 +215,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Password</h1>
               <Input
+                type="password"
                 className="w-full"
                 placeholder="Enter password"
                 value={password}
@@ -225,6 +226,7 @@ export default function SignupParent() {
             <div className="w-full md:w-1/2 px-3">
               <h1 className="text-l font-sans font-semibold">Confirm Password</h1>
               <Input
+                type="password"
                 className="w-full"
                 placeholder="Enter password"
                 value={confirmPassword}

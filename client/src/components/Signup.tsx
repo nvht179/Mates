@@ -209,6 +209,7 @@ export default function SignupParent() {
             <h1 className="text-l font-sans font-semibold">Password</h1>
             <form className="mb-4 mt-1" onSubmit={handleSubmit}>
                 <Input
+                    type="password"
                     className="w-full"
                     placeholder="Enter password"
                     value={password}
@@ -219,6 +220,7 @@ export default function SignupParent() {
             <h1 className="text-l font-sans font-semibold">Confirm Password</h1>
             <form className="mt-1" onSubmit={handleSubmit}>
                 <Input
+                    type="password"
                     className="w-full"
                     placeholder="Enter password"
                     value={confirmPassword}
