@@ -6,13 +6,12 @@ module.exports =
     ],
     "parameters": [
       {
-        "name": "email",
+        "name": "id",
         "in": "path",
-        "description": "The email of that user",
         "required": true,
+        "description": "User's id",
         "schema": {
-          "type": "string",
-          "example": "lnkhoa22@apcs.fitus.edu.vn"
+          "type": "string"
         }
       }
     ],

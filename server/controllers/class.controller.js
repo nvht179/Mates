@@ -23,8 +23,8 @@ class ClassController {
 
   viewAllClasses = async (req, res) => {
     try {
-      const { email } = req.params;
-      const allClassesInfo = await ClassService.viewAllClasses(email);
+      const { id } = req.params;
+      const allClassesInfo = await ClassService.viewAllClasses(id);
       const message = "Successful";
       res.status(200).json({ message, allClassesInfo });
     } catch (err) {

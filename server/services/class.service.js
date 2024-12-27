@@ -42,9 +42,9 @@ class ClassService {
     }
   };
 
-  viewAllClasses = async (email) => {
+  viewAllClasses = async (id) => {
     try {
-      const user = await UserDB.getUserByEmailDB(email);
+      const user = await UserDB.getUserByIdDB(id);
 
       if (!user) {
         throw new ErrorHandler(403, "User not found");
