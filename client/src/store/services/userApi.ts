@@ -7,12 +7,15 @@ import {
   UpdateUserInfoResponse,
 } from "../../interfaces/User";
 import { getAuthToken } from "../../utils/getAuthToken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const userApi = createApi({
   reducerPath: "userApi",
   tagTypes: ["UserInfo"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: `${process.env.BASE_URL}`,
     credentials: "include",
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();

@@ -10,12 +10,15 @@ import {
   ViewPostRequest,
   ViewPostsResponse,
 } from "../../interfaces/Post";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const postApi = createApi({
   reducerPath: "post",
   tagTypes: ["Post", "ClassPost", "Comment"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: `${process.env.BASE_URL}`,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {

@@ -10,12 +10,15 @@ import {
   ViewAllLecturesRequest,
   ViewAllLecturesResponse,
 } from "../../interfaces/Lecture";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const lectureApi = createApi({
   reducerPath: "lecture",
   tagTypes: ["Lecture"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: `${process.env.BASE_URL}`,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {

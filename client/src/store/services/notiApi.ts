@@ -8,12 +8,15 @@ import {
   ViewNotificationRequest,
   ViewNotificationResponse,
 } from "../../interfaces/Notification";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const notiApi = createApi({
   reducerPath: "noti",
   tagTypes: ["Notification"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: `${process.env.BASE_URL}`,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {
