@@ -46,9 +46,9 @@ class AuthController {
         childEmail
       );
       res.header("auth-token", token);
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-      });
+      // res.cookie("refreshToken", refreshToken, {
+      //   httpOnly: true,
+      // });
       const message = "Successful";
       res.status(200).json({ message, token, newUser, classUser });
     } catch (err) {
