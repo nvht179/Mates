@@ -99,6 +99,16 @@ export default function EditClass() {
     value: string,
   ) => {
     const updatedSchedule = [...schedule];
+
+    // Validate time format (HH:MM)
+    if (field === "startTime" || field === "endTime") {
+      const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+      if (!timeRegex.test(value)) {
+        // If the input is invalid, keep the previous value
+        return;
+      }
+    }
+
     updatedSchedule[index][field] = value;
     setSchedule(updatedSchedule);
   };

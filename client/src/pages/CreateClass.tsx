@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { LuPencilLine } from "react-icons/lu";
-import { IoMdCode } from "react-icons/io";
+import { IoMdCode, IoMdRemoveCircleOutline } from "react-icons/io";
 import { FaRegClock } from "react-icons/fa6";
 import { MdAddCircleOutline } from "react-icons/md";
 import { RxLoop } from "react-icons/rx";
@@ -14,7 +14,6 @@ import { RootState, useCreateClassMutation } from "../store";
 import { getNextDate, parseHours } from "../utils/date";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { IoMdRemoveCircleOutline } from "react-icons/io";
 import Dropdown from "../components/Dropdown";
 import Textarea from "../components/TextArea";
 
@@ -60,6 +59,16 @@ export default function CreateClass() {
     value: string,
   ) => {
     const updatedSchedule = [...schedule];
+
+    // Validate time format (HH:MM)
+    if (field === "startTime" || field === "endTime") {
+      const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+      if (!timeRegex.test(value)) {
+        // If the input is invalid, keep the previous value
+        return;
+      }
+    }
+
     updatedSchedule[index][field] = value;
     setSchedule(updatedSchedule);
   };
@@ -129,7 +138,7 @@ export default function CreateClass() {
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between px-8 py-3 w-[60]">
+      <div className="flex w-[60] flex-row items-center justify-between px-8 py-3">
         <div className="flex flex-row items-center justify-between">
           <h1 className="text-lg font-bold">New Class</h1>
         </div>
@@ -141,19 +150,13 @@ export default function CreateClass() {
           >
             Close
           </Button>
-          {isError ? (
-            <Button disabled className="text-red-default">
-              {errorMessage}
-            </Button>
-          ) : (
-            <Button
-              className="w-20 text-sm"
-              onClick={handleSubmit}
-              disabled={isLoading}
-            >
-              Create
-            </Button>
-          )}
+          <Button
+            className="w-20 text-sm"
+            onClick={handleSubmit}
+            disabled={isLoading}
+          >
+            Create
+          </Button>
         </div>
       </div>
       <div className="border-b-2" />
@@ -233,7 +236,7 @@ export default function CreateClass() {
         </div>
 
         {/* Add Time Slot */}
-        <div className="flex flex-row items-center space-x-4 ml-10">
+        <div className="ml-10 flex flex-row items-center space-x-4">
           <div
             onClick={addTimeSlot}
             className="flex flex-row items-center space-x-4 hover:cursor-pointer"
