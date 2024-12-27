@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
-import { LuPencilLine } from "react-icons/lu";
+import { LuPencilLine, LuWeight } from "react-icons/lu";
 import { FaRegClock } from "react-icons/fa6";
-import { LuWeight } from "react-icons/lu";
 import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { MdAttachment } from "react-icons/md";
@@ -43,19 +42,68 @@ export default function EditAssignment() {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Convert ISO time to local time for display
+  const isoToLocalDateTime = (isoString: string) => {
+    const date = new Date(isoString);
+    const localDateTime = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000,
+    );
+    return localDateTime.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:MM
+  };
+
+  // Convert local time back to ISO format for the server
+  const localToISODateTime = (localString: string) => {
+    const date = new Date(localString);
+    return date.toISOString();
+  };
+
+  const [startDateTime, setStartDateTime] = useState(
+    isoToLocalDateTime(startTime),
+  );
+  const [endDateTime, setEndDateTime] = useState(isoToLocalDateTime(endTime));
+
+  const validateAndUpdateDateTime = (
+    newStartDateTime: string,
+    newEndDateTime: string,
+  ) => {
+    const now = new Date();
+    const nowLocal = isoToLocalDateTime(now.toISOString());
+
+    // Validate start date/time isn't in the past
+    if (newStartDateTime < nowLocal) {
+      newStartDateTime = nowLocal;
+    }
+
+    // Validate end date/time isn't before start date/time
+    if (newEndDateTime <= newStartDateTime) {
+      newEndDateTime = newStartDateTime;
+    }
+
+    setStartDateTime(newStartDateTime);
+    setEndDateTime(newEndDateTime);
+  };
+
+  const handleStartDateTimeChange = (value: string) => {
+    validateAndUpdateDateTime(value, endDateTime);
+  };
+
+  const handleEndDateTimeChange = (value: string) => {
+    validateAndUpdateDateTime(startDateTime, value);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const dataTransfer = new DataTransfer();
-      
+
       // Add existing files if any
       if (attachment) {
-        Array.from(attachment).forEach(file => {
+        Array.from(attachment).forEach((file) => {
           dataTransfer.items.add(file);
         });
       }
-      
+
       // Add new files
-      Array.from(e.target.files).forEach(file => {
+      Array.from(e.target.files).forEach((file) => {
         dataTransfer.items.add(file);
       });
 
@@ -63,7 +111,7 @@ export default function EditAssignment() {
     }
     // Reset input
     if (inputRef.current) {
-      inputRef.current.value = '';
+      inputRef.current.value = "";
     }
   };
 
@@ -77,49 +125,6 @@ export default function EditAssignment() {
       setAttachment(dataTransfer.files);
     }
   }, [attachments]);
-
-  type ScheduleSlot = {
-    startDate: string;
-    startTime: string;
-    endDate: string;
-    endTime: string;
-  };
-
-  const [schedule, setSchedule] = useState<ScheduleSlot>({
-    startDate: startTime.slice(0, 10),
-    startTime: startTime.slice(11, 16),
-    endDate: endTime.slice(0, 10),
-    endTime: endTime.slice(11, 16),
-  });
-
-  const validateAndUpdateSchedule = (field: keyof ScheduleSlot, value: string) => {
-    const now = new Date();
-    const nowDate = now.toISOString().slice(0, 10);
-    const nowTime = now.toTimeString().slice(0, 5);
-    
-    const newSchedule = { ...schedule, [field]: value };
-
-    // Validate start date/time isn't in the past
-    if (newSchedule.startDate < nowDate) {
-      newSchedule.startDate = nowDate;
-    } else if (newSchedule.startDate === nowDate && newSchedule.startTime < nowTime) {
-      newSchedule.startTime = nowTime;
-    }
-
-    // Validate end date/time isn't before start date/time
-    const startDT = new Date(`${newSchedule.startDate}T${newSchedule.startTime}`);
-    const endDT = new Date(`${newSchedule.endDate}T${newSchedule.endTime}`);
-    if (endDT <= startDT) {
-      newSchedule.endDate = newSchedule.startDate;
-      newSchedule.endTime = newSchedule.startTime;
-    }
-
-    setSchedule(newSchedule);
-  };
-
-  const handleScheduleChange = (field: keyof ScheduleSlot, value: string) => {
-    validateAndUpdateSchedule(field, value);
-  };
 
   useEffect(() => {
     responseErrorHandler(
@@ -135,25 +140,21 @@ export default function EditAssignment() {
   }, [isError, error, isSuccess, navigate, code, state]);
 
   const handleSubmit = useCallback(async () => {
-    const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
-    const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
-    if (endDT <= startDT) {
-      setErrorMessage("End time must be after start time")
-      return;
-    };
+    const startISODateTime = localToISODateTime(startDateTime);
+    const endISODateTime = localToISODateTime(endDateTime);
 
+    if (endISODateTime <= startISODateTime) {
+      setErrorMessage("End time must be after start time");
+      return;
+    }
     const formData = new FormData();
     formData.append("title", assignmentTitle);
     formData.append("description", description);
     formData.append("classID", classID.toString());
     formData.append("weight", weight.toString());
-    formData.append("startTime", startDT.toISOString());
-    try {
-      formData.append("endTime", endDT.toISOString());
-    } catch (error) {
-      setErrorMessage(`end time error: ${error}`);
-      return;
-    }
+    formData.append("startTime", startISODateTime);
+    formData.append("endTime", endISODateTime);
+
     if (attachment) {
       Array.from(attachment).forEach((file) => formData.append("files", file));
     }
@@ -163,7 +164,8 @@ export default function EditAssignment() {
       data: formData,
     });
   }, [
-    schedule,
+    startDateTime,
+    endDateTime,
     assignmentTitle,
     description,
     classID,
@@ -195,7 +197,7 @@ export default function EditAssignment() {
       <div className="mb-6 flex items-center">
         <LuPencilLine className="mx-4 text-xl text-fg-soft" />
         <Input
-          className="bg-fg-alt border-fg-alt"
+          className="border-fg-alt bg-fg-alt"
           type="text"
           value={assignmentTitle}
           placeholder="Assignment title"
@@ -207,7 +209,7 @@ export default function EditAssignment() {
       <div className="mb-6 flex items-center">
         <LuWeight className="mx-4 text-xl text-fg-soft" />
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="number"
           value={weight}
           placeholder="Weight"
@@ -220,48 +222,21 @@ export default function EditAssignment() {
         {/* Start Day */}
         <FaRegClock className="ml-4 text-xl" />
         <Input
-          className="bg-bg-dark border-fg-alt"
-          type="date"
-          value={schedule.startDate}
-          min={new Date().toISOString().slice(0, 10)}
-          onChange={(e) => handleScheduleChange("startDate", e.target.value)}
-        />
-
-        {/* Start Time */}
-        <Input
-          className="bg-bg-dark border-fg-alt"
-          type="time"
-          value={schedule.startTime}
-          min={
-            schedule.startDate === new Date().toISOString().slice(0, 10)
-              ? new Date().toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : ""
-          }
-          onChange={(e) => handleScheduleChange("startTime", e.target.value)}
+          className="border-fg-alt bg-bg-dark"
+          type="datetime-local"
+          value={startDateTime}
+          min={isoToLocalDateTime(new Date().toISOString())}
+          onChange={(e) => handleStartDateTimeChange(e.target.value)}
         />
         <HiArrowLongRight className="text-xl" />
 
         {/* End Day */}
         <Input
-          className="bg-bg-dark border-fg-alt"
-          type="date"
-          value={schedule.endDate}
-          min={schedule.startDate}
-          onChange={(e) => handleScheduleChange("endDate", e.target.value)}
-        />
-
-        {/* End Time */}
-        <Input
-          className="bg-bg-dark border-fg-alt"
-          type="time"
-          value={schedule.endTime}
-          min={
-            schedule.startDate === schedule.endDate ? schedule.startTime : ""
-          }
-          onChange={(e) => handleScheduleChange("endTime", e.target.value)}
+          className="border-fg-alt bg-bg-dark"
+          type="datetime-local"
+          value={endDateTime}
+          min={startDateTime}
+          onChange={(e) => handleEndDateTimeChange(e.target.value)}
         />
       </div>
 

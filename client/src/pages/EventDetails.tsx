@@ -27,21 +27,38 @@ function EventDetails() {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
 
+  // Convert ISO date to local date string (YYYY-MM-DD)
+  const toLocalDate = (isoDate: string) => {
+    const date = new Date(isoDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // Convert ISO date to local time string (HH:MM)
+  const toLocalTime = (isoDate: string) => {
+    const date = new Date(isoDate);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
   const [title, setTitle] = useState<string>(event?.title ?? "");
   const [description, setDescription] = useState<string>(
     event?.description ?? "",
   );
   const [startDate, setStartDate] = useState<string>(
-    event?.startTime.split("T")[0] ?? "",
+    event ? toLocalDate(event.startTime) : "",
   );
   const [startTime, setStartTime] = useState<string>(
-    event?.startTime.split("T")[1] ?? "",
+    event ? toLocalTime(event.startTime) : "",
   );
   const [endDate, setEndDate] = useState<string>(
-    event?.endTime.split("T")[0] ?? "",
+    event ? toLocalDate(event.endTime) : "",
   );
   const [endTime, setEndTime] = useState<string>(
-    event?.endTime.split("T")[1] ?? "",
+    event ? toLocalTime(event.endTime) : "",
   );
   const repeatOptions = ["Does not repeat", "Weekly", "Bi-Weekly", "Monthly"];
   const [repeatType, setRepeatType] = useState<string>(
@@ -93,7 +110,8 @@ function EventDetails() {
       setErrorMessage("Please fill in the date and time fields");
       return;
     }
-    
+
+    // Convert local date and time to ISO strings
     const startDateTime = new Date(`${startDate}T${startTime}`).toISOString();
     const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
 
@@ -185,7 +203,7 @@ function EventDetails() {
             placeholder="Start Time"
             className="flex-1 border-fg-alt bg-fg-alt"
             type="time"
-            value={startTime.slice(0, 5)} // Display only HH:MM
+            value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
           />
           <FaArrowRightLong className="mx-4 text-2xl font-thin" />
@@ -200,7 +218,7 @@ function EventDetails() {
             placeholder="End Time"
             className="flex-1 border-fg-alt bg-fg-alt"
             type="time"
-            value={endTime.slice(0, 5)} // Display only HH:MM
+            value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
           />
         </div>

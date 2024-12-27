@@ -1,14 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
-import { LuPencilLine } from "react-icons/lu";
+import { LuPencilLine, LuWeight } from "react-icons/lu";
 import { FaRegClock } from "react-icons/fa6";
-import { LuWeight } from "react-icons/lu";
 import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { MdAttachment } from "react-icons/md";
 import { useCreateAssignmentMutation } from "../store";
-import { useLocation } from "react-router-dom";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import FileList from "../components/FileList";
@@ -81,27 +79,27 @@ export default function CreateAssignment() {
   }, [schedule]);
 
   const handleSubmit = useCallback(async () => {
+    // Convert local date and time to ISO format
     const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
     const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
+
     if (endDT <= startDT) {
       setErrorMessage("End time must be after start time");
-    };
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", assignmentTitle);
     formData.append("description", description);
     formData.append("classID", classID.toString());
     formData.append("weight", weight.toString());
-    formData.append("startTime", startDT.toISOString());
-    try {
-      formData.append("endTime", endDT.toISOString());
-    } catch (error) {
-      setErrorMessage(`end time error: ${error}`);
-      return;
-    }
+    formData.append("startTime", startDT.toISOString()); // Convert to ISO format
+    formData.append("endTime", endDT.toISOString()); // Convert to ISO format
+
     if (attachment) {
       Array.from(attachment).forEach((file) => formData.append("files", file));
     }
+
     await createAssignment(formData);
   }, [
     schedule,
@@ -141,7 +139,7 @@ export default function CreateAssignment() {
       <div className="mb-6 flex items-center">
         <LuPencilLine className="mx-4 text-xl text-fg-soft" />
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="text"
           value={assignmentTitle}
           placeholder="Assignment title"
@@ -153,7 +151,7 @@ export default function CreateAssignment() {
       <div className="mb-6 flex items-center">
         <LuWeight className="mx-4 text-xl text-fg-soft" />
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="number"
           value={weight}
           min={1}
@@ -167,7 +165,7 @@ export default function CreateAssignment() {
         {/* Start Day */}
         <FaRegClock className="ml-4 text-xl" />
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="date"
           value={schedule.startDate}
           min={new Date().toISOString().slice(0, 10)}
@@ -176,7 +174,7 @@ export default function CreateAssignment() {
 
         {/* Start Time */}
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="time"
           value={schedule.startTime}
           min={
@@ -193,7 +191,7 @@ export default function CreateAssignment() {
 
         {/* End Day */}
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="date"
           value={schedule.endDate}
           min={schedule.startDate}
@@ -202,7 +200,7 @@ export default function CreateAssignment() {
 
         {/* End Time */}
         <Input
-          className="bg-bg-dark border-fg-alt"
+          className="border-fg-alt bg-bg-dark"
           type="time"
           value={schedule.endTime}
           min={
@@ -226,7 +224,10 @@ export default function CreateAssignment() {
       {/* Attachment */}
       <div className="my-4 flex items-center">
         <MdAttachment className="mx-4 text-xl text-fg-soft" />
-        <label htmlFor="attachment" className="cursor-pointer text-primary-default">
+        <label
+          htmlFor="attachment"
+          className="cursor-pointer text-primary-default"
+        >
           Attach files
         </label>
         <Input
@@ -240,7 +241,9 @@ export default function CreateAssignment() {
             }
           }}
         />
-        {fileNumber > 0 && <p className="ml-4 text-primary-default">{fileNumber}</p>}
+        {fileNumber > 0 && (
+          <p className="ml-4 text-primary-default">{fileNumber}</p>
+        )}
       </div>
       <FileList
         fileList={attachment}

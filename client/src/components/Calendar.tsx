@@ -9,7 +9,7 @@ interface CalendarProps {
   events: Event[];
 }
 
-const HOURWIDTH = 5; // 1 hour = 5rem
+const HOUR_LENGTH = 5; // 1 hour = 5rem
 function Calendar({ displayDate, events }: CalendarProps) {
   const navigate = useNavigate();
   const role = useSelector((state: RootState) => state.user.role);
@@ -20,7 +20,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
     displayDate.getFullYear(),
     displayDate.getMonth(),
     displayDate.getDate() -
-      (displayDate.getDay() === 0 ? 6 : displayDate.getDay() - 1),
+    (displayDate.getDay() === 0 ? 6 : displayDate.getDay() - 1),
   );
 
   // Generate an array of 7 days (Monday to Sunday)
@@ -53,7 +53,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
 
     const dayDiff = Math.floor(
       (dayMidnight.getTime() - eventStartMidnight.getTime()) /
-        (1000 * 60 * 60 * 24),
+      (1000 * 60 * 60 * 24),
     );
 
     switch (event.repeatTime) {
@@ -73,13 +73,19 @@ function Calendar({ displayDate, events }: CalendarProps) {
     const eventStart = new Date(event.startTime);
     const eventEnd = new Date(event.endTime);
 
-    const startHour = eventStart.getHours();
-    const endHour = eventEnd.getHours();
-    const durationInHours = Math.max(endHour - startHour, 1.5);
+    // Calculate the total minutes from the start of the day
+    const startMinutes = eventStart.getHours() * 60 + eventStart.getMinutes();
+    const endMinutes = eventEnd.getHours() * 60 + eventEnd.getMinutes();
+
+    // Calculate the duration in minutes
+    const durationInMinutes = Math.max(endMinutes - startMinutes, 90); // Minimum duration of 1.5 hours (90 minutes)
+
+    // Convert minutes to rem (1 hour = 5rem, so 1 minute = 5/60 rem)
+    const minutesToRem = (minutes: number) => (minutes * HOUR_LENGTH) / 60;
 
     return {
-      top: `${startHour * HOURWIDTH + 2.5}rem`, // Each hour is 5rem tall
-      height: `${durationInHours * HOURWIDTH}rem`,
+      top: `${minutesToRem(startMinutes)}rem`, // Position from the top
+      height: `${minutesToRem(durationInMinutes)}rem`, // Height of the event
     };
   };
 
@@ -99,8 +105,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
           {timeSlots.map((time, index) => (
             <div
               key={index}
-              className="flex items-end border-b-2 text-sm text-fg-default"
-              style={{ height: `${HOURWIDTH}rem` }}
+              className={`flex h-[${HOUR_LENGTH}rem] items-end border-b-2 text-sm text-fg-default`}
             >
               {time}
             </div>
@@ -113,8 +118,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
             {weekDays.map((day, index) => (
               <div
                 key={index}
-                className="top-0 flex items-center justify-center border border-fg-border text-sm font-semibold"
-                style={{ height: `${HOURWIDTH}rem` }}
+                className={`top-0 flex items-center justify-center border border-fg-border text-sm font-semibold h-[${HOUR_LENGTH}rem]`}
               >
                 {day.toLocaleDateString("en-US", {
                   weekday: "short",
@@ -132,23 +136,22 @@ function Calendar({ displayDate, events }: CalendarProps) {
                 key={colIndex}
                 className="relative"
                 style={{
-                  height: `${HOURWIDTH * 24}rem`,
+                  height: `${HOUR_LENGTH * 24}rem`,
                 }}
               >
                 {events
                   .filter(
                     (event) =>
                       new Date(event.startTime).toDateString() ===
-                        day.toDateString() ||
+                      day.toDateString() ||
                       new Date(event.endTime).toDateString() ===
-                        day.toDateString() ||
+                      day.toDateString() ||
                       isRecurringEvent(event, day),
                   )
                   .map((event) => (
                     <div
                       key={event.eventID}
-                      className="absolute w-full rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm"
-                      style={getEventStyles(event)}
+                      className={`absolute w-full rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm top-[${getEventStyles(event).top}] h-[${getEventStyles(event).height}]`}
                       title={event.description}
                     >
                       <div className="flex items-center justify-between">
