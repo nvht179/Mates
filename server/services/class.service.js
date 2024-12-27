@@ -304,6 +304,15 @@ class ClassService {
     }
   };
 
+  setAvatarClass = async (classID, publicURL, linkTitle) => {
+    try {
+      const avatarClass = await ClassDB.setAvatarClass(classID, publicURL, linkTitle);
+      return avatarClass;
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
   removeClass = async (classID) => {
     try {
       // Remove student_class

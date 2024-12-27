@@ -1,4 +1,5 @@
 const ClassService = require("../services/class.service");
+const supabase = require("../config/supabase")
 
 class ClassController {
   createNewClass = async (req, res) => {
@@ -124,6 +125,47 @@ class ClassController {
       const { updatedClass, updatedEvents } = await ClassService.editClassInfo(classID, className, code, description, events);
       const message = "Successful";
       res.status(200).json({ message, updatedClass, updatedEvents });
+    } catch (err) {
+      const message = err.message || "An error occurred";
+      res.status(403).json({ message });
+    }
+  };
+
+  setAvatarClass = async (req, res) => {
+    try {
+      const { classID } = req.body;
+
+      const file = req.file;
+
+      let publicURL;
+      let linkTitle;
+
+      if (!file) {
+        publicURL = null;
+        linkTitle = null;
+      }
+      else {
+        // Create path for Supabase Storage
+        const filePath = `${Date.now()}_${file.originalname}`;
+        const { data, error } = await supabase.storage
+          .from("Attachments")
+          .upload(filePath, file.buffer);
+
+        if (error) {
+          throw new Error(`File upload failed: ${error.message}`);
+        }
+
+        const { data: publicData } = supabase.storage
+          .from("Attachments")
+          .getPublicUrl(filePath);
+
+        publicURL = publicData.publicUrl;
+        linkTitle = file.originalname;
+      }
+
+      const avatarClass = await ClassService.setAvatarClass(classID, publicURL, linkTitle);
+      const message = "Successful";
+      res.status(200).json({ message, avatarClass });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });

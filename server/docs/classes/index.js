@@ -9,6 +9,7 @@ const viewAllStudentsInClass = require("./viewAllStudentsInClass");
 const viewAllTeachersInClass = require("./viewAllStudentsInClass");
 const viewClassInfo = require("./viewClassInfo");
 const removeClass = require("./removeClass");
+const setAvatarClass = require("./setAvatarClass");
 
 module.exports = {
   "/classes/create-class": {
@@ -34,6 +35,9 @@ module.exports = {
   },
   "/classes/edit-class-info": {
     ...editClassInfo
+  },
+  "/classes/set-avatar-class": {
+    ...setAvatarClass
   },
   "/classes/remove-students-in-class": {
     ...removeStudentsInClass
