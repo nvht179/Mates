@@ -9,10 +9,18 @@ import Notification from "./Notification";
 
 export default function TopBar() {
   const [showModal, setShowModal] = useState(false);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const user = useSelector((state: RootState) => state.user);
-
   const userModal = <UserModal onClose={() => setShowModal(false)} />;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      return;
+    }
+    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery.trim())}`;
+    window.open(googleSearchUrl, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div>
@@ -21,16 +29,20 @@ export default function TopBar() {
         <img src={MatesLogo} alt="Logo" className="h-6 w-6" />
 
         {/* Search Bar */}
-        <div className="flex flex-grow justify-center">
-          <Input
-            type="text"
-            placeholder="Search..."
-            className="w-full text-sm"
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-grow justify-center">
+            <Input
+              type="text"
+              placeholder="Search..."
+              className="w-full text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </form>
 
         {/* Icons */}
-        <div className="mr-2 ml-auto flex items-center space-x-4">
+        <div className="ml-auto mr-2 flex items-center space-x-4">
           {/* Notification Icon */}
           <div className="relative">
             <Notification />

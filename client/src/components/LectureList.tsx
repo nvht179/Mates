@@ -1,5 +1,4 @@
-import Panel from "./Panel";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDeleteLectureMutation } from "../store";
 import { Lecture } from "../interfaces/Lecture";
 import { ClassState } from "../interfaces/Class";
@@ -29,9 +28,11 @@ function LectureList({ lectures }: LectureListProps) {
 
   const renderedLectures = lectures.map((lecture) => {
     return (
-      <Panel key={lecture.id} className="my-6 p-4">
+      <div key={lecture.id} className="my-6 rounded border p-4 shadow">
         <div className="flex flex-row items-center justify-between">
-          <p className="text-2xl">{lecture.title}</p>
+          <p className="text-xl font-semibold text-fg-default">
+            {lecture.title}
+          </p>
           <OptionDropdown
             handleEditClick={() => handleEditClick(lecture)}
             handleDeleteClick={() => handleDeleteClick(lecture)}
@@ -41,7 +42,7 @@ function LectureList({ lectures }: LectureListProps) {
         <div className="mt-2 flex flex-row justify-between">
           <div className="flex-2">
             <p className="mr-2 inline text-sm font-bold">Description:</p>
-            <span className="text-gray-700">{lecture.content}</span>
+            <span className="text-sm text-fg-default">{lecture.content}</span>
           </div>
           <div className="pl-16 pr-4 text-right">
             {lecture.attachments.length > 0 ? (
@@ -52,7 +53,7 @@ function LectureList({ lectures }: LectureListProps) {
                 <div key={attachment.id}>
                   <a
                     href={attachment.link}
-                    className="text-blue-500 hover:underline"
+                    className="text-primary-default hover:underline"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -63,7 +64,7 @@ function LectureList({ lectures }: LectureListProps) {
             </div>
           </div>
         </div>
-      </Panel>
+      </div>
     );
   });
 
