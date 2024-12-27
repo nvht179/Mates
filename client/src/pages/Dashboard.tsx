@@ -14,7 +14,7 @@ function Dashboard() {
 
   const user = useSelector((state: RootState) => state.user);
   const { data, isError, isLoading, error } = useViewAllClassesQuery({
-    email: user.email ?? "",
+    id: user.id || 0,
   });
 
   useEffect(() => {
@@ -35,13 +35,15 @@ function Dashboard() {
     <div>
       <div className="flex h-[60px] flex-row items-center justify-between p-3">
         <p className="ml-5 text-lg font-bold">My classes</p>
-        {role === "Teacher" && <Button
-          secondary
-          onClick={handleCreateClass}
-          className="mr-8 my-2 text-sm font-semibold"
-        >
-          Create Class
-        </Button>}
+        {role === "Teacher" && (
+          <Button
+            secondary
+            onClick={handleCreateClass}
+            className="my-2 mr-8 text-sm font-semibold"
+          >
+            Create Class
+          </Button>
+        )}
       </div>
       <div className="border-b-2"></div>
       {isLoading ? (

@@ -1,4 +1,4 @@
-import { createApi,  } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
   CreateClassRequest,
@@ -26,20 +26,33 @@ import {
 
 const classApi = createApi({
   reducerPath: "class",
-  tagTypes: ["ClassMember", "ClassMemberStudent", "ClassMemberTeacher"],
+  tagTypes: [
+    "UserClass",
+    "ClassMember",
+    "ClassMemberStudent",
+    "ClassMemberTeacher",
+  ],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     viewAllClasses: builder.query<
       ViewAllClassesResponse,
       ViewAllClassesRequest
     >({
-      providesTags: (result) => 
-        result ? result.allClassesInfo.map((c) => ({ type: "ClassMember", id: c.classID })) : [],
+      providesTags: (result, _error, arg) => {
+        const tags = result
+          ? result.allClassesInfo.map((c) => ({
+              type: "ClassMember" as const,
+              id: c.classID,
+            }))
+          : [];
+        tags.push({ type: "UserClass" as const, id: arg.id });
+        return tags;
+      },
       query: (user) => {
         return {
-          url: `/classes/view-all-classes/${user.email}`,
+          url: `/classes/view-all-classes/${user.id}`,
           params: {
-            email: user.email,
+            email: user.id,
           },
           method: "GET",
         };
@@ -75,6 +88,9 @@ const classApi = createApi({
       },
     }),
     createClass: builder.mutation<CreateClassResponse, CreateClassRequest>({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "UserClass", id: arg.userID },
+      ],
       query: (newClass) => {
         return {
           url: "/classes/create-class",

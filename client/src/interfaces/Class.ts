@@ -16,7 +16,7 @@ interface ViewAllClassesResponse {
 }
 
 interface ViewAllClassesRequest {
-  email: string;
+  id: number;
 }
 
 interface CreateClassRequest {
