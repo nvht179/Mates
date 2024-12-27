@@ -9,7 +9,7 @@ import { RootState } from "../store";
 import DefaultClassImage from "../assets/default-class.svg";
 
 type AssignmentTopBarTab = "Classwork" | "Grade";
-type Module = "Assignment" | "Lecture" | "Discussion" | "Grade";
+type Module = "Assignment" | "Lecture" | "Discussion" | "Grade" | "Edit Class";
 
 function ClassTopBar() {
   const role = useSelector((state: RootState) => state.user.role);
@@ -28,6 +28,7 @@ function ClassTopBar() {
   const [isEditingAssignment, setIsEditingAssignment] = useState(false);
   const [isCreatingLecture, setIsCreatingLecture] = useState(false);
   const [isGrading, setIsGrading] = useState(false);
+  const [isEditClass, setIsEditClass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [assignmentButtonClick, setAssignmentButtonClick] =
     useState<AssignmentTopBarTab>("Classwork");
@@ -79,6 +80,11 @@ function ClassTopBar() {
       setIsCreatingLecture(true);
     } else if (pathname.includes("lecture")) {
       setIsCreatingLecture(false);
+    }
+    if (pathname.includes("edit-class")) {
+      setIsEditClass(true);
+    } else {
+      setIsEditClass(false);
     }
   }, [
     pathname,
@@ -406,11 +412,73 @@ function ClassTopBar() {
     </>
   );
 
+  const handleSaveEditClassClick = () => {
+    setIsLoading(true);
+    const event = new CustomEvent("SaveEditClass");
+    window.dispatchEvent(event);
+  };
+
+  useEffect(() => {
+    const handleSaveEditClassSuccess = () => {
+      setIsLoading(false);
+    };
+    window.addEventListener("SaveEditClassSuccess", handleSaveEditClassSuccess);
+    return () => {
+      window.removeEventListener(
+        "SaveEditClassSuccess",
+        handleSaveEditClassSuccess,
+      );
+    };
+  }, []);
+
+  const handleCancelEditClassClick = () => {
+    setIsEditClass(false);
+    navigate(`/class/${code}/lecture`, { state: { ...state, module: "Lecture", title: "Lecture" } });
+  };
+
+  const editClassContent = (
+    <>
+      <TopBarTab active className="ml-4 pt-1">
+        Detail
+      </TopBarTab>
+      <div className="h-full w-full" />
+      <div className="mr-4 flex h-full items-center gap-4">
+        {isEditClass && (
+          <>
+            <Button
+              primary
+              small
+              className="mr-4 w-20"
+              onClick={handleSaveEditClassClick}
+              disabled={isLoading}
+            >
+              Save
+            </Button>
+            <Button
+              secondary
+              small
+              className="mr-4 w-20"
+              onClick={handleCancelEditClassClick}
+            >
+              Close
+            </Button>
+          </>
+        )}
+      </div>
+    </>
+  );
+
   return (
     <div className="flex h-[60px] flex-row items-center border-b border-fg-border bg-bg-soft">
       <div className="flex h-full flex-shrink-0 items-center">
         <img
-          src={cla?.avatar ? (cla.avatar === "" ? defaultClassImg : cla.avatar) : defaultClassImg}
+          src={
+            cla?.avatar
+              ? cla.avatar === ""
+                ? defaultClassImg
+                : cla.avatar
+              : defaultClassImg
+          }
           alt={className}
           className="ml-4 h-8 w-8 flex-shrink-0 rounded object-cover"
         />
@@ -425,7 +493,9 @@ function ClassTopBar() {
           ? lectureContent
           : module === "Grade"
             ? gradingContent
-            : null}
+            : module === "Edit Class"
+              ? editClassContent
+              : null}
     </div>
   );
 }

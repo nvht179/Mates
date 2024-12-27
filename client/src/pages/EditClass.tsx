@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -10,7 +10,7 @@ import { RxLoop } from "react-icons/rx";
 import { GrTextAlignFull } from "react-icons/gr";
 import { HiArrowLongRight } from "react-icons/hi2";
 // import { useSelector } from "react-redux";
-import { useEditClassMutation } from "../store";
+import { useEditClassMutation, useSetAvatarClassMutation } from "../store";
 import { getNextDate, parseHours } from "../utils/date";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -68,6 +68,7 @@ export default function EditClass() {
 
   const [className, setClassName] = useState(cla.className);
   const [classCode, setClassCode] = useState(cla.code);
+  const [classAvatar, setClassAvatar] = useState<File | null>(null);
   const [description, setDescription] = useState(cla.description);
   const [schedule, setSchedule] = useState<ScheduleSlot[]>([
     { day: "Monday", startTime: "13:30", endTime: "15:30" },
@@ -79,6 +80,7 @@ export default function EditClass() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [editClassMutation, { isLoading, isSuccess, isError, error }] =
     useEditClassMutation();
+  const [setAvatarClassMutation] = useSetAvatarClassMutation();
 
   const navigate = useNavigate();
   // const { id, role } = useSelector((state: RootState) => state.user);
@@ -90,17 +92,6 @@ export default function EditClass() {
       setErrorMessage,
     );
   }, [isError, error]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/");
-    }
-  }, [isSuccess, navigate]);
-
-  const handleClose = () => {
-    state.title = "Lecture";
-    navigate(`/class/${cla.code}/lecture`, { state });
-  };
 
   const handleScheduleChange = (
     index: number,
@@ -143,49 +134,47 @@ export default function EditClass() {
     };
   });
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
-  ) => {
-    e.preventDefault();
+  const getAvatarPreviewUrl = useCallback(() => {
+    if (classAvatar) {
+      return URL.createObjectURL(classAvatar);
+    }
+    return cla.avatar && cla.avatar !== "" ? cla.avatar : defaultClassImg;
+  }, [classAvatar, cla.avatar]);
 
-    console.log({
-      classIDnum,
-      className,
-      classCode,
-      description,
-      events,
-      // id,
-      // role,
-    });
+  useEffect(() => {
+    if (isSuccess) {
+      const editClassSuccess = new CustomEvent("SaveEditClassSuccess");
+      window.dispatchEvent(editClassSuccess);
+      navigate("/");
+    }
+  }, [navigate, state, isSuccess, cla.code]);
 
-    await editClassMutation({
-      classID,
-      className,
-      code: classCode,
-      description,
-      events,
-      // userID: String(id),
-      // role: role ?? "student",
-    });
-  };
+  useEffect(() => {
+    const handleSaveEditClass = () => {
+      editClassMutation({
+        classID,
+        className,
+        code: classCode,
+        description,
+        events,
+        // userID: String(id),
+        // role: role ?? "student",
+      });
+      const formData = new FormData();
+      formData.append("classID", classID);
+      if (classAvatar) {
+        formData.append("file", classAvatar);
+      }
+      setAvatarClassMutation(formData);
+    };
+    window.addEventListener("SaveEditClass", handleSaveEditClass);
+    return () => {
+      window.removeEventListener("SaveEditClass", handleSaveEditClass);
+    };
+  }, [editClassMutation, classID, className, classCode, description, events, classAvatar, setAvatarClassMutation]);
 
   return (
     <div className="max-w mx-auto">
-      {/* Buttons */}
-      {/* <div className="mr-20 flex justify-end space-x-7">
-          <Button secondary onClick={handleClose}>
-            Close
-          </Button>
-          {isLoading ? (
-            <Button primary> Editting...</Button>
-          ) : isError ? (
-            <Button disabled className="text-red-default">
-              {errorMessage}
-            </Button>
-          ) : (
-            <Button onClick={handleSubmit}>Edit</Button>
-          )}
-        </div> */}
       <div className="space-y-4 pl-12 pr-40 pt-8">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-1 flex-col space-y-4">
@@ -212,16 +201,26 @@ export default function EditClass() {
               />
             </div>
           </div>
-          <img
-            src={
-              cla?.avatar
-                ? cla.avatar === ""
-                  ? defaultClassImg
-                  : cla.avatar
-                : defaultClassImg
-            }
-            className="mx-16 h-16 w-16 object-cover"
-            alt={cla.className}
+          <label
+            htmlFor="avatarInput"
+            className="relative cursor-pointer active:opacity-50"
+          >
+            <img
+              src={getAvatarPreviewUrl()}
+              className="mx-16 h-16 w-16 object-cover"
+              alt={cla.className}
+            />
+          </label>
+          <input
+            type="file"
+            id="avatarInput"
+            className="hidden"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files?.[0]) {
+                setClassAvatar(e.target.files[0]);
+              }
+            }}
           />
         </div>
 

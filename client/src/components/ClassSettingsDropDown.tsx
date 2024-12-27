@@ -15,6 +15,7 @@ interface LocationState {
   image: string;
   title: string;
   display: string | null;
+  module: string;
 }
 
 const ClassSettingsDropDown = ({ 
@@ -24,6 +25,7 @@ const ClassSettingsDropDown = ({
     cla,
     title: "Edit Class",
     display: null,
+    module: "Edit Class",
   } as LocationState;
   
   const [isOpen, setIsOpen] = useState(false);

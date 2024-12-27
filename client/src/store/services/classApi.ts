@@ -20,6 +20,8 @@ import {
   ViewClassInfoResponse,
   RemoveClassResponse,
   RemoveClassRequest,
+  setAvatarClassResponse,
+  setAvatarClassRequest,
 } from "../../interfaces/Class";
 
 const classApi = createApi({
@@ -82,6 +84,9 @@ const classApi = createApi({
       },
     }),
     editClass: builder.mutation<EditClassResponse, EditClassRequest>({
+      invalidatesTags: (_result, _error, arg) => [
+        { type: "ClassMember", id: arg.classID },
+      ],
       query: (edittedClass) => {
         return {
           url: "/classes/edit-class-info",
@@ -102,6 +107,9 @@ const classApi = createApi({
       },
     }),
     viewClassInfo: builder.query<ViewClassInfoResponse, string>({
+      providesTags: (_result, _error, classID) => [
+        { type: "ClassMember", id: classID },
+      ],
       query: (classID) => {
         return {
           url: `/classes/view-class-info/${classID}`,
@@ -169,6 +177,18 @@ const classApi = createApi({
         };
       },
     }),
+    setAvatarClass: builder.mutation<
+      setAvatarClassResponse,
+      setAvatarClassRequest
+    >({
+      query: (args) => {
+        return {
+          url: `/classes/set-avatar-class/`,
+          body: args,
+          method: "PUT",
+        };
+      },
+    }),
   }),
 });
 
@@ -184,5 +204,6 @@ export const {
   useRemoveTeachersInClassMutation,
   useEditClassMutation,
   useViewClassInfoQuery,
+  useSetAvatarClassMutation,
 } = classApi;
 export default classApi;

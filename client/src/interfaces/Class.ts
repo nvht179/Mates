@@ -196,6 +196,14 @@ type RemoveClassResponse = {
   message: string;
 };
 
+// classID: string
+// file
+type setAvatarClassRequest = FormData
+
+type setAvatarClassResponse = {
+  message: string;
+};
+
 export type {
   ClassState,
   ViewAllClassesResponse,
@@ -217,4 +225,6 @@ export type {
   RemoveClassResponse,
   EditClassRequest,
   EditClassResponse,
+  setAvatarClassRequest,
+  setAvatarClassResponse
 };

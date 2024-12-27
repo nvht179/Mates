@@ -25,7 +25,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
 
   const handleEditClassClick = (cla: ClassState) => {
     navigate(`/class/${cla.code}/edit-class`, {
-      state: { cla, title: "Edit Class" },
+      state: { cla, title: "Edit Class", module: "Edit Class" },
     });
   };
 
