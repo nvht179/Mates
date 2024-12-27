@@ -84,10 +84,6 @@ class EventDB {
     const removedEvent = await this.getEventByID(eventID);
     const event_persons = await this.getPersonEventByID(eventID);
 
-    if (removedEvent.classID != null) {
-      return;
-    }
-
     for (const event_person of event_persons) {
       await event_person.destroy();
     }
