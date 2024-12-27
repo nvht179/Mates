@@ -177,6 +177,14 @@ function AssignmentPage() {
     return [...data.data].sort((a, b) => {
       const dateA = new Date(a.endTime);
       const dateB = new Date(b.endTime);
+      const now = new Date();
+
+      const isAPast = dateA < now;
+      const isBPast = dateB < now;
+
+      if (isAPast && !isBPast) return 1;
+      if (!isAPast && isBPast) return -1;
+
       return dateA.getTime() - dateB.getTime();
     });
   }, [isSuccess, data]);
@@ -227,8 +235,8 @@ function AssignmentPage() {
               </p>
               {new Date(assignment.endTime) > new Date() ? (
                 <p className="text-sm text-fg-softer">{dueTime}</p>
-              ) : (
-                <p className="text-sm text-red-default">Overdue</p>
+              ) : submitStatus === "" ? <p className="text-sm  text-red-default">Overdue</p> : (
+                <p className="text-sm  text-fg-softer">Due</p>
               )}
             </div>
           </div>

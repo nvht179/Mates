@@ -52,7 +52,7 @@ const gradeApi = createApi({
       },
       query: (body) => ({
         url: "/grades/submit-assignment",
-        method: "POST",
+        method: "PUT",
         body,
       }),
     }),
