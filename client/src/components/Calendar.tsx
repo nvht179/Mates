@@ -78,7 +78,8 @@ function Calendar({ displayDate, events }: CalendarProps) {
     const durationInHours = Math.max(endHour - startHour, 1.5);
 
     return {
-      marginTop: `${startHour * HOURWIDTH}rem`, // Each hour is 5rem tall
+      position: "absolute",
+      top: `${startHour * HOURWIDTH + 2.5}rem`, // Each hour is 5rem tall
       height: `${durationInHours * HOURWIDTH}rem`,
     };
   };
