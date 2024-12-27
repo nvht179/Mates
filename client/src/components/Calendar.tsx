@@ -78,7 +78,6 @@ function Calendar({ displayDate, events }: CalendarProps) {
     const durationInHours = Math.max(endHour - startHour, 1.5);
 
     return {
-      position: "absolute",
       top: `${startHour * HOURWIDTH + 2.5}rem`, // Each hour is 5rem tall
       height: `${durationInHours * HOURWIDTH}rem`,
     };
@@ -148,7 +147,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
                   .map((event) => (
                     <div
                       key={event.eventID}
-                      className="rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm"
+                      className="absolute w-full rounded border-2 border-fg-alt bg-bg-darker px-2 py-1 text-sm"
                       style={getEventStyles(event)}
                       title={event.description}
                     >
