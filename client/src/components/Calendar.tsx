@@ -12,8 +12,8 @@ interface CalendarProps {
 const HOURWIDTH = 5; // 1 hour = 5rem
 function Calendar({ displayDate, events }: CalendarProps) {
   const navigate = useNavigate();
-  const [deleteEvent] = useDeleteEventMutation();
   const role = useSelector((state: RootState) => state.user.role);
+  const [deleteEvent] = useDeleteEventMutation();
 
   // Get the start of the week (Monday)
   const startOfWeek = new Date(
@@ -84,7 +84,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
   };
 
   const handleEditClick = (event: Event) => {
-    navigate("/calendar/event-details", { state: { event } });
+    navigate("/calendar/event-details", { state: { event, displayDate } });
   };
 
   const handleDeleteClick = (event: Event) => {

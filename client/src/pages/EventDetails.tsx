@@ -22,7 +22,7 @@ import { BiDetail } from "react-icons/bi";
 
 function EventDetails() {
   const { state } = useLocation();
-  const { event } = state as { event: Event };
+  const { event, displayDate } = state as { event: Event, displayDate: Date };
 
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
@@ -90,11 +90,11 @@ function EventDetails() {
   };
 
   if (isCreateEventSuccess || isEditEventSuccess) {
-    navigate("/calendar");
+    navigate("/calendar", { state: { displayDate } });
   }
 
   const handleCancelClick = () => {
-    navigate("/calendar");
+    navigate("/calendar", { state: { displayDate } });
   };
 
   const header = (
