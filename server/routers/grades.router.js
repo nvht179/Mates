@@ -4,7 +4,7 @@ const upload = require("../middleware/upload.middleware");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken.middleware");
 
-router.use(verifyToken);
+// router.use(verifyToken);
 router.post('/submit-assignment', upload, GradeController.submitAssignment);
 router.get('/view-submission-student/:personID/:classID', GradeController.viewGradesInThatAssignmentStudent);
 router.get('/view-grade-details/:personID/:assignmentID', GradeController.viewGradeDetailStudent);

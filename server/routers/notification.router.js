@@ -3,7 +3,7 @@ const NotificationController = require("../controllers/notification.controller")
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken.middleware");
 
-router.use(verifyToken);
+// router.use(verifyToken);
 
 // View all notifications của người dùng
 router.get("/view-all/:userId", NotificationController.getAllNotifications);

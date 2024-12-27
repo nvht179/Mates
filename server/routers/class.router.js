@@ -3,7 +3,7 @@ const ClassController = require('../controllers/class.controller')
 const avatar = require("../middleware/avatar.middleware");
 const verifyToken = require("../middleware/verifyToken.middleware");
 
-router.use(verifyToken);
+// router.use(verifyToken);
 router.post("/create-class", ClassController.createNewClass);
 router.get("/view-all-classes/:email", ClassController.viewAllClasses);
 router.post("/add-students-to-class", ClassController.addStudentsToClass);

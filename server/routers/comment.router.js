@@ -4,7 +4,7 @@ const commentController = require("../controllers/comment.controller");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken.middleware");
 
-router.use(verifyToken);
+// router.use(verifyToken);
 
 // Endpoint to add a comment to a post
 router.post("/add", CommentController.addComment);
