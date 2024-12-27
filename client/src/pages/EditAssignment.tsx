@@ -145,7 +145,12 @@ export default function EditAssignment() {
     formData.append("classID", classID.toString());
     formData.append("weight", weight.toString());
     formData.append("startTime", startDT.toISOString());
-    formData.append("endTime", endDT.toISOString());
+    try {
+      formData.append("endTime", endDT.toISOString());
+    } catch (error) {
+      setErrorMessage(`end time error: ${error}`);
+      return;
+    }
     if (attachment) {
       Array.from(attachment).forEach((file) => formData.append("files", file));
     }

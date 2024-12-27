@@ -94,7 +94,7 @@ export default function CreateAssignment() {
     try {
       formData.append("endTime", endDT.toISOString());
     } catch (error) {
-      console.error("end time error: ", error);
+      setErrorMessage(`end time error: ${error}`);
       return;
     }
     if (attachment) {

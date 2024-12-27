@@ -28,9 +28,9 @@ function CalendarPage() {
   };
 
   const header = (
-    <div className="flex flex-row items-center justify-between px-8 py-2">
+    <div className="flex flex-row items-center justify-between px-8 h-[60px]">
       <div className="flex flex-row items-center justify-between">
-        <div className="my-2 mr-4 rounded bg-primary-default p-2">
+        <div className="mr-4 rounded bg-primary-default p-2">
           <FaRegCalendarAlt className="text-white" />
         </div>
         <h1 className="text-lg font-bold">Calendar</h1>

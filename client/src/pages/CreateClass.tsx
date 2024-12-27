@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -26,7 +26,7 @@ export default function CreateClass() {
   const [classCode, setClassCode] = useState("");
   const [description, setDescription] = useState("");
   const [schedule, setSchedule] = useState<ScheduleSlot[]>([
-    { day: "Monday", startTime: "13:30", endTime: "15:10" },
+    { day: "Monday", startTime: "07:30", endTime: "11:30" },
   ]);
   const [frequency, setFrequency] = useState("Weekly");
 
@@ -62,7 +62,10 @@ export default function CreateClass() {
   };
 
   const addTimeSlot = () => {
-    setSchedule([...schedule, { day: "Monday", startTime: "13:30", endTime: "15:10" }]);
+    setSchedule([
+      ...schedule,
+      { day: "Monday", startTime: "13:30", endTime: "15:10" },
+    ]);
   };
 
   // const handleScheduleChange = (index: number, field: string, value: string) => {
@@ -105,19 +108,15 @@ export default function CreateClass() {
 
   return (
     <div className="max-w mx-auto">
-      <div className="mb-10 flex items-center justify-between border-b-2 border-b-fg-border px-10 pb-5 pt-6">
-        <h1 className="text-3xl font-bold">New Class</h1>
+      <div className="mb-10 flex h-[60px] items-center justify-between border-b-2 border-b-fg-border px-10">
+        <h1 className="text-lg font-bold">New Class</h1>
         {/* Buttons */}
-        <div className="flex justify-end space-x-7">
+        <div className="flex justify-end space-x-6">
           <Button secondary onClick={() => navigate("/")}>
             Close
           </Button>
           {isLoading ? (
             <Button primary> Creating...</Button>
-          ) : isError ? (
-            <Button disabled className="text-red-default">
-              {errorMessage}
-            </Button>
           ) : (
             <Button onClick={handleSubmit}>Create</Button>
           )}
@@ -125,11 +124,11 @@ export default function CreateClass() {
       </div>
       <div className="mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
         {/* Class Name */}
-        <div className="mb-4 flex items-center pr-20 w-full">
+        <div className="mb-4 flex w-full items-center pr-20">
           {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
-          <LuPencilLine className="mx-4 text-2xl " />
+          <LuPencilLine className="mx-4 text-2xl" />
           <Input
-            className="border-fg-alt bg-fg-alt w-1/4"
+            className="w-1/4 border-fg-alt bg-fg-alt"
             type="text"
             value={className}
             placeholder="Enter class name"
@@ -138,11 +137,11 @@ export default function CreateClass() {
         </div>
 
         {/* Class Code */}
-        <div className="mb-4 flex items-center pr-20 w-full">
+        <div className="mb-4 flex w-full items-center pr-20">
           {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
           <IoMdCode className="mx-3 text-3xl" />
           <Input
-            className="border-fg-alt bg-fg-alt w-1/4"
+            className="w-1/4 border-fg-alt bg-fg-alt"
             type="text"
             value={classCode}
             placeholder="Enter class code"
@@ -154,15 +153,15 @@ export default function CreateClass() {
         <div className="mb-2 flex-col items-center pr-20">
           {/* <label className="block text-gray-700 mb-2">Schedule</label> */}
           {schedule.map((slot, index) => (
-            <div key={index} className="mb-2 flex items-center gap-4 w-full">
+            <div key={index} className="mb-2 flex w-full items-center gap-4">
               {/* Day */}
-              <FaRegClock className="flex-none ml-4 mr-1 text-xl max-w" />
+              <FaRegClock className="max-w ml-4 mr-1 flex-none text-xl" />
               <select
                 value={slot.day}
                 onChange={(e) =>
                   handleScheduleChange(index, "day", e.target.value)
                 }
-                className="bg-fg-alt w-2/5 rounded border-2 border-fg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="w-2/5 rounded border-2 border-fg-alt bg-fg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
               >
                 {[
                   "Monday",
@@ -185,9 +184,9 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "startTime", e.target.value)
                 }
-                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-1 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="w-full rounded border-2 border-fg-alt bg-fg-alt p-1 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
-              <HiArrowLongRight className="flex-none h-auto text-4xl" />
+              <HiArrowLongRight className="h-auto flex-none text-4xl" />
 
               {/* End Time */}
               <Input
@@ -196,7 +195,7 @@ export default function CreateClass() {
                 onChange={(e) =>
                   handleScheduleChange(index, "endTime", e.target.value)
                 }
-                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-1 px-3 transition focus:border-b-primary-default focus:outline-none"
+                className="w-full rounded border-2 border-fg-alt bg-fg-alt p-1 px-3 transition focus:border-b-primary-default focus:outline-none"
               />
 
               {/* Remove Time Slot */}
@@ -248,11 +247,11 @@ export default function CreateClass() {
         {/* Frequency */}
         <div className="mb-4 flex w-full items-center pr-20">
           {/* <label className="block text-gray-700 mb-1">Frequency</label> */}
-          <RxLoop className="flex-none ml-3 mr-4 text-2xl" />
+          <RxLoop className="ml-3 mr-4 flex-none text-2xl" />
           <select
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
-            className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+            className="w-full rounded border-2 border-fg-alt bg-fg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
           >
             <option value="Weekly">Weekly</option>
             <option value="Bi-Weekly">Bi-Weekly</option>
@@ -263,15 +262,16 @@ export default function CreateClass() {
         {/* Description */}
         <div className="mb-6 flex w-full items-center pr-20">
           {/* <label className="block text-gray-700 mb-1">Description</label> */}
-          <GrTextAlignFull className="flex-none ml-3 mr-4 text-2xl" />
+          <GrTextAlignFull className="ml-3 mr-4 flex-none text-2xl" />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
+            className="w-full rounded border-2 border-fg-alt bg-fg-alt p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
             placeholder="Enter class description"
             rows={4}
           />
         </div>
+        <p className="ml-14 text-red-default">{errorMessage}</p>
       </div>
     </div>
   );
