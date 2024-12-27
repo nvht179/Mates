@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthToken } from "../../utils/getAuthToken";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
   CreateEventRequest,
   CreateEventResponse,
@@ -11,23 +11,16 @@ import {
   ViewAllEventResponse,
 } from "../../interfaces/Event";
 
+type Tag = { type: "Event" | "UserEvent"; id: string | number };
+
 export const eventApi = createApi({
   reducerPath: "event",
   tagTypes: ["Event", "UserEvent"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     viewAllEvent: builder.query<ViewAllEventResponse, ViewAllEventRequest>({
       providesTags: (result, _error, arg) => {
-        const tags = (result?.events ?? []).map((event) => ({
+        const tags: Tag[] = (result?.events ?? []).map((event) => ({
           type: "Event" as const,
           id: event.eventID,
         }));

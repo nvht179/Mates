@@ -1,27 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
-  CheckUserByEmailResponse,
   CheckUserByEmailRequest,
+  CheckUserByEmailResponse,
   GetUserInfoResponse,
   UpdateUserInfoRequest,
   UpdateUserInfoResponse,
 } from "../../interfaces/User";
-import { getAuthToken } from "../../utils/getAuthToken";
 
 const userApi = createApi({
   reducerPath: "userApi",
   tagTypes: ["UserInfo"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
-    credentials: "include",
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     checkUserByEmail: builder.query<
       CheckUserByEmailResponse,
@@ -65,6 +55,6 @@ export const {
   useLazyCheckUserByEmailQuery,
   useLazyGetUserByIdQuery,
   useUpdateUserIntoMutation,
-  useGetUserByIdQuery
+  useGetUserByIdQuery,
 } = userApi;
 export default userApi;
