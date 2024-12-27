@@ -56,7 +56,7 @@ class GradeDB {
     const allSubmissions = await Grade.findAll({
       where: { assignmentID }
     });
-    return allSubmissions[0];
+    return allSubmissions;
   };
 
   getSubmissionByAssignmentIDAndStudentID = async (assignmentID, studentID) => {

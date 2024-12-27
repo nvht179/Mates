@@ -153,25 +153,34 @@ class GradeService {
       const allSubmissionInClass = [];
       for (const assignment of assignments) {
         const assignmentID = assignment.id;
-        const grade = await GradeDB.getAllSubmissionsAssignment(assignmentID);
-        if (!grade || grade.length == 0) {
+        const grades = await GradeDB.getAllSubmissionsAssignment(assignmentID);
+        if (!grades || grades.length == 0) {
           continue;
         }
-        const id = grade.studentID;
-        const user = await UserDB.getUserByIdDB(id);
 
-        const gradeId = grade.Id;
-        const personID = id;
-        const name = user.name;
-        const avatar = user.avatar;
-        const assignmentTitle = assignment.title;
-        const status = grade.status;
-        const submittedOn = grade.submittedOn;
-        const comment = grade.comment;
-        const assignmentWeight = assignment.weight;
-        const grade100 = grade.grade100;
+        for (const grade of grades){
+          console.log("grade service:",grade);
 
-        allSubmissionInClass.push({ personID, avatar, name, assignmentTitle, status, submittedOn, comment, assignmentWeight, grade100, gradeId, assignmentID });
+          const id = grade.studentID;
+          const user = await UserDB.getUserByIdDB(id);
+
+          const gradeId = grade.gradeId;
+          const personID = id;
+          const name = user.name;
+          const avatar = user.avatar;
+          const assignmentTitle = assignment.title;
+          const status = grade.status;
+          const submittedOn = grade.submittedOn;
+          const comment = grade.comment;
+          const assignmentWeight = assignment.weight;
+          const grade100 = grade.grade100;
+
+          console.log("grade service:",personID, avatar, name, assignmentTitle, status, submittedOn, comment, assignmentWeight, grade100, gradeId, assignmentID)
+
+          allSubmissionInClass.push({ personID, avatar, name, assignmentTitle, status, submittedOn, comment,
+             assignmentWeight, grade100, gradeId, assignmentID });
+        }
+
       }
       return allSubmissionInClass;
     } catch (err) {
