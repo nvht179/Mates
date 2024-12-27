@@ -77,6 +77,7 @@ class GradeDB {
     const submissionDetail = await this.getSubmissionByAssignmentIDAndStudentID(assignmentID, studentID);
     submissionDetail.grade100 = grade100;
     submissionDetail.comment = comment;
+    submissionDetail.status = "Graded";
     submissionDetail.save();
     return submissionDetail;
   };

@@ -225,7 +225,7 @@ function AssignmentPage() {
     return (
       <div key={assignment.id} className="mb-4 rounded border p-4 shadow">
         <div className="flex flex-row items-center justify-between">
-          <div className="flex w-2/5 items-center justify-between">
+          <div className="flex w-1/2 items-center justify-between">
             <p className="font-semibold text-fg-default">
               {"#" + assignmentNumber + " " + assignment.title}
             </p>
@@ -236,7 +236,7 @@ function AssignmentPage() {
               {new Date(assignment.endTime) > new Date() ? (
                 <p className="text-sm text-fg-softer">{dueTime}</p>
               ) : submitStatus === "" ? <p className="text-sm  text-red-default">Overdue</p> : (
-                <p className="text-sm  text-fg-softer mr-[6.5rem]">Due</p>
+                <p className="text-sm  text-fg-softer">Due</p>
               )}
             </div>
           </div>
