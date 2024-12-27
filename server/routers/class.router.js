@@ -5,7 +5,7 @@ const verifyToken = require("../middleware/verifyToken.middleware");
 
 router.use(verifyToken);
 router.post("/create-class", ClassController.createNewClass);
-router.get("/view-all-classes/:email", ClassController.viewAllClasses);
+router.get("/view-all-classes/:id", ClassController.viewAllClasses);
 router.post("/add-students-to-class", ClassController.addStudentsToClass);
 router.post("/add-teachers-to-class", ClassController.addTeachersToClass);
 router.get("/view-all-students-in-class/:classID", ClassController.viewAllStudentsInClass);

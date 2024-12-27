@@ -24,7 +24,7 @@ module.exports = {
   "/classes/view-class-info/{classID}": {
     ...viewClassInfo
   },
-  "/classes/view-all-classes/{email}": {
+  "/classes/view-all-classes/{id}": {
     ...viewAllClasses
   },
   "/classes/view-all-students-in-class/{classID}": {
