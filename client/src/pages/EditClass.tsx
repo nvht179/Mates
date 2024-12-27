@@ -66,13 +66,30 @@ export default function EditClass() {
     avatar: "",
   };
 
+  const classEvents = data?.classEvents ?? [];
+
+  const initialSchedule = classEvents.map((event) => {
+    const startDate = new Date(event.startTime);
+    const endDate = new Date(event.endTime);
+    return {
+      day: startDate.toLocaleDateString('en-US', { weekday: 'long' }),
+      startTime: startDate.toTimeString().slice(0, 5),
+      endTime: endDate.toTimeString().slice(0, 5),
+    };
+  });
+
+  const [schedule, setSchedule] = useState<ScheduleSlot[]>(initialSchedule);
+
+
+
+
   const [className, setClassName] = useState(cla.className);
   const [classCode, setClassCode] = useState(cla.code);
   const [classAvatar, setClassAvatar] = useState<File | null>(null);
   const [description, setDescription] = useState(cla.description);
-  const [schedule, setSchedule] = useState<ScheduleSlot[]>([
-    { day: "Monday", startTime: "13:30", endTime: "15:30" },
-  ]);
+  // const [schedule, setSchedule] = useState<ScheduleSlot[]>([
+  //   { day: "Monday", startTime: "13:30", endTime: "15:30" },
+  // ]);
   const [frequency, setFrequency] = useState(
     data?.classEvents[0].repeatTime ?? "Weekly",
   );
