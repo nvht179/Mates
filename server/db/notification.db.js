@@ -13,15 +13,13 @@ class NotificationDB {
     }
   };
 
-  // Xóa một notification theo notificationId
   deleteNotification = async (notificationId) => {
     try {
       const notification = await Notification.findByPk(notificationId);
-      if (!notification) return null; // Nếu không tìm thấy notification
+      if (!notification) return null; 
 
-      // Xóa notification
       await notification.destroy();
-      return notification; // Trả về thông báo đã xóa
+      return notification; 
     } catch (err) {
       throw new Error("Error deleting notification: " + err.message);
     }

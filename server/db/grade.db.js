@@ -9,15 +9,21 @@ class GradeDB {
     try {
       const submissionDetail = await this.getSubmissionByAssignmentIDAndStudentID(assignmentID, studentID);
       if (!submissionDetail) {
-        throw new ErrorHandler(403, "You have not submitted this assignment yet");
+        submissionDetail = await Grade.create({
+          studentID: studentID,
+          assignmentID: assignmentID, 
+        })
       }
-  
+      const gradeID = submissionDetail.gradeId;
+
       const status = "Submitted";
       await Grade.update(
         { status }, 
         { where: { studentID, assignmentID } }
       );
   
+      await AttachmentDB.removeAttachmentsByGradeId(gradeID);
+
       if (attachments && attachments.length > 0) {
         for (let attachment of attachments) {
           await AttachmentDB.addAttachment(

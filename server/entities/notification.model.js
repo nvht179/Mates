@@ -24,12 +24,12 @@ const Notification = sequelize.define(
       allowNull: false,
     },
     type: {
-      type: DataTypes.STRING, // Có thể là 'post', 'comment', 'assignment'
+      type: DataTypes.STRING, 
       allowNull: false,
     },
     targetId: {
       type: DataTypes.INTEGER,
-      allowNull: false, // ID của người nhận thông báo
+      allowNull: false, 
       references: {
         model: Person,
         key: 'id',
@@ -37,6 +37,7 @@ const Notification = sequelize.define(
     },
     postId: {
       type: DataTypes.INTEGER,
+      allowNull: false, 
       references: {
         model: Post,
         key: 'id',
@@ -44,6 +45,7 @@ const Notification = sequelize.define(
     },
     commentId: {
       type: DataTypes.INTEGER,
+      allowNull: false, 
       references: {
         model: Comment,
         key: 'id',
@@ -51,6 +53,7 @@ const Notification = sequelize.define(
     },
     assignmentId: {
       type: DataTypes.INTEGER,
+      allowNull: false, 
       references: {
         model: Assignment,
         key: 'id',
