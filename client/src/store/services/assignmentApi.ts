@@ -1,14 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthToken } from "../../utils/getAuthToken";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
   CreateAssignmentRequest,
   CreateAssignmentResponse,
+  EditAssignmentRequest,
+  EditAssignmentResponse,
   GetAllAssignmentsRequest,
   GetAllAssignmentsResponse,
   RemoveAssignmentRequest,
   RemoveAssignmentResponse,
-  EditAssignmentRequest,
-  EditAssignmentResponse,
 } from "../../interfaces/Assignment";
 
 type Tag = { type: "Assignment" | "AssignmentClass"; id: string };
@@ -16,16 +16,7 @@ type Tag = { type: "Assignment" | "AssignmentClass"; id: string };
 const assignmentApi = createApi({
   reducerPath: "assignment",
   tagTypes: ["Assignment", "AssignmentClass"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    }
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     getAllAssignments: builder.query<
       GetAllAssignmentsResponse,
@@ -41,37 +32,55 @@ const assignmentApi = createApi({
       query: (classId) => {
         return {
           url: `/assignments/class/${classId}`,
-          method: "GET"
+          method: "GET",
         };
-      }
+      },
     }),
 
-    createAssignment: builder.mutation<CreateAssignmentResponse, CreateAssignmentRequest>({
+    createAssignment: builder.mutation<
+      CreateAssignmentResponse,
+      CreateAssignmentRequest
+    >({
       query: (body) => ({
         url: "/assignments/create",
         method: "POST",
-        body
+        body,
       }),
-      invalidatesTags: (_result, _error, request) => [{ type: "AssignmentClass", id: request.get("classID")?.toString() }]
+      invalidatesTags: (_result, _error, request) => [
+        {
+          type: "AssignmentClass",
+          id: request.get("classID")?.toString(),
+        },
+      ],
     }),
 
-    removeAssignment: builder.mutation<RemoveAssignmentResponse, RemoveAssignmentRequest>({
+    removeAssignment: builder.mutation<
+      RemoveAssignmentResponse,
+      RemoveAssignmentRequest
+    >({
       query: (assignmentId) => ({
         url: `/assignments/remove/${assignmentId}`,
-        method: "DELETE"
+        method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, request) => [{ type: "Assignment", id: request}]
+      invalidatesTags: (_result, _error, request) => [
+        { type: "Assignment", id: request },
+      ],
     }),
 
-    editAssignment: builder.mutation<EditAssignmentResponse, EditAssignmentRequest>({
+    editAssignment: builder.mutation<
+      EditAssignmentResponse,
+      EditAssignmentRequest
+    >({
       query: (request) => ({
         url: `/assignments/edit/${request.assignmentId}`,
         method: "PUT",
-        body: request.data
+        body: request.data,
       }),
-      invalidatesTags: (_result, _error, request) => [{ type: "Assignment", id: request.assignmentId.toString() }]
-    })
-  })
+      invalidatesTags: (_result, _error, request) => [
+        { type: "Assignment", id: request.assignmentId.toString() },
+      ],
+    }),
+  }),
 });
 
 export const {
