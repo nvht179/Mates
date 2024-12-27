@@ -36,7 +36,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
   };
 
   return (
-    <div className="relative z-50 select-none bg-bg-darker max-h-96 overflow-y-scroll">
+    <div className="relative z-50 select-none bg-bg-darker">
       <div
         className="cursor-pointer px-4 py-4 hover:bg-bg-dark hover:text-primary-default active:bg-opacity-30"
         onMouseEnter={() => setIsHovered(true)}

@@ -93,7 +93,7 @@ function PostDisplay({ post }: PostListProps) {
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center">
           {userProfileRendered}
-          <p className="ml-4 font-light">
+          <p className="ml-4 font-light text-sm">
             {formatDate(post.time)}
           </p>
         </div>
