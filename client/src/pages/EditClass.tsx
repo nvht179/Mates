@@ -250,16 +250,16 @@ export default function EditClass() {
               />
             </div>
           </div>
-          <label
+            <label
             htmlFor="avatarInput"
             className="relative cursor-pointer active:opacity-50"
-          >
+            >
             <img
               src={getAvatarPreviewUrl()}
-              className="mx-16 h-16 w-16 object-cover"
+              className="mx-16 h-16 w-16 object-cover rounded-md"
               alt={cla.className}
             />
-          </label>
+            </label>
           <input
             type="file"
             id="avatarInput"
