@@ -17,19 +17,19 @@ const Notification = sequelize.define(
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     type: {
-      type: DataTypes.STRING, 
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     targetId: {
       type: DataTypes.INTEGER,
-      allowNull: false, 
+      allowNull: false,
       references: {
         model: Person,
         key: 'id',
@@ -37,7 +37,7 @@ const Notification = sequelize.define(
     },
     postId: {
       type: DataTypes.INTEGER,
-      allowNull: false, 
+      allowNull: true,
       references: {
         model: Post,
         key: 'id',
@@ -45,7 +45,7 @@ const Notification = sequelize.define(
     },
     commentId: {
       type: DataTypes.INTEGER,
-      allowNull: false, 
+      allowNull: true,
       references: {
         model: Comment,
         key: 'id',
@@ -53,7 +53,7 @@ const Notification = sequelize.define(
     },
     assignmentId: {
       type: DataTypes.INTEGER,
-      allowNull: false, 
+      allowNull: true,
       references: {
         model: Assignment,
         key: 'id',
@@ -62,11 +62,10 @@ const Notification = sequelize.define(
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
-      allowNull: false,
     },
-    statusRead:{
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+    statusRead: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     }
   },
   {

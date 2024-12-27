@@ -69,12 +69,10 @@ class ClassService {
       const classesInfo = [];
       for (const classInfo of allClasses) {
         const classID = classInfo.classID;
-        console.log("ClassService:", classID);
         const info = await ClassDB.getInfoByID(classID);
         if (!info) {
           throw new ErrorHandler(404, "There are not exist classes");
         }
-        console.log("ClassService:", info);
         classesInfo.push(info);
       }
 
@@ -90,12 +88,10 @@ class ClassService {
       const studentsClass = [];
       const totalEvents = [];
       for (const email of emailStudents) {
-        console.log("ClassService:", email)
         const student = await UserDB.getUserByEmailDB(email)
         if (!student) {
           throw new ErrorHandler(403, "There is not exist student");
         }
-        console.log("ClassService:", student.id, classID)
         const studentClass = await ClassDB.addStudentsToClass(student.id, classID);
 
         studentsClass.push(studentClass);
@@ -106,7 +102,6 @@ class ClassService {
         for (const eachEvent of events) {
           const personID = student.id;
           const eventID = eachEvent.eventID;
-          console.log("PersonID", personID, "EventID", eventID);
           const event_person = await EventDB.addPersonToEvent(eventID, personID);
           newEvents.push(event_person);
         }
@@ -196,7 +191,6 @@ class ClassService {
     try {
       const removedStudents = [];
       for (const email of studentsEmail) {
-        console.log("ClassService:", email)
         const removedStudent = await UserDB.getUserByEmailDB(email);
         if (!removedStudent) {
           throw new ErrorHandler(403, "There is not student");

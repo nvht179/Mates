@@ -16,10 +16,10 @@ class NotificationDB {
   deleteNotification = async (notificationId) => {
     try {
       const notification = await Notification.findByPk(notificationId);
-      if (!notification) return null; 
+      if (!notification) return null;
 
       await notification.destroy();
-      return notification; 
+      return notification;
     } catch (err) {
       throw new Error("Error deleting notification: " + err.message);
     }
@@ -28,14 +28,32 @@ class NotificationDB {
   updateNotificationStatus = async (notificationId, statusRead) => {
     try {
       const notification = await Notification.findByPk(notificationId);
-      if (!notification) return null; 
+      if (!notification) return null;
 
       notification.statusRead = statusRead;
       await notification.save();
-      return notification; 
+      return notification;
     } catch (err) {
       throw new Error("Error updating notification status: " + err.message);
     }
+  };
+
+  notification = async (userID, postID, notiTitle, content, type, commentID, assignmentID) => {
+    const targetId = userID;
+    const postId = postID;
+    const title = notiTitle;
+    const commentId = commentID;
+    const assignmentId = assignmentID;
+    const notification = await Notification.create({
+      targetId,
+      postId,
+      title,
+      content,
+      type,
+      commentId,
+      assignmentId
+    })
+    return notification;
   };
 }
 

@@ -222,6 +222,12 @@ class PostDB {
       throw new Error(`Error retrieving post with ID ${postId}: ${error.message}`);
     }
   };
+
+  findPostByID = async (postId) => {
+    const id = postId;
+    const post = await Post.findByPk(id);
+    return post;
+  };
 }
 
 module.exports = new PostDB();

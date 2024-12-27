@@ -59,6 +59,7 @@ class PostController {
       res.status(403).json({ error: err.message });
     }
   };
+
    // Edit a post
    editPost = async (req, res) => {
     try {
@@ -118,7 +119,6 @@ class PostController {
       res.status(403).json({ error: err.message });
     }
   };
-
 
   // Remove a post
   removePost = async (req, res) => {

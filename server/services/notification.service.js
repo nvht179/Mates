@@ -2,6 +2,17 @@ const NotificationDB = require("../db/notification.db");
 const { ErrorHandler } = require("../helpers/error");
 
 class NotificationService {
+  notification = async (userID, postID, notiTitle, content, type, commentID, assignmentID) => {
+    try {
+      const notification = await NotificationDB.notification(userID, postID, notiTitle, content, type, commentID, assignmentID);
+      if (!notification) {
+        throw new ErrorHandler(403, "The error with notification in posts");
+      }
+    } catch (err) {
+      throw new ErrorHandler(err.statusCode, err.message);
+    }
+  };
+
   // Lấy tất cả notifications của người dùng
   async getAllNotifications(userId) {
     try {

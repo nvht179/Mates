@@ -45,67 +45,17 @@ Assignment.belongsTo(Class, { foreignKey: "classID", as: "class" });
 Person.hasMany(Comment, { foreignKey: "personId", as: "comments", onDelete: "CASCADE", hooks: true });
 Comment.belongsTo(Person, { foreignKey: "personId", as: "person" });
 
-// Notification and Post
-Notification.belongsTo(Post, { foreignKey: "postId", onDelete: "CASCADE", hooks: true });
+// // Notification and Post
+// Notification.belongsTo(Post, { foreignKey: "postId", onDelete: "CASCADE", hooks: true });
 
-// Notification and Comment
-Notification.belongsTo(Comment, { foreignKey: "commentId", onDelete: "CASCADE", hooks: true });
+// // Notification and Comment
+// Notification.belongsTo(Comment, { foreignKey: "commentId", onDelete: "CASCADE", hooks: true });
 
-// Notification and Assignment
-Notification.belongsTo(Assignment, { foreignKey: "assignmentId", onDelete: "CASCADE", hooks: true });
+// // Notification and Assignment
+// Notification.belongsTo(Assignment, { foreignKey: "assignmentId", onDelete: "CASCADE", hooks: true });
 
-// Notification and Person
-Notification.belongsTo(Person, { foreignKey: "targetId", onDelete: "CASCADE", hooks: true });
-
-// Add CASCADE constraints to existing tables via raw SQL
-const addCascadeConstraints = async () => {
-  const queries = [
-    `
-      ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "Notifications_postId_fkey",
-      ADD CONSTRAINT "Notifications_postId_fkey"
-      FOREIGN KEY ("postId")
-      REFERENCES "Post" ("id")
-      ON DELETE CASCADE
-      ON UPDATE CASCADE;
-    `,
-    `
-      ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "Notifications_commentId_fkey",
-      ADD CONSTRAINT "Notifications_commentId_fkey"
-      FOREIGN KEY ("commentId")
-      REFERENCES "Comment" ("id")
-      ON DELETE CASCADE
-      ON UPDATE CASCADE;
-    `,
-    `
-      ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "Notifications_assignmentId_fkey",
-      ADD CONSTRAINT "Notifications_assignmentId_fkey"
-      FOREIGN KEY ("assignmentId")
-      REFERENCES "Assignment" ("id")
-      ON DELETE CASCADE
-      ON UPDATE CASCADE;
-    `,
-    `
-      ALTER TABLE "Notifications"
-      DROP CONSTRAINT IF EXISTS "Notifications_targetId_fkey",
-      ADD CONSTRAINT "Notifications_targetId_fkey"
-      FOREIGN KEY ("targetId")
-      REFERENCES "Person" ("id")
-      ON DELETE CASCADE
-      ON UPDATE CASCADE;
-    `,
-  ];
-
-  for (const query of queries) {
-    try {
-      await sequelize.query(query);
-    } catch (err) {
-      logger.error(`Error executing query: ${query.trim()} - ${err.message}`);
-    }
-  }
-};
+// // Notification and Person
+// Notification.belongsTo(Person, { foreignKey: "targetId", onDelete: "CASCADE", hooks: true });
 
 // Sync models and apply raw SQL constraints
 sequelize

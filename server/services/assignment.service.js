@@ -1,5 +1,7 @@
 const AssignmentDB = require("../db/assignment.db");
 const { ErrorHandler } = require("../helpers/error");
+const NotificationService = require("./notification.service");
+const ClassService = require("./class.service");
 
 class AssignmentService {
   // Add a new assignment with attachments
@@ -21,6 +23,28 @@ class AssignmentService {
         weight,
         classID
       });
+
+      const postID = null;
+      const type = "assignment";
+      const notiTitle = "New assignment " + title;
+      const commentID = null;
+      const assignmentID = newAssignment.id;
+      const content = description;
+
+      // All members in class
+      const studentClassInfo = await ClassService.viewAllStudentsInClass(classID);
+      for (const student of studentClassInfo) {
+        const userID = student.id;
+        console.log("AssignmentService:", userID, postID, notiTitle, content, type, commentID, assignmentID)
+        const notification = await NotificationService.notification(userID, postID, notiTitle, content, type, commentID, assignmentID);
+      }
+
+      const teacherClassInfo = await ClassService.viewAllTeachersInClass(classID);
+      for (const teacher of teacherClassInfo) {
+        const userID = teacher.id;
+        const notification = await NotificationService.notification(userID, postID, notiTitle, content, type, commentID, assignmentID);
+      }
+
 
       return newAssignment;
     } catch (err) {

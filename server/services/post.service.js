@@ -1,5 +1,7 @@
 const PostDB = require("../db/post.db");
 const { ErrorHandler } = require("../helpers/error");
+const NotificationService = require("./notification.service");
+const ClassService = require("./class.service");
 
 class PostService {
   addNewPostWithAttachments = async ({ classID, title, content, attachments, personID }) => {
@@ -13,6 +15,25 @@ class PostService {
         personID, // Thêm personID vào tham số
       });
 
+      const postID = newPost.id;
+      const type = "post";
+      const notiTitle = "New post - " + title;
+      const commentID = null;
+      const assignmentID = null;
+
+      // All members in class
+      const studentClassInfo = await ClassService.viewAllStudentsInClass(classID);
+      for (const student of studentClassInfo) {
+        const userID = student.id;
+        const notification = await NotificationService.notification(userID, postID, notiTitle, content, type, commentID, assignmentID);
+      }
+
+      const teacherClassInfo = await ClassService.viewAllTeachersInClass(classID);
+      for (const teacher of teacherClassInfo) {
+        const userID = teacher.id;
+        const notification = await NotificationService.notification(userID, postID, notiTitle, content, type, commentID, assignmentID);
+      }
+
       return newPost;
     } catch (err) {
       console.log(err);
@@ -23,7 +44,7 @@ class PostService {
     }
   };
 
-   getPostsByClassId = async (classID) => {
+  getPostsByClassId = async (classID) => {
     try {
       const posts = await PostDB.getPostsByClassId(classID);
       return posts;
@@ -65,14 +86,14 @@ class PostService {
     }
   }
 
-   getPostById = async (postId) => {
+  getPostById = async (postId) => {
     try {
       const post = await PostDB.getPostById(postId);
-  
+
       if (!post) {
         throw new Error(`Post with ID ${postId} not found.`);
       }
-  
+
       return post;
     } catch (err) {
       throw new Error(`Error in PostService - getPostById: ${err.message}`);
