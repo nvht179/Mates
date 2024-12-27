@@ -138,9 +138,13 @@ function GradeDetailsPage() {
         {role === "Teacher" ? (
           <Textarea
             value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= 255) {
+          setFeedback(e.target.value);
+              }
+            }}
             className="ml-11 w-full bg-fg-alt p-2 px-3"
-            placeholder="Feed back for this submission"
+            placeholder="Feedback for this submission"
             rows={4}
           />
         ) : (
