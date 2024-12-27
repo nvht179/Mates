@@ -36,7 +36,7 @@ function CalendarPage() {
         <h1 className="text-lg font-bold">Calendar</h1>
       </div>
       <div>
-        <Button primary onClick={handleNewEventClick}>
+        <Button secondary onClick={handleNewEventClick} className="text-sm">
           <LuCalendarPlus className="mr-2" />
           New event
         </Button>

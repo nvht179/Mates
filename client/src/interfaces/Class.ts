@@ -177,6 +177,7 @@ interface ViewClassInfoResponse {
     className: string;
     code: string;
     description: string;
+    avatar: string;
   };
   classEvents: Array<{
     eventID: number;

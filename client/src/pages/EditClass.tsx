@@ -17,11 +17,15 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useLocation } from "react-router-dom";
 // import { ClassState } from "../interfaces/Class";
 import { useViewClassInfoQuery } from "../store";
+import { IoMdRemoveCircleOutline } from "react-icons/io";
+import Textarea from "../components/TextArea";
+import Dropdown from "../components/Dropdown";
+import DefaultClassImage from "../assets/default-class.svg";
 
 type ScheduleSlot = {
-    day: string;
-    startTime: string;
-    endTime: string;
+  day: string;
+  startTime: string;
+  endTime: string;
 };
 
 // interface ClassIDState {
@@ -34,295 +38,285 @@ type ScheduleSlot = {
 //     title: string;
 //     display: string | null;
 // }
-
+const defaultClassImg = DefaultClassImage;
 export default function EditClass() {
+  const { state } = useLocation();
+  const classIDnum = state?.cla.classID;
+  const classID = classIDnum?.toString();
+  // const { state } = useLocation();
+  // const { cla } = state as { cla: ClassState; image: string };
+  // const { classID } = cla;
 
-    const { state } = useLocation();
-    const classIDnum = state?.cla.classID;
-    const classID = classIDnum?.toString();
-    // const { state } = useLocation();
-    // const { cla } = state as { cla: ClassState; image: string };
-    // const { classID } = cla;
+  const classInfoQuery = useViewClassInfoQuery(classID);
 
-    const classInfoQuery = useViewClassInfoQuery(classID);
+  const { data, isError: CIIsError, error: CIError } = classInfoQuery;
 
-    const { data, isError: CIIsError, error: CIError } = classInfoQuery;
-
-    useEffect(() => {
-        responseErrorHandler(
-            CIIsError,
-            CIError as FetchBaseQueryError,
-            setErrorMessage,
-        );
-    }, [CIIsError, CIError]);
-
-    const cla = data?.classInfo ?? { className: "", code: "", description: "" };
-
-    const [className, setClassName] = useState(cla.className);
-    const [classCode, setClassCode] = useState(cla.code);
-    const [description, setDescription] = useState(cla.description);
-    const [schedule, setSchedule] = useState<ScheduleSlot[]>(
-        [{ day: "Monday", startTime: "13:30", endTime: "15:30" }]
+  useEffect(() => {
+    responseErrorHandler(
+      CIIsError,
+      CIError as FetchBaseQueryError,
+      setErrorMessage,
     );
-    const [frequency, setFrequency] = useState(data?.classEvents[0].repeatTime ?? "Weekly");
+  }, [CIIsError, CIError]);
 
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [editClassMutation, { isLoading, isSuccess, isError, error }] =
-        useEditClassMutation();
+  const cla = data?.classInfo ?? {
+    className: "",
+    code: "",
+    description: "",
+    avatar: "",
+  };
 
-    const navigate = useNavigate();
-    // const { id, role } = useSelector((state: RootState) => state.user);
+  const [className, setClassName] = useState(cla.className);
+  const [classCode, setClassCode] = useState(cla.code);
+  const [description, setDescription] = useState(cla.description);
+  const [schedule, setSchedule] = useState<ScheduleSlot[]>([
+    { day: "Monday", startTime: "13:30", endTime: "15:30" },
+  ]);
+  const [frequency, setFrequency] = useState(
+    data?.classEvents[0].repeatTime ?? "Weekly",
+  );
 
-    useEffect(() => {
-        responseErrorHandler(
-            isError,
-            error as FetchBaseQueryError,
-            setErrorMessage,
-        );
-    }, [isError, error]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [editClassMutation, { isLoading, isSuccess, isError, error }] =
+    useEditClassMutation();
 
-    useEffect(() => {
-        if (isSuccess) {
-            navigate("/");
-        }
-    }, [isSuccess, navigate]);
+  const navigate = useNavigate();
+  // const { id, role } = useSelector((state: RootState) => state.user);
 
-    const handleClose = () => {
-        state.title = "Lecture";
-        navigate(`/class/${cla.code}/lecture`, { state })
+  useEffect(() => {
+    responseErrorHandler(
+      isError,
+      error as FetchBaseQueryError,
+      setErrorMessage,
+    );
+  }, [isError, error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
     }
+  }, [isSuccess, navigate]);
 
-    const handleScheduleChange = (
-        index: number,
-        field: keyof ScheduleSlot,
-        value: string,
-    ) => {
-        const updatedSchedule = [...schedule];
-        updatedSchedule[index][field] = value;
-        setSchedule(updatedSchedule);
+  const handleClose = () => {
+    state.title = "Lecture";
+    navigate(`/class/${cla.code}/lecture`, { state });
+  };
+
+  const handleScheduleChange = (
+    index: number,
+    field: keyof ScheduleSlot,
+    value: string,
+  ) => {
+    const updatedSchedule = [...schedule];
+    updatedSchedule[index][field] = value;
+    setSchedule(updatedSchedule);
+  };
+
+  const addTimeSlot = () => {
+    setSchedule([
+      ...schedule,
+      { day: "Monday", startTime: "13:15", endTime: "15:15" },
+    ]);
+  };
+
+  // const handleScheduleChange = (index: number, field: string, value: string) => {
+  //     const updatedSchedule = [...schedule];
+  //     updatedSchedule[index][field] = value;
+  //     setSchedule(updatedSchedule);
+  // };
+
+  const events = schedule.map((slot) => {
+    const startTime = getNextDate(slot.day);
+    startTime.setHours(
+      parseHours(slot.startTime).hour,
+      parseHours(slot.startTime).minute,
+    );
+    const endTime = getNextDate(slot.day);
+    endTime.setHours(
+      parseHours(slot.endTime).hour,
+      parseHours(slot.endTime).minute,
+    );
+    return {
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+      repeatTime: frequency,
     };
+  });
 
-    const addTimeSlot = () => {
-        setSchedule([...schedule, { day: "Monday", startTime: "13:15", endTime: "15:15" }]);
-    };
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
+  ) => {
+    e.preventDefault();
 
-    // const handleScheduleChange = (index: number, field: string, value: string) => {
-    //     const updatedSchedule = [...schedule];
-    //     updatedSchedule[index][field] = value;
-    //     setSchedule(updatedSchedule);
-    // };
-
-    const events = schedule.map((slot) => {
-        const startTime = getNextDate(slot.day);
-        startTime.setHours(
-            parseHours(slot.startTime).hour,
-            parseHours(slot.startTime).minute,
-        );
-        const endTime = getNextDate(slot.day);
-        endTime.setHours(
-            parseHours(slot.endTime).hour,
-            parseHours(slot.endTime).minute,
-        );
-        return {
-            startTime: startTime.toISOString(),
-            endTime: endTime.toISOString(),
-            repeatTime: frequency,
-        };
+    console.log({
+      classIDnum,
+      className,
+      classCode,
+      description,
+      events,
+      // id,
+      // role,
     });
 
-    const handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
-    ) => {
-        e.preventDefault();
-        
-        console.log({
-            classIDnum,
-            className,
-            classCode,
-            description,
-            events,
-            // id,
-            // role,
-        });
+    await editClassMutation({
+      classID,
+      className,
+      code: classCode,
+      description,
+      events,
+      // userID: String(id),
+      // role: role ?? "student",
+    });
+  };
 
-        await editClassMutation({
-            classID,
-            className,
-            code: classCode,
-            description,
-            events,
-            // userID: String(id),
-            // role: role ?? "student",
-        });
-    };
-
-    return (
-        <div className="max-w mx-auto">
-            <div className="flex items-center justify-between mx-auto mr-20 py-10 pb-5 pl-10 pr-20">
-                <div className="flex items-center pr-20">
-                    {/* <label className="block text-gray-700 mb-1">Class Name</label> */}
-                    <LuPencilLine className="mx-4 ml-5 text-2xl" />
-                    <Input
-                        className="border-fg-alt bg-fg-alt w-full"
-                        type="text"
-                        value={className}
-                        placeholder="Enter class name"
-                        onChange={(e) => setClassName(e.target.value)}
-                    />
-                </div>
-                {/* Buttons */}
-                <div className="flex justify-end space-x-7 mr-20">
-                    <Button secondary onClick={handleClose}>
-                        Close
-                    </Button>
-                    {isLoading ? (
-                        <Button primary> Editting...</Button>
-                    ) : isError ? (
-                        <Button disabled className="text-red-default">
-                            {errorMessage}
-                        </Button>
-                    ) : (
-                        <Button onClick={handleSubmit}>Edit</Button>
-                    )}
-                </div>
+  return (
+    <div className="max-w mx-auto">
+      {/* Buttons */}
+      {/* <div className="mr-20 flex justify-end space-x-7">
+          <Button secondary onClick={handleClose}>
+            Close
+          </Button>
+          {isLoading ? (
+            <Button primary> Editting...</Button>
+          ) : isError ? (
+            <Button disabled className="text-red-default">
+              {errorMessage}
+            </Button>
+          ) : (
+            <Button onClick={handleSubmit}>Edit</Button>
+          )}
+        </div> */}
+      <div className="space-y-4 pl-12 pr-40 pt-8">
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-1 flex-col space-y-4">
+            <div className="flex flex-row items-center space-x-4">
+              <LuPencilLine />
+              <Input
+                className="w-full border-fg-alt bg-fg-alt"
+                type="text"
+                value={className}
+                placeholder="Enter class name"
+                onChange={(e) => setClassName(e.target.value)}
+              />
             </div>
-            <div className="mx-auto mr-20 pb-5 pl-10 pr-20">
-                {/* Class Code */}
-                <div className="mb-4 flex items-center w-1/4">
-                    {/* <label className="block text-gray-700 mb-1">Class Code</label> */}
-                    <IoMdCode className="flex-none mx-3 text-3xl" />
-                    <Input
-                        className="border-fg-alt bg-fg-alt"
-                        type="text"
-                        value={classCode}
-                        placeholder="Enter class code"
-                        onChange={(e) => setClassCode(e.target.value)}
-                    />
-                </div>
 
-                {/* Schedule */}
-                <div className="mb-2 flex-col items-center pr-20">
-                    {/* <label className="block text-gray-700 mb-2">Schedule</label> */}
-                    {schedule.map((slot, index) => (
-                        <div key={index} className="mb-2 flex items-center space-x-4">
-                            {/* Day */}
-                            <FaRegClock className="flex-none ml-4 mr-1 text-xl" />
-                            <select
-                                value={slot.day}
-                                onChange={(e) =>
-                                    handleScheduleChange(index, "day", e.target.value)
-                                }
-                                className="border-fg-alt bg-fg-alt w-2/5 rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-                            >
-                                {[
-                                    "Monday",
-                                    "Tuesday",
-                                    "Wednesday",
-                                    "Thursday",
-                                    "Friday",
-                                    "Saturday",
-                                ].map((day) => (
-                                    <option key={day} value={day}>
-                                        {day}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {/* Start Time */}
-                            <Input
-                                type="time"
-                                value={slot.startTime}
-                                onChange={(e) =>
-                                    handleScheduleChange(index, "startTime", e.target.value)
-                                }
-                                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-                            />
-                            <HiArrowLongRight className="flex-none h-auto text-4xl" />
-
-                            {/* End Time */}
-                            <Input
-                                type="time"
-                                value={slot.endTime}
-                                onChange={(e) =>
-                                    handleScheduleChange(index, "endTime", e.target.value)
-                                }
-                                className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-                            />
-
-                            {/* Remove Time Slot */}
-                            <span
-                                className="cursor-pointer text-xl text-red-default"
-                                onClick={() =>
-                                    setSchedule(schedule.filter((_, i) => i !== index))
-                                }
-                            >
-                                <svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                    />
-                                    <line
-                                        x1="8"
-                                        y1="12"
-                                        x2="16"
-                                        y2="12"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                    />
-                                </svg>
-                            </span>
-                        </div>
-                    ))}
-
-                    {/* Add Time Slot */}
-                    <div
-                        onClick={addTimeSlot}
-                        className="ml-12 flex items-center pl-4 hover:cursor-pointer"
-                    >
-                        <MdAddCircleOutline className="text-2xl text-fg-softer" />
-                        <Button onClick={addTimeSlot} secondary className="border-none">
-                            Add Time Slot
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Frequency */}
-                <div className="mb-4 flex w-full items-center pr-20">
-                    {/* <label className="block text-gray-700 mb-1">Frequency</label> */}
-                    <RxLoop className="flex-none mx-4 text-2xl" />
-                    <select
-                        value={frequency}
-                        onChange={(e) => setFrequency(e.target.value)}
-                        className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-                    >
-                        <option value="Weekly">Weekly</option>
-                        <option value="Bi-Weekly">Bi-Weekly</option>
-                        <option value="Monthly">Monthly</option>
-                    </select>
-                </div>
-
-                {/* Description */}
-                <div className="mb-6 flex w-full items-center pr-20">
-                    {/* <label className="block text-gray-700 mb-1">Description</label> */}
-                    <GrTextAlignFull className="flex-none mx-4 text-2xl" />
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="border-fg-alt bg-fg-alt w-full rounded border-2 p-2 px-3 transition focus:border-b-primary-default focus:outline-none"
-                        placeholder="Enter class description"
-                        rows={4}
-                    />
-                </div>
+            {/* Class Code */}
+            <div className="flex flex-row items-center space-x-4">
+              <IoMdCode />
+              <Input
+                className="w-full border-fg-alt bg-fg-alt"
+                type="text"
+                value={classCode}
+                placeholder="Enter class code"
+                onChange={(e) => setClassCode(e.target.value)}
+              />
             </div>
+          </div>
+          <img
+            src={
+              cla?.avatar
+                ? cla.avatar === ""
+                  ? defaultClassImg
+                  : cla.avatar
+                : defaultClassImg
+            }
+            className="mx-16 h-16 w-16 object-cover"
+            alt={cla.className}
+          />
         </div>
-    );
+
+        {/* Schedule */}
+        <div className="flex-col">
+          {schedule.map((slot, index) => (
+            <div key={index} className="mt-2 flex items-center gap-4">
+              {/* Day */}
+              <FaRegClock />
+              <div className="flex-1">
+                <Dropdown
+                  options={[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                  ]}
+                  value={slot.day}
+                  onChanged={(e) => handleScheduleChange(index, "day", e)}
+                />
+              </div>
+
+              {/* Start Time */}
+              <Input
+                type="time"
+                value={slot.startTime}
+                onChange={(e) =>
+                  handleScheduleChange(index, "startTime", e.target.value)
+                }
+                className="flex-1 border-fg-alt bg-fg-alt"
+              />
+              <HiArrowLongRight className="mx-4 text-xl" />
+
+              {/* End Time */}
+              <Input
+                type="time"
+                value={slot.endTime}
+                onChange={(e) =>
+                  handleScheduleChange(index, "endTime", e.target.value)
+                }
+                className="flex-1 border-fg-alt bg-fg-alt"
+              />
+
+              {/* Remove Time Slot */}
+              <IoMdRemoveCircleOutline
+                onClick={() => {
+                  const updatedSchedule = schedule.filter(
+                    (_, i) => i !== index,
+                  );
+                  setSchedule(updatedSchedule);
+                }}
+                className="text-xl text-red-default hover:cursor-pointer"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Add Time Slot */}
+        <div className="ml-10 flex flex-row items-center space-x-4">
+          <div
+            onClick={addTimeSlot}
+            className="flex flex-row items-center space-x-4 hover:cursor-pointer"
+          >
+            <MdAddCircleOutline className="text-xl text-fg-softer" />
+            <Button onClick={addTimeSlot} secondary className="border-none">
+              Add Time Slot
+            </Button>
+          </div>
+        </div>
+
+        {/* Frequency */}
+        <div className="flex flex-row items-center space-x-4">
+          <RxLoop />
+          <Dropdown
+            options={["Weekly", "Bi-Weekly", "Monthly"]}
+            value={frequency}
+            onChanged={setFrequency}
+          />
+        </div>
+
+        {/* Description */}
+        <div className="flex flex-row items-center space-x-4">
+          <GrTextAlignFull />
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="h-44 border-fg-alt bg-fg-alt"
+            placeholder="Enter class description"
+            rows={4}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
