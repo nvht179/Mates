@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { IoIosNotificationsOutline } from "react-icons/io";
-import { IoIosNotifications } from "react-icons/io";
+import { IoIosNotifications, IoIosNotificationsOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import { useLazyViewNotificationsQuery } from "../store";
+import { RootState, useLazyViewNotificationsQuery } from "../store";
 import NotificationCard from "./NotificationCard";
 import { NotificationType } from "../interfaces/Notification";
 
@@ -41,7 +39,7 @@ function Notification() {
   }, []);
 
   const handleShowNotification = () => {
-    if (user.id !== null && isActivated === false) {
+    if (user.id !== null && !isActivated) {
       viewNotifications({ userId: user.id });
     }
     setIsActivated((prev) => !prev);
@@ -49,11 +47,18 @@ function Notification() {
 
   const renderedNotifications =
     notifications.length > 0 ? (
-      notifications.map((notification) => (
-        <div key={notification.id}>
-          <NotificationCard notification={notification} />
-        </div>
-      ))
+      notifications
+        .slice() // Create a shallow copy to avoid mutating the original array
+        .sort((a, b) => {
+          if (a.statusRead === b.statusRead) return 0; // Maintain order if status is the same
+          // @ts-expect-error-"Read" comes before "Unread"
+          return a.statusRead === "Read" ? -1 : 1; //
+        })
+        .map((notification) => (
+          <div key={notification.id}>
+            <NotificationCard notification={notification} />
+          </div>
+        ))
     ) : (
       <div className="p-2 text-center text-fg-default">
         No notifications available
@@ -79,7 +84,11 @@ function Notification() {
         {isLoading ? (
           <div>Loading...</div>
         ) : (
-          isActivated && <div>{renderedNotifications}</div>
+          isActivated && (
+            <div className="scrollbar-hidden max-h-96 overflow-hidden overflow-y-scroll rounded">
+              {renderedNotifications}
+            </div>
+          )
         )}
       </div>
     </div>
