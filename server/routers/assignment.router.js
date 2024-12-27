@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const AssignmentController = require('../controllers/assignment.controller');
 const upload = require("../middleware/upload.middleware");
+const verifyToken = require("../middleware/verifyToken.middleware");
 
+// router.use(verifyToken);
 // Create a new assignment with attachments
 router.post("/create", upload, AssignmentController.addNewAssignment);
 
