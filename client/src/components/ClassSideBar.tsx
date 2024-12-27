@@ -31,6 +31,9 @@ function ClassSideBar() {
     if (pathname.includes("lecture")) {
       setButtonClicked("lecture");
     }
+    if (pathname.includes("lecture-details")) {
+      setButtonClicked("lecture");
+    }
     if (pathname.includes("grade-details")) {
       setButtonClicked("assignment");
     }

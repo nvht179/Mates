@@ -218,10 +218,10 @@ function AssignmentPage() {
               <div className="text-sm text-fg-softer">{dueTime}</div>
             </div>
           </div>
-          <OptionDropdown
+          {role === "Teacher" && <OptionDropdown
             handleDeleteClick={() => handleDeleteClick(assignment)}
             handleEditClick={() => handleEditClick(assignment)}
-          />
+          />}
         </div>
         <div className="mt-2 border-b-2" />
         <div className="mt-2 flex flex-row text-sm">

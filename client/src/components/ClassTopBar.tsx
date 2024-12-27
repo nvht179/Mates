@@ -13,13 +13,12 @@ type Module = "Assignment" | "Lecture" | "Discussion" | "Grade";
 function ClassTopBar() {
   const role = useSelector((state: RootState) => state.user.role);
   const { state, pathname } = useLocation();
-  const { cla, image, module, title, display, tab } = state as {
+  const { cla, image, module, title, display } = state as {
     cla: ClassState;
     image: string;
     module: Module;
     title: string;
     display: string | null;
-    tab: AssignmentTopBarTab | null;
   };
   const { className, code } = cla;
   const navigate = useNavigate();
@@ -74,6 +73,11 @@ function ClassTopBar() {
     }
     if (pathname.includes("grade")) {
       setAssignmentButtonClick("Grade");
+    }
+    if (pathname.includes("lecture-details")) {
+      setIsCreatingLecture(true);
+    } else if (pathname.includes("lecture")) {
+      setIsCreatingLecture(false);
     }
   }, [
     pathname,
@@ -377,15 +381,17 @@ function ClassTopBar() {
       <div className="mr-4 flex h-full items-center gap-4">
         {isGrading && (
           <>
-            {role === "Teacher" && <Button
-              primary
-              small
-              className="mr-4 w-20"
-              onClick={handleSaveGradeClick}
-              disabled={isLoading}
-            >
-              Save
-            </Button>}
+            {role === "Teacher" && (
+              <Button
+                primary
+                small
+                className="mr-4 w-20"
+                onClick={handleSaveGradeClick}
+                disabled={isLoading}
+              >
+                Save
+              </Button>
+            )}
             <Button
               secondary
               small
