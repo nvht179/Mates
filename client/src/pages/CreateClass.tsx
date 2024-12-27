@@ -109,6 +109,14 @@ export default function CreateClass() {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault();
+    if (!className || !classCode) {
+      alert("Please fill in className and classCode field");
+      return;
+    }
+    if (schedule.some((slot) => slot.startTime >= slot.endTime)) {
+      alert("Start time must be before end time");
+      return;
+    }
     await createClassMutation({
       className,
       code: classCode,

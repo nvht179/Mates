@@ -78,7 +78,7 @@ export default function EditClass() {
   );
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [editClassMutation, { isLoading, isSuccess, isError, error }] =
+  const [editClassMutation, { isSuccess, isError, error }] =
     useEditClassMutation();
   const [setAvatarClassMutation] = useSetAvatarClassMutation();
 
@@ -151,6 +151,18 @@ export default function EditClass() {
 
   useEffect(() => {
     const handleSaveEditClass = () => {
+      if (!className || !classCode) {
+        alert("Please fill in className and classCode field");
+        const editClassSuccess = new CustomEvent("SaveEditClassFailed");
+        window.dispatchEvent(editClassSuccess);
+        return;
+      }
+      if (schedule.some((slot) => slot.startTime >= slot.endTime)) {
+        alert("Start time must be before end time");
+        const editClassSuccess = new CustomEvent("SaveEditClassFailed");
+        window.dispatchEvent(editClassSuccess);
+        return;
+      }
       editClassMutation({
         classID,
         className,
@@ -171,7 +183,17 @@ export default function EditClass() {
     return () => {
       window.removeEventListener("SaveEditClass", handleSaveEditClass);
     };
-  }, [editClassMutation, classID, className, classCode, description, events, classAvatar, setAvatarClassMutation]);
+  }, [
+    editClassMutation,
+    classID,
+    className,
+    classCode,
+    description,
+    events,
+    classAvatar,
+    setAvatarClassMutation,
+    schedule,
+  ]);
 
   return (
     <div className="max-w mx-auto">

@@ -431,6 +431,19 @@ function ClassTopBar() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleSaveEditClassSuccess = () => {
+      setIsLoading(false);
+    };
+    window.addEventListener("SaveEditClassFailed", handleSaveEditClassSuccess);
+    return () => {
+      window.removeEventListener(
+        "SaveEditClassFailed",
+        handleSaveEditClassSuccess,
+      );
+    };
+  }, []);
+
   const handleCancelEditClassClick = () => {
     setIsEditClass(false);
     navigate(`/class/${code}/lecture`, { state: { ...state, module: "Lecture", title: "Lecture" } });
