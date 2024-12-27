@@ -137,7 +137,10 @@ export default function EditAssignment() {
   const handleSubmit = useCallback(async () => {
     const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
     const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
-    if (endDT <= startDT) return alert("End time must be after start time");
+    if (endDT <= startDT) {
+      setErrorMessage("End time must be after start time")
+      return;
+    };
 
     const formData = new FormData();
     formData.append("title", assignmentTitle);

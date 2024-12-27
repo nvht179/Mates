@@ -110,11 +110,11 @@ export default function CreateClass() {
   ) => {
     e.preventDefault();
     if (!className || !classCode) {
-      alert("Please fill in className and classCode field");
+      setErrorMessage("Please fill in the class name and class code fields");
       return;
     }
     if (schedule.some((slot) => slot.startTime >= slot.endTime)) {
-      alert("Start time must be before end time");
+      setErrorMessage("Start time must be before end time");
       return;
     }
     await createClassMutation({
@@ -266,7 +266,7 @@ export default function CreateClass() {
             rows={4}
           />
         </div>
-        <p className="ml-14 text-red-default">{errorMessage}</p>
+        <p className="ml-10 text-red-default">{errorMessage}</p>
       </div>
     </div>
   );

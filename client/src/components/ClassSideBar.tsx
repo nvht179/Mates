@@ -17,13 +17,12 @@ function ClassSideBar() {
   const { state, pathname } = useLocation();
   const { cla } = state as { cla: ClassState};
   const { className, code, classID } = cla;
-  const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
-  const [infoHovered, setInfoHovered] = useState("");
   const role = useSelector((state: RootState) => state.user.role);
+  const [buttonClicked, setButtonClicked] = useState<buttonClicked>(role ==="Parent" ? "assignment" : "lecture");
+  const [infoHovered, setInfoHovered] = useState("");
   const defaultClassImg = DefaultClassImage;
 
   useEffect(() => {
-    // Then handle specific routes
     if (pathname.includes("assignment")) {
       setButtonClicked("assignment");
     }

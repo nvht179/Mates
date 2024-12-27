@@ -14,10 +14,21 @@ interface ClassCardListProps {
 function ClassCardList({ classes }: ClassCardListProps) {
   const navigate = useNavigate();
   const [hoveredIcon, setHoveredIcon] = useState<string>("");
-  const role = useSelector((state: RootState) => state.user.role);
+  const state = useSelector((state: RootState) => state.user);
   const defaultClassImg = DefaultClassImage;
 
   const handleClick = (cla: ClassState) => {
+    if (state.role === "Parent") {
+      navigate(`/class/${cla.code}/assignment`, {
+        state: {
+          ...state,
+          module: "Assignment",
+          title: "Assignment",
+          display: null,
+        },
+      });
+      return
+    }
     navigate("/class/" + cla.code + "/lecture", {
       state: { cla, title: "Lecture", module: "Lecture" },
     });
@@ -58,7 +69,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
             ></ClassInfo>
           </div>
 
-          {role === "Teacher" && <div
+          {state.role === "Teacher" && <div
             className="ml-0.5 mt-3 cursor-pointer pt-1 text-2xl"
             onMouseEnter={() => setHoveredIcon(`${cla.classID}_edit`)}
             onMouseLeave={() => setHoveredIcon("")}

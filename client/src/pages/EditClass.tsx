@@ -152,13 +152,13 @@ export default function EditClass() {
   useEffect(() => {
     const handleSaveEditClass = () => {
       if (!className || !classCode) {
-        alert("Please fill in className and classCode field");
+        setErrorMessage("Please fill in className and classCode field");
         const editClassSuccess = new CustomEvent("SaveEditClassFailed");
         window.dispatchEvent(editClassSuccess);
         return;
       }
       if (schedule.some((slot) => slot.startTime >= slot.endTime)) {
-        alert("Start time must be before end time");
+        setErrorMessage("Start time must be before end time");
         const editClassSuccess = new CustomEvent("SaveEditClassFailed");
         window.dispatchEvent(editClassSuccess);
         return;
@@ -337,6 +337,7 @@ export default function EditClass() {
             rows={4}
           />
         </div>
+        <p className="ml-10 text-red-default">{errorMessage}</p>
       </div>
     </div>
   );

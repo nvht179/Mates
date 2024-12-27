@@ -83,7 +83,9 @@ export default function CreateAssignment() {
   const handleSubmit = useCallback(async () => {
     const startDT = new Date(`${schedule.startDate}T${schedule.startTime}`);
     const endDT = new Date(`${schedule.endDate}T${schedule.endTime}`);
-    if (endDT <= startDT) return alert("End time must be after start time");
+    if (endDT <= startDT) {
+      setErrorMessage("End time must be after start time");
+    };
 
     const formData = new FormData();
     formData.append("title", assignmentTitle);
@@ -154,6 +156,7 @@ export default function CreateAssignment() {
           className="bg-bg-dark border-fg-alt"
           type="number"
           value={weight}
+          min={1}
           placeholder="Weight"
           onChange={(e) => setWeight(Number(e.target.value))}
         />

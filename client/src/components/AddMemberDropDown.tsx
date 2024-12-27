@@ -187,7 +187,7 @@ const AddMemberDropDown = ({
               type="email"
               value={searchText}
               onChange={handleSearchChange}
-              placeholder={`Add a ${memberType.slice(0, -1)} email...`}
+              placeholder={`Add a ${memberType} email...`}
               className="w-full text-sm"
             />
             <button

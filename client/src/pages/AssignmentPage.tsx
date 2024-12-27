@@ -236,7 +236,7 @@ function AssignmentPage() {
               {new Date(assignment.endTime) > new Date() ? (
                 <p className="text-sm text-fg-softer">{dueTime}</p>
               ) : submitStatus === "" ? <p className="text-sm  text-red-default">Overdue</p> : (
-                <p className="text-sm  text-fg-softer">Due</p>
+                <p className="text-sm  text-fg-softer mr-[6.5rem]">Due</p>
               )}
             </div>
           </div>

@@ -86,11 +86,11 @@ function EventDetails() {
 
   const handleSaveClick = () => {
     if (!title || !description) {
-      alert("Please fill in the title and description fields");
+      setErrorMessage("Please fill in the title and description fields");
       return;
     }
     if (startDate === "" || startTime === "" || endDate === "" || endTime === "") {
-      alert("Please fill in the date and time fields");
+      setErrorMessage("Please fill in the date and time fields");
       return;
     }
     
@@ -98,7 +98,7 @@ function EventDetails() {
     const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
 
     if (new Date(startDateTime) >= new Date(endDateTime)) {
-      alert("Start time must be before end time");
+      setErrorMessage("Start time must be before end time");
       return;
     }
 
