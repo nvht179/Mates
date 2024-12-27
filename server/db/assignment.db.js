@@ -2,8 +2,9 @@ const Assignment = require("../entities/assignment.model");
 const { ErrorHandler } = require("../helpers/error");
 const AttachmentDB = require("./attachment.db");
 const sequelize = require("../config/db");
-const { Comment, Reaction, Person, Attachment } = require("../entities");
+const { Comment, Reaction, Person, Attachment, Grade } = require("../entities");
 const GradeDB = require("./grade.db");
+const ClassDB = require("./class.db");
 
 class AssignmentDB {
   // Add new assignment with attachments
@@ -38,6 +39,14 @@ class AssignmentDB {
           );
         }
       }
+
+    const studentsInClass = await ClassDB.viewAllStudentsInClass(classID);
+    for (const student of studentsInClass) {
+      await Grade.create({
+        studentID: student.studentID,
+        assignmentID: newAssignment.id, // Link to the new assignment
+      }, { transaction });
+    }
 
       // Commit the transaction
       await transaction.commit();

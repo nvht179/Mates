@@ -1,5 +1,5 @@
 module.exports = {
-  "post": {
+  "put": {
     "tags": [
       "Grades"
     ],
