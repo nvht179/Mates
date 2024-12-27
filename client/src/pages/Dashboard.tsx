@@ -33,12 +33,12 @@ function Dashboard() {
 
   return (
     <div>
-      <div className="flex h-[60px] flex-row items-center justify-between">
-        <p className="ml-8 text-lg font-bold text-fg-default">My classes</p>
+      <div className="flex h-[60px] flex-row items-center justify-between p-3">
+        <p className="ml-5 text-lg font-bold">My classes</p>
         {role === "Teacher" && <Button
           secondary
           onClick={handleCreateClass}
-          className="mx-4 my-2 text-sm font-semibold text-fg-default"
+          className="mr-8 my-2 text-sm font-semibold"
         >
           Create Class
         </Button>}

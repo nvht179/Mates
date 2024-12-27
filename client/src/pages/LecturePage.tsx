@@ -27,7 +27,7 @@ function LecturePage() {
   lecturesWithAttachment.sort((a, b) => a.id - b.id);
 
   return (
-    <div className="mx-20 bg-bg-soft">
+    <div className="h-full px-40">
       <LectureList lectures={lecturesWithAttachment} />
       {/*<Button className="mt-4 mb-8" onClick={handleCreateLectureClick}>*/}
       {/*  Create Lecture*/}

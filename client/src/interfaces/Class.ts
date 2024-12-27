@@ -5,12 +5,13 @@ interface ClassState {
   className: string;
   code: string;
   description: string;
+  avatar: string | null;
 }
 
 interface ViewAllClassesResponse {
   message: string;
   allClassesInfo: [
-    { classID: number; className: string; code: string; description: string },
+    { classID: number; className: string; code: string; description: string; avatar: string },
   ];
 }
 
@@ -176,6 +177,7 @@ interface ViewClassInfoResponse {
     className: string;
     code: string;
     description: string;
+    avatar: string;
   };
   classEvents: Array<{
     eventID: number;
@@ -191,6 +193,14 @@ interface ViewClassInfoResponse {
 type RemoveClassRequest = string;
 
 type RemoveClassResponse = {
+  message: string;
+};
+
+// classID: string
+// file
+type setAvatarClassRequest = FormData
+
+type setAvatarClassResponse = {
   message: string;
 };
 
@@ -215,4 +225,6 @@ export type {
   RemoveClassResponse,
   EditClassRequest,
   EditClassResponse,
+  setAvatarClassRequest,
+  setAvatarClassResponse
 };

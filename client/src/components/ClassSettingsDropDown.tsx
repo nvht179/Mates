@@ -8,7 +8,6 @@ import { ClassState } from "../interfaces/Class";
 
 interface ClassSettingsDropDownProps {
   cla: ClassState;
-  image: string
 }
 
 interface LocationState {
@@ -16,17 +15,17 @@ interface LocationState {
   image: string;
   title: string;
   display: string | null;
+  module: string;
 }
 
 const ClassSettingsDropDown = ({ 
   cla,
-  image,
 }: ClassSettingsDropDownProps) => {
   const state = {
     cla,
-    image,
     title: "Edit Class",
     display: null,
+    module: "Edit Class",
   } as LocationState;
   
   const [isOpen, setIsOpen] = useState(false);
@@ -40,8 +39,6 @@ const ClassSettingsDropDown = ({
     e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
-
-  console.log("state huhu: ", state);
 
   const handleRemove = () => {
     removeClass(cla.classID.toString());

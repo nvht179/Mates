@@ -65,7 +65,7 @@ function GradeDetailsPage() {
   }, [isGradingSuccess, navigate, cla.code, state]);
 
   return (
-    <div className="max-w">
+    <div className="max-w px-8">
       <div className="my-10 flex flex-row items-center space-x-4 px-10">
         <img
           className="h-10 w-10 rounded-full object-cover"
@@ -89,7 +89,7 @@ function GradeDetailsPage() {
 
           <div className="max-w flex items-center">
             <h1 className="mr-5 font-semibold">Assignment</h1>
-            <h1>{grade?.name}</h1>
+            <h1>{grade.assignmentTitle}</h1>
           </div>
 
           <div className="max-w flex items-center">

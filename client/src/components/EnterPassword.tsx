@@ -15,6 +15,7 @@ export default function EnterPassword() {
   const email = (location.state as string | null) || null;
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const navigate = useNavigate();
+  const [btnContent, setBtnContent] = useState<string>("Sign in");
 
   useEffect(() => {
     if (!email || email === "") {
@@ -28,8 +29,9 @@ export default function EnterPassword() {
       error as FetchBaseQueryError,
       setErrorMessage,
     );
-    if (isError && errorMessage === "Email is not verified") {
-       navigate("/email-input" , { state: { email: email } });
+    if (errorMessage === "Email is not verified") {
+        setBtnContent("Resend verification email");
+        navigate("/email-input" , { state: { email: email } });
     }
   }, [isError, error, isSuccess, data]);
 
@@ -81,7 +83,7 @@ export default function EnterPassword() {
         className="mt-auto self-end"
         disabled={isLoading}
       >
-        {isLoading ? "Loading" : "Sign in"}
+        {errorMessage === "Email is not verified" ? "Resend verification code" : (isLoading ? "Loading" : btnContent)}
       </Button>
     </div>
   );

@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthToken } from "../../utils/getAuthToken";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
   CreatePostRequest,
   CreatePostResponse,
@@ -11,19 +11,12 @@ import {
   ViewPostsResponse,
 } from "../../interfaces/Post";
 
+type Tag = { type: "Post" | "ClassPost"; id: string | number };
+
 const postApi = createApi({
   reducerPath: "post",
   tagTypes: ["Post", "ClassPost", "Comment"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     createPost: builder.mutation<CreatePostResponse, CreatePostRequest>({
       invalidatesTags: (_result, _error, arg) => [
@@ -39,7 +32,7 @@ const postApi = createApi({
     }),
     viewPosts: builder.query<ViewPostsResponse, ViewPostRequest>({
       providesTags: (result, _error, arg) => {
-        const tags = (result?.data ?? []).map((post) => ({
+        const tags: Tag[] = (result?.data ?? []).map((post) => ({
           type: "Post" as const,
           id: post.id.toString(),
         }));

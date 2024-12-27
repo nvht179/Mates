@@ -5,7 +5,7 @@ export default function Textarea({
   ...rest
 }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   const style = className(
-    "w-full border-2 border-fg-border p-2 focus:border-b-primary-border focus:outline-none focus:ring-0 rounded",
+    "w-full border-2 p-2 focus:border-b-primary-border focus:outline-none focus:ring-0 rounded",
     rest.className,
   );
 

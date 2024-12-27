@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthToken } from "../../utils/getAuthToken";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   DeleteNotificationRequest,
   DeleteNotificationResponse,
@@ -8,20 +7,12 @@ import {
   ViewNotificationRequest,
   ViewNotificationResponse,
 } from "../../interfaces/Notification";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 
 const notiApi = createApi({
   reducerPath: "noti",
   tagTypes: ["Notification"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     viewNotifications: builder.query<
       ViewNotificationResponse,

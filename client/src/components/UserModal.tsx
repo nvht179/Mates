@@ -8,6 +8,7 @@ import Input from "./Input";
 import { useLazyLogoutQuery, useUpdateUserIntoMutation } from "../store";
 import { responseErrorHandler } from "../utils/responseErrorHandler";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { LuUserRoundPen } from "react-icons/lu";
 
 interface UserModalProps {
   onClose: () => void;
@@ -71,10 +72,10 @@ const EditableUserInfo = React.memo(
   }: EditableUserInfoProps) => (
     <div className="flex min-h-24 min-w-64 flex-col items-center">
       <div className="flex flex-row items-center">
-        <AvatarUpload
-          avatarPreviewUrl={avatarPreviewUrl}
-          onAvatarChange={onAvatarChange}
-        />
+          <AvatarUpload
+            avatarPreviewUrl={avatarPreviewUrl}
+            onAvatarChange={onAvatarChange}
+          />
         <div className="ml-4 flex flex-col">
           <Input
             className="mb-1 h-8 text-sm"
@@ -103,12 +104,13 @@ const AvatarUpload = React.memo(
     avatarPreviewUrl: string;
     onAvatarChange: (file: File) => void;
   }) => (
-    <label htmlFor="avatarInput" className="cursor-pointer">
+    <label htmlFor="avatarInput" className="relative cursor-pointer active:opacity-50">
       <img
         src={avatarPreviewUrl}
         alt="user"
-        className="h-12 w-12 rounded-full object-cover active:opacity-50"
+        className="h-12 w-12 rounded-full object-cover"
       />
+      <LuUserRoundPen className="absolute right-0 bottom-0 text-fg-softer" />
       <input
         type="file"
         id="avatarInput"
@@ -241,7 +243,7 @@ function UserModal({ onClose }: UserModalProps) {
     if (userAvatar) {
       return URL.createObjectURL(userAvatar);
     }
-    return avatar ?? DefaultAvatar;
+    return avatar && avatar !== "" ? avatar : DefaultAvatar;
   }, [userAvatar, avatar]);
 
   const modal = (
@@ -287,7 +289,7 @@ function UserModal({ onClose }: UserModalProps) {
             <UserInfo
               userFullName={userFullName}
               userEmail={userEmail}
-              avatarUrl={avatar ?? DefaultAvatar}
+              avatarUrl={avatar && avatar !== "" ? avatar : DefaultAvatar}
               onEdit={() => setIsEditing(true)}
             />
           )}

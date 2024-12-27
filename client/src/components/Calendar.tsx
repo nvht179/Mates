@@ -1,7 +1,8 @@
 import { Event } from "../interfaces/Event";
 import { useNavigate } from "react-router-dom";
 import OptionDropdown from "./OptionDropdown";
-import { useDeleteEventMutation } from "../store";
+import { RootState, useDeleteEventMutation } from "../store";
+import { useSelector } from "react-redux";
 
 interface CalendarProps {
   displayDate: Date;
@@ -11,6 +12,7 @@ interface CalendarProps {
 const HOURWIDTH = 5; // 1 hour = 5rem
 function Calendar({ displayDate, events }: CalendarProps) {
   const navigate = useNavigate();
+  const role = useSelector((state: RootState) => state.user.role);
   const [deleteEvent] = useDeleteEventMutation();
 
   // Get the start of the week (Monday)
@@ -82,7 +84,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
   };
 
   const handleEditClick = (event: Event) => {
-    navigate("/calendar/event-details", { state: { event } });
+    navigate("/calendar/event-details", { state: { event, displayDate } });
   };
 
   const handleDeleteClick = (event: Event) => {
@@ -131,7 +133,6 @@ function Calendar({ displayDate, events }: CalendarProps) {
                 className="relative"
                 style={{
                   height: `${HOURWIDTH * 24}rem`,
-                  // marginTop: `${HOURWIDTH}rem`,
                 }}
               >
                 {events
@@ -152,10 +153,12 @@ function Calendar({ displayDate, events }: CalendarProps) {
                     >
                       <div className="flex items-center justify-between">
                         <h2 className="font-semibold">{event.title}</h2>
-                        <OptionDropdown
-                          handleEditClick={() => handleEditClick(event)}
-                          handleDeleteClick={() => handleDeleteClick(event)}
-                        />
+                        {(role === "Teacher" || event.classID === null) && (
+                          <OptionDropdown
+                            handleEditClick={() => handleEditClick(event)}
+                            handleDeleteClick={() => handleDeleteClick(event)}
+                          />
+                        )}
                       </div>
                       <p className="text-xs">
                         {new Date(event.startTime).toLocaleTimeString([], {

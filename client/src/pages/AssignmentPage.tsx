@@ -1,10 +1,10 @@
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   RootState,
-  useGetAllAssignmentsQuery,
-  useRemoveAssignmentMutation,
   useDeleteSubmissionMutation,
+  useGetAllAssignmentsQuery,
   useLazyViewGradeDetailsQuery,
+  useRemoveAssignmentMutation,
   useSubmitAssignmentMutation,
 } from "../store";
 import Button from "../components/Button";
@@ -24,7 +24,9 @@ function AssignmentPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [attachment, setAttachment] = useState<FileList | null>(null);
   const [submissionActionsCount, setSubmissionActionsCount] = useState(0);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<
+    string | null
+  >(null);
   const navigate = useNavigate();
   const [
     removeAssignment,
@@ -32,7 +34,11 @@ function AssignmentPage() {
   ] = useRemoveAssignmentMutation();
   const [
     deleteSubmission,
-    { isError: isDeleteSubmissionError, error: deleteSubmissionError, isLoading: isDeletingSubmission },
+    {
+      isError: isDeleteSubmissionError,
+      error: deleteSubmissionError,
+      isLoading: isDeletingSubmission,
+    },
   ] = useDeleteSubmissionMutation();
   const [
     viewGradeDetails,
@@ -69,43 +75,43 @@ function AssignmentPage() {
   const handleDeleteSubmission = async (assignmentID: string) => {
     if (id) {
       await deleteSubmission({ personID: id.toString(), assignmentID });
-      setSubmissionActionsCount(prev => prev + 1);
+      setSubmissionActionsCount((prev) => prev + 1);
     }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && selectedAssignmentId) {
       const dataTransfer = new DataTransfer();
-      
+
       // Add existing files if any
       if (attachment) {
-        Array.from(attachment).forEach(file => {
+        Array.from(attachment).forEach((file) => {
           dataTransfer.items.add(file);
         });
       }
-      
+
       // Add new files
-      Array.from(e.target.files).forEach(file => {
+      Array.from(e.target.files).forEach((file) => {
         dataTransfer.items.add(file);
       });
 
       // Set attachment first
       setAttachment(dataTransfer.files);
-      
+
       // Create and submit form data
       const submission = new FormData();
       Array.from(dataTransfer.files).forEach((file) => {
         submission.append("files", file);
       });
-      
+
       if (id) {
         submission.append("studentID", id.toString());
         submission.append("assignmentID", selectedAssignmentId);
         console.log("Submitting assignment: ", submission.get("files"));
         await submitAssignment(submission);
-        setSubmissionActionsCount(prev => prev + 1);
+        setSubmissionActionsCount((prev) => prev + 1);
         if (inputRef.current) {
-          inputRef.current.value = '';
+          inputRef.current.value = "";
         }
         setAttachment(null);
         setSelectedAssignmentId(null);
@@ -165,10 +171,23 @@ function AssignmentPage() {
     }
   }, [error, isError]);
 
-  const assignments = useMemo(
-    () => (isSuccess && data?.data) || [],
-    [isSuccess, data],
-  );
+  const assignments = useMemo(() => {
+    if (!isSuccess || !data?.data) return [];
+
+    return [...data.data].sort((a, b) => {
+      const dateA = new Date(a.endTime);
+      const dateB = new Date(b.endTime);
+      const now = new Date();
+
+      const isAPast = dateA < now;
+      const isBPast = dateB < now;
+
+      if (isAPast && !isBPast) return 1;
+      if (!isAPast && isBPast) return -1;
+
+      return dateA.getTime() - dateB.getTime();
+    });
+  }, [isSuccess, data]);
 
   useEffect(() => {
     const fetchStudentSubmissions = async () => {
@@ -176,21 +195,19 @@ function AssignmentPage() {
         const submissions: { [key: string]: ViewGradeDetailsResponse } = {};
         for (const assignment of assignments) {
           try {
-            const response = await viewGradeDetails({
+            submissions[assignment.id] = await viewGradeDetails({
               personID: id.toString(),
               assignmentID: assignment.id.toString(),
             }).unwrap();
-            submissions[assignment.id] = response;
           } catch (error) {
             console.error("Error fetching student submission details: ", error);
           }
         }
-        console.log("huhu: ", submissions);
         setStudentSubmissionAttachmentsDict(submissions);
       }
     };
 
-    fetchStudentSubmissions();
+    fetchStudentSubmissions().then();
   }, [assignments, id, role, viewGradeDetails, submissionActionsCount]);
 
   console.log(
@@ -201,6 +218,7 @@ function AssignmentPage() {
   const renderedAssignment = assignments.map((assignment, index) => {
     const assignmentNumber = index + 1;
     const dueTime = new Date(assignment.endTime).toLocaleString();
+
     const submitStatus =
       studentSubmissionAttachmentsDict[assignment.id]?.submissionDetail
         ?.status || "Not Submitted";
@@ -215,18 +233,24 @@ function AssignmentPage() {
               <p className="mx-2 inline text-sm font-bold text-fg-soft">
                 Due Time:{" "}
               </p>
-              <div className="text-sm text-fg-softer">{dueTime}</div>
+              {new Date(assignment.endTime) > new Date() ? (
+                <p className="text-sm text-fg-softer">{dueTime}</p>
+              ) : submitStatus === "" ? <p className="text-sm  text-red-default">Overdue</p> : (
+                <p className="text-sm  text-fg-softer">Due</p>
+              )}
             </div>
           </div>
-          <OptionDropdown
-            handleDeleteClick={() => handleDeleteClick(assignment)}
-            handleEditClick={() => handleEditClick(assignment)}
-          />
+          {role === "Teacher" && (
+            <OptionDropdown
+              handleDeleteClick={() => handleDeleteClick(assignment)}
+              handleEditClick={() => handleEditClick(assignment)}
+            />
+          )}
         </div>
         <div className="mt-2 border-b-2" />
         <div className="mt-2 flex flex-row text-sm">
           <div className="flex-1">
-            <p className="mr-2 inline text-sm font-bold">Description:</p>
+            <p className="mr-2 inline text-sm font-bold">Description: </p>
             <span className="text-sm text-fg-default">
               {assignment.description}
             </span>
@@ -241,7 +265,7 @@ function AssignmentPage() {
                   ].attachments.map((attachment) => (
                     <a
                       key={attachment.id}
-                      className="text-primary-default hover:underline block"
+                      className="block text-primary-default hover:underline"
                       href={attachment.link}
                     >
                       {attachment.linkTitle}
@@ -249,40 +273,41 @@ function AssignmentPage() {
                   ))}
                 </div>
               )}
-            {role === "Student" && (
-              <div className="mt-4 flex gap-4">
-                <Button
-                  onClick={() => {
-                    setSelectedAssignmentId(assignment.id.toString());
-                    inputRef.current?.click();
-                  }}
-                  disabled={isSubmittingAssignment}
-                >
-                  Submit
-                </Button>
-                <input
-                  ref={inputRef}
-                  id="attachment"
-                  type="file"
-                  hidden
-                  multiple
-                  onChange={handleFileChange}
-                />
-                {submitStatus === "Submitted" && (
+            {role === "Student" &&
+              new Date(assignment.endTime) > new Date() && (
+                <div className="mt-4 flex gap-4">
                   <Button
-                    small
-                    secondary
-                    className="w-[4.5rem] text-red-default"
-                    disabled={isDeletingSubmission}
-                    onClick={() =>
-                      handleDeleteSubmission(assignment.id.toString())
-                    }
+                    onClick={() => {
+                      setSelectedAssignmentId(assignment.id.toString());
+                      inputRef.current?.click();
+                    }}
+                    disabled={isSubmittingAssignment}
                   >
-                    Delete
+                    Submit
                   </Button>
-                )}
-              </div>
-            )}
+                  <input
+                    ref={inputRef}
+                    id="attachment"
+                    type="file"
+                    hidden
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                  {submitStatus === "Submitted" && (
+                    <Button
+                      small
+                      secondary
+                      className="w-[4.5rem] text-red-default"
+                      disabled={isDeletingSubmission}
+                      onClick={() =>
+                        handleDeleteSubmission(assignment.id.toString())
+                      }
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </div>
+              )}
           </div>
           {/* <div className="flex-1" /> */}
           <div className="w-96">
@@ -294,9 +319,9 @@ function AssignmentPage() {
                 <a
                   key={attachment.id}
                   href={attachment.link}
-                  className="text-primary-default hover:underline block"
+                  className="block text-primary-default hover:underline"
                 >
-                  {attachment.linkTitle}  
+                  {attachment.linkTitle}
                 </a>
               ))}
             </div>
