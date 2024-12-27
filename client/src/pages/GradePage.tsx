@@ -80,7 +80,7 @@ function GradePage() {
       viewGradeAssignmentByTeacherQuery({ assignmentID: selectedAssignmentID });
       grades = gradesQuery?.allSubmissionAssignment || [];
     }
-    grades.sort((a, b) => a.gradeId - b.gradeId);
+    grades = [...grades].sort((a, b) => a.gradeId - b.gradeId);
     setGrades(grades);
   }, [
     selectedAssignmentID,
@@ -103,8 +103,8 @@ function GradePage() {
         personID: childData?.user.id ?? 0,
         classID: cla.classID,
       });
-      const grades = gradesInClass?.allSubmissionInClass || [];
-      grades.sort((a, b) => a.gradeId - b.gradeId);
+      let grades = gradesInClass?.allSubmissionInClass || [];
+      grades = [...grades].sort((a, b) => a.gradeId - b.gradeId);
       setGrades(grades);
     }
   }, [checkUserByEmailQuery, childData?.user.id, childError, cla.classID, gradesInClass?.allSubmissionInClass, isLoadingSubmissionByStudent, submissionByStudent, user.childEmail, user?.id, user.role, viewAllSubmissionByStudent]);

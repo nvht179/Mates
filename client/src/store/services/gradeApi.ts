@@ -19,7 +19,7 @@ import {
 
 const gradeApi = createApi({
   reducerPath: "grade",
-  tagTypes: ["Grade", "GradePerson"],
+  tagTypes: ["SubmitAssignment", "Grade", "GradePerson"],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
     prepareHeaders: async (headers) => {
@@ -35,14 +35,11 @@ const gradeApi = createApi({
       ViewGradeDetailsResponse,
       ViewGradeDetailsRequest
     >({
-      providesTags: (_result, _error, request) => {
-        console.log("viewGradeDetails: ", [
-          { type: "GradePerson", id: request.personID },
-          { type: "Grade", id: request.assignmentID },
-        ]);
+      providesTags: (result, _error, request) => {
         return [
           { type: "GradePerson", id: request.personID },
-          { type: "Grade", id: request.assignmentID },
+          { type: "SubmitAssignment", id: request.assignmentID },
+          { type: "Grade", id:  result?.submissionDetail?.gradeId || "" },
         ];
       },
       query: (request) => ({
@@ -57,13 +54,9 @@ const gradeApi = createApi({
       invalidatesTags: (_result, _error, request) => {
         const studentID = request.get("studentID") as string;
         const assignmentID = request.get("assignmentID") as string;
-        console.log("submitAssignment: ", [
-          { type: "GradePerson", id: studentID },
-          { type: "Grade", id: assignmentID },
-        ]);
         return [
           { type: "GradePerson", id: studentID },
-          { type: "Grade", id: assignmentID },
+          { type: "SubmitAssignment", id: assignmentID },
         ];
       },
       query: (body) => ({
@@ -76,6 +69,9 @@ const gradeApi = createApi({
       ViewGradeAssignmentByTeacherResponse,
       ViewGradeAssignmentByTeacherRequest
     >({
+      providesTags: (result) => {
+        return result ? result.allSubmissionAssignment.map((s) => ({ type: "Grade", id: s.gradeId })) : [];
+      },
       query: (assignment) => ({
         url: `grades/view-grade-assignments-teacher/${assignment.assignmentID}`,
         params: {
@@ -88,6 +84,9 @@ const gradeApi = createApi({
       ViewAllGradeInClassResponse,
       ViewAllGradeInClassRequest
     >({
+      providesTags: (result) => {
+        return result ? result.allSubmissionInClass.map((s) => ({ type: "Grade", id: s.gradeId })) : [];
+      },
       query: (cla) => ({
         url: `grades/view-all-grades-in-class/${cla.classID}`,
         params: {
@@ -100,6 +99,9 @@ const gradeApi = createApi({
       ViewSubmissionByStudentResponse,
       ViewSubmissionByStudentRequest
     >({
+      providesTags: (result) => {
+        return result ? result.allSubmissionAssignment.map((s) => ({ type: "Grade", id: s.gradeId })) : [];
+      },
       query: (person) => ({
         url: `grades/view-submission-student/${person.personID}`,
         params: {
@@ -112,6 +114,9 @@ const gradeApi = createApi({
       GradingAssignmentResponse,
       GradingAssignmentRequest
     >({
+      invalidatesTags: (result) => [
+        { type: "Grade", id: String(result?.submissionDetail.gradeId) },
+      ],
       query: (grading) => ({
         url: "grades/grade-assignment-teacher",
         method: "PUT",
@@ -123,7 +128,7 @@ const gradeApi = createApi({
       DeleteSubmissionRequest
     >({
       invalidatesTags: (_result, _error, request) => [
-        { type: "Grade", id: String(request.assignmentID) },
+        { type: "SubmitAssignment", id: String(request.assignmentID) },
         { type: "GradePerson", id: String(request.personID) },
       ],
       query: (request) => ({

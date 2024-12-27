@@ -338,12 +338,13 @@ function ClassTopBar() {
       },
     });
     setAssignmentButtonClick("Grade");
-    setIsGrading(false);
   };
 
   useEffect(() => {
     const handleGradingSuccess = () => {
       setIsLoading(false);
+      setIsGrading(false);
+      setAssignmentButtonClick("Grade");
     };
     window.addEventListener("SaveGradingSuccess", handleGradingSuccess);
     return () => {
