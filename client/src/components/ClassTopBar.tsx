@@ -170,13 +170,11 @@ function ClassTopBar() {
   };
 
   const handleSaveAssignmentClick = () => {
-    setIsLoading(true);
     const eventSaveAssignment = new CustomEvent("SaveAssignment");
     window.dispatchEvent(eventSaveAssignment);
   };
 
   const handleSaveEditAssignmentClick = () => {
-    setIsLoading(true);
     const eventSaveEditAssignment = new CustomEvent("SaveEditAssignment");
     window.dispatchEvent(eventSaveEditAssignment);
   };

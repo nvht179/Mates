@@ -77,6 +77,21 @@ const userSlice = createSlice({
         localStorage.setItem("userId", user.id.toString());
       },
     );
+    builder.addMatcher(
+      authApi.endpoints.refreshToken.matchFulfilled,
+      (state, { payload }) => {
+        state.token = payload.token;
+        state.isAuthenticated = true;
+
+        // update userId from localStorage if it's null in state
+        if (state.id === null) {
+          const storedUserId = localStorage.getItem("userId");
+          if (storedUserId) {
+            state.id = parseInt(storedUserId);
+          }
+        }
+      },
+    );
     builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state) => {
       state.token = null;
       state.isAuthenticated = false;
