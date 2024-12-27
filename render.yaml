@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: frontend
+    runtime: node
+    buildCommand: cd client && npm install && npm run build
+    startCommand: cd client && npm run dev
+    region: oregon
+    plan: free 
+
+  - type: web
+    name: backend
+    runtime: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm run dev
+    region: oregon
+    plan: free 
