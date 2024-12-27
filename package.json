@@ -4,10 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client-install": "cd client && npm install",
+    "client-install": "cd client && npm install && npm run build",
     "server-install": "cd server && npm install",
     "build": "npm-run-all --parallel client-install server-install",
-    "dev": "npm run dev --prefix server & npm run dev --prefix client",
+    "dev": "npm run dev --prefix server & npm run preview --prefix client",
     "client": "",
     "server": ""
   },
