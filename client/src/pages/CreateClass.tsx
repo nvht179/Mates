@@ -121,7 +121,7 @@ export default function CreateClass() {
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between px-8 py-3">
+      <div className="flex flex-row items-center justify-between px-8 py-3 w-[60]">
         <div className="flex flex-row items-center justify-between">
           <h1 className="text-lg font-bold">New Class</h1>
         </div>
