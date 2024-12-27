@@ -7,12 +7,12 @@ const sequelize = require("../config/db");
 class GradeDB {
   updateSubmission = async (studentID, assignmentID, attachments) => {
     try {
-      const submissionDetail = await this.getSubmissionByAssignmentIDAndStudentID(assignmentID, studentID);
+      let submissionDetail = await this.getSubmissionByAssignmentIDAndStudentID(assignmentID, studentID);
       if (!submissionDetail) {
         submissionDetail = await Grade.create({
           studentID: studentID,
-          assignmentID: assignmentID, 
-        })
+          assignmentID: assignmentID,
+        });
       }
       const gradeID = submissionDetail.gradeId;
 
