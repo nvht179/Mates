@@ -174,6 +174,15 @@ class ClassDB {
     const removedClass = await Class.findByPk(classID);
     removedClass.destroy();
   };
+
+  setAvatarClass = async (classID, publicURL, linkTitle) => {
+    const avatarClass = await Class.findByPk(classID);
+    if (publicURL) {
+      avatarClass.avatar = publicURL;
+    }
+    avatarClass.save();
+    return avatarClass;
+  };
 }
 
 module.exports = new ClassDB();
