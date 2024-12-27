@@ -85,8 +85,22 @@ function EventDetails() {
   }, [createEventError, editEventError, isCreateEventError, isEditEventError]);
 
   const handleSaveClick = () => {
+    if (!title || !description) {
+      alert("Please fill in the title and description fields");
+      return;
+    }
+    if (startDate === "" || startTime === "" || endDate === "" || endTime === "") {
+      alert("Please fill in the date and time fields");
+      return;
+    }
+    
     const startDateTime = new Date(`${startDate}T${startTime}`).toISOString();
     const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
+
+    if (new Date(startDateTime) >= new Date(endDateTime)) {
+      alert("Start time must be before end time");
+      return;
+    }
 
     if (user.id === null) {
       return;
