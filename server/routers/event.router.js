@@ -3,7 +3,7 @@ const EventController = require("../controllers/event.controller");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken.middleware");
 
-// router.use(verifyToken);
+router.use(verifyToken);
 
 router.post('/create', EventController.createEvent);
 router.get('/view-event-by-userID/:userID', EventController.viewEventByUserID);
