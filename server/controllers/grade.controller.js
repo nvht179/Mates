@@ -34,7 +34,7 @@ class GradeController {
 
       const submission = await GradeService.submitAssignment(studentID, assignmentID, attachments);
       const message = "Successful";
-      res.status(200).json({ message });
+      res.status(200).json({ message  });
     } catch (err) {
       const message = err.message || "An error occurred";
       res.status(403).json({ message });

@@ -13,7 +13,7 @@ class GradeService {
       if (!checkStudent) {
         throw new ErrorHandler(403, "The student is not in that class");
       }
-      const submission = await GradeDB.submitAssignment(studentID, assignmentID, attachments);
+      const submission = await GradeDB.updateSubmission(studentID, assignmentID, attachments);
       if (!submission) {
         throw new ErrorHandler(403, "Can not submit the assignment");
       }

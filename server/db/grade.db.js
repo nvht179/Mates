@@ -5,30 +5,32 @@ const sequelize = require("../config/db");
 
 
 class GradeDB {
-  submitAssignment = async (studentID, assignmentID, attachments) => {
+  updateSubmission = async (studentID, assignmentID, attachments) => {
     try {
       const submissionDetail = await this.getSubmissionByAssignmentIDAndStudentID(assignmentID, studentID);
-      if (submissionDetail) {
-        throw new ErrorHandler(403, "You have already submitted this assignment");
+      if (!submissionDetail) {
+        throw new ErrorHandler(403, "You have not submitted this assignment yet");
       }
+  
       const status = "Submitted";
-      const submission = await Grade.create({
-        studentID, assignmentID, status
-      });
-      const gradeID = submission.gradeId;
-
+      await Grade.update(
+        { status }, 
+        { where: { studentID, assignmentID } }
+      );
+  
       if (attachments && attachments.length > 0) {
         for (let attachment of attachments) {
           await AttachmentDB.addAttachment(
             {
               link: attachment.link,
               linkTitle: attachment.linkTitle,
-              gradeID: gradeID,
+              gradeID: submissionDetail.gradeId, 
             }
           );
         }
       }
-      return submission;
+  
+      return { message: "Submission updated successfully" };
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);
     }
