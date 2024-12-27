@@ -5,12 +5,11 @@ import GradeTable from "../components/GradeTable";
 import DefaultAvatar from "../assets/default-avatar.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
-import { useGetAllAssignmentsQuery } from "../store";
+import { useGetAllAssignmentsQuery, useLazyCheckUserByEmailQuery } from "../store";
 import {
   useLazyViewGradeAssignmentByTeacherQuery,
   useLazyViewAllGradeInClassQuery,
   useLazyViewSubmissionByStudentQuery,
-  useCheckUserByEmailQuery,
 } from "../store";
 import Dropdown from "../components/Dropdown";
 import { formatDate } from "../utils/date";
@@ -57,9 +56,7 @@ function GradePage() {
     viewAllSubmissionByStudent,
     { data: submissionByStudent, isLoading: isLoadingSubmissionByStudent },
   ] = useLazyViewSubmissionByStudentQuery();
-  const { data: childData, isError: childError } = useCheckUserByEmailQuery({
-    email: user?.childEmail || "",
-  });
+  const [checkUserByEmailQuery, { data: childData, error: childError }] = useLazyCheckUserByEmailQuery();
 
   const assignments = assignmentQuery?.data || [];
   const assignmentTitles = assignments.map((assignment) => assignment.title);
@@ -70,6 +67,7 @@ function GradePage() {
     const assignment = assignments.find(
       (assignment) => assignment.title === title,
     );
+    console.log(title,assignment);
     return assignment ? assignment.id : -1;
   };
 
@@ -82,7 +80,7 @@ function GradePage() {
       viewGradeAssignmentByTeacherQuery({ assignmentID: selectedAssignmentID });
       grades = gradesQuery?.allSubmissionAssignment || [];
     }
-    grades.sort((a, b) => a.gradeId - b.gradeId);
+    grades = [...grades].sort((a, b) => a.gradeId - b.gradeId);
     setGrades(grades);
   }, [
     selectedAssignmentID,
@@ -100,25 +98,16 @@ function GradePage() {
         classID: cla.classID,
       });
     } else if (user.role === "Parent" && !childError) {
+      checkUserByEmailQuery({ email: user.childEmail || "" });
       viewAllSubmissionByStudent({
         personID: childData?.user.id ?? 0,
         classID: cla.classID,
       });
-      const grades = gradesInClass?.allSubmissionInClass || [];
-      grades.sort((a, b) => a.gradeId - b.gradeId);
+      let grades = gradesInClass?.allSubmissionInClass || [];
+      grades = [...grades].sort((a, b) => a.gradeId - b.gradeId);
       setGrades(grades);
     }
-  }, [
-    childData?.user.id,
-    childError,
-    cla.classID,
-    gradesInClass?.allSubmissionInClass,
-    isLoadingSubmissionByStudent,
-    submissionByStudent,
-    user?.id,
-    user.role,
-    viewAllSubmissionByStudent,
-  ]);
+  }, [checkUserByEmailQuery, childData?.user.id, childError, cla.classID, gradesInClass?.allSubmissionInClass, isLoadingSubmissionByStudent, submissionByStudent, user.childEmail, user?.id, user.role, viewAllSubmissionByStudent]);
 
   const handleNavigateGradeDetailsClick = (grade: Grade) => {
     if (user.role === "Student" || user.role === "Parent") {
@@ -214,6 +203,7 @@ function GradePage() {
       return;
     }
     setSelectedAssignmentID(titleToID(option));
+    console.log(selectedAssignmentID);
   };
 
   const renderedGradeListHeaders = (
@@ -251,7 +241,7 @@ function GradePage() {
           <div className="w-44">
             <Dropdown
               options={["All", ...assignmentTitles]}
-              value={assignments[selectedAssignmentID]?.title || "All"}
+              value={assignments.find((assignment) => assignment.id === selectedAssignmentID)?.title || "All"}
               onChanged={(option) => handleOnChangeAssignment(option)}
             />
           </div>

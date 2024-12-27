@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -12,8 +12,9 @@ import Input from "../components/Input";
 import { useViewAllEventQuery } from "../store/services/eventApi";
 
 function CalendarPage() {
+  const { state } = useLocation();
   const navigate = useNavigate();
-  const [selectionDate, setSelectionDate] = useState<Date>(new Date());
+  const [selectionDate, setSelectionDate] = useState<Date>(state?.displayDate ?? new Date());
 
   const user = useSelector((state: RootState) => state.user);
   const { data } = useViewAllEventQuery({
@@ -27,15 +28,15 @@ function CalendarPage() {
   };
 
   const header = (
-    <div className="flex flex-row items-center justify-between px-8 py-2">
+    <div className="flex flex-row items-center justify-between px-8 h-[60px]">
       <div className="flex flex-row items-center justify-between">
-        <div className="my-2 mr-4 rounded bg-primary-default p-2">
+        <div className="mr-4 rounded bg-primary-default p-2">
           <FaRegCalendarAlt className="text-white" />
         </div>
         <h1 className="text-lg font-bold">Calendar</h1>
       </div>
       <div>
-        <Button primary onClick={handleNewEventClick}>
+        <Button secondary onClick={handleNewEventClick} className="text-sm">
           <LuCalendarPlus className="mr-2" />
           New event
         </Button>
@@ -84,7 +85,6 @@ function CalendarPage() {
       {header}
       <div className="border-b-2" />
       {navigationBar}
-      {/* <div className="mb-1 border-b-2" /> */}
       <div className="flex-1 overflow-y-scroll overflow-x-hidden">
         <Calendar displayDate={selectionDate} events={events} />
       </div>

@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
+  RootState,
   useCreateEventMutation,
   useEditEventMutation,
-  RootState,
 } from "../store";
 import { Event } from "../interfaces/Event";
+import { responseErrorHandler } from "../utils/responseErrorHandler";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -14,15 +15,14 @@ import Dropdown from "../components/Dropdown";
 import Textarea from "../components/TextArea";
 
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { LuPencil } from "react-icons/lu";
-import { LuClock } from "react-icons/lu";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { FaArrowsRotate } from "react-icons/fa6";
+import { LuClock, LuPencil } from "react-icons/lu";
+import { FaArrowRightLong, FaArrowsRotate } from "react-icons/fa6";
 import { BiDetail } from "react-icons/bi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 function EventDetails() {
   const { state } = useLocation();
-  const { event } = state as { event: Event };
+  const { event, displayDate } = state as { event: Event; displayDate: Date };
 
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
@@ -47,23 +47,60 @@ function EventDetails() {
   const [repeatType, setRepeatType] = useState<string>(
     event?.repeatTime ?? "Does not repeat",
   );
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [
     createEvent,
-    { isLoading: isCreateEventLoading, isSuccess: isCreateEventSuccess },
+    {
+      isLoading: isCreateEventLoading,
+      isSuccess: isCreateEventSuccess,
+      isError: isCreateEventError,
+      error: createEventError,
+    },
   ] = useCreateEventMutation();
   const [
     editEvent,
-    { isLoading: isEditEventLoading, isSuccess: isEditEventSuccess },
+    {
+      isLoading: isEditEventLoading,
+      isSuccess: isEditEventSuccess,
+      isError: isEditEventError,
+      error: editEventError,
+    },
   ] = useEditEventMutation();
 
   const handleRepeatChanged = (option: string) => {
     setRepeatType(option);
   };
 
+  useEffect(() => {
+    responseErrorHandler(
+      isCreateEventError,
+      createEventError as FetchBaseQueryError,
+      setErrorMessage,
+    );
+    responseErrorHandler(
+      isEditEventError,
+      editEventError as FetchBaseQueryError,
+      setErrorMessage,
+    );
+  }, [createEventError, editEventError, isCreateEventError, isEditEventError]);
+
   const handleSaveClick = () => {
+    if (!title || !description) {
+      alert("Please fill in the title and description fields");
+      return;
+    }
+    if (startDate === "" || startTime === "" || endDate === "" || endTime === "") {
+      alert("Please fill in the date and time fields");
+      return;
+    }
+    
     const startDateTime = new Date(`${startDate}T${startTime}`).toISOString();
     const endDateTime = new Date(`${endDate}T${endTime}`).toISOString();
+
+    if (new Date(startDateTime) >= new Date(endDateTime)) {
+      alert("Start time must be before end time");
+      return;
+    }
 
     if (user.id === null) {
       return;
@@ -90,11 +127,11 @@ function EventDetails() {
   };
 
   if (isCreateEventSuccess || isEditEventSuccess) {
-    navigate("/calendar");
+    navigate("/calendar", { state: { displayDate } });
   }
 
   const handleCancelClick = () => {
-    navigate("/calendar");
+    navigate("/calendar", { state: { displayDate } });
   };
 
   const header = (
@@ -129,66 +166,63 @@ function EventDetails() {
         <LuPencil className="mr-4 text-xl" />
         <Input
           placeholder="Event Title"
-          className="w-full"
+          className="w-full border-fg-alt bg-fg-alt"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div>
-        <div className="mt-8 flex flex-row items-center">
-          <LuClock className="mr-4 text-xl" />
-          <div className="flex w-full flex-row items-center gap-4">
-            <Input
-              placeholder="Start Date"
-              className="flex-1"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            <Input
-              placeholder="Start Time"
-              className="flex-1"
-              type="time"
-              value={startTime.slice(0, 5)} // Display only HH:MM
-              onChange={(e) => setStartTime(e.target.value)}
-            />
-            <FaArrowRightLong className="mx-4 text-2xl font-thin" />
-            <Input
-              placeholder="End Date"
-              className="flex-1"
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-            <Input
-              placeholder="End Time"
-              className="flex-1"
-              type="time"
-              value={endTime.slice(0, 5)} // Display only HH:MM
-              onChange={(e) => setEndTime(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="mt-8 flex flex-row items-center">
-          <FaArrowsRotate className="mr-4 text-xl" />
-          <Dropdown
-            options={repeatOptions}
-            value={repeatType}
-            onChanged={handleRepeatChanged}
+      <div className="mt-8 flex flex-row items-center">
+        <LuClock className="mr-4 text-xl" />
+        <div className="flex w-full flex-row items-center gap-4">
+          <Input
+            placeholder="Start Date"
+            className="flex-1 border-fg-alt bg-fg-alt"
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <Input
+            placeholder="Start Time"
+            className="flex-1 border-fg-alt bg-fg-alt"
+            type="time"
+            value={startTime.slice(0, 5)} // Display only HH:MM
+            onChange={(e) => setStartTime(e.target.value)}
+          />
+          <FaArrowRightLong className="mx-4 text-2xl font-thin" />
+          <Input
+            placeholder="End Date"
+            className="flex-1 border-fg-alt bg-fg-alt"
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <Input
+            placeholder="End Time"
+            className="flex-1 border-fg-alt bg-fg-alt"
+            type="time"
+            value={endTime.slice(0, 5)} // Display only HH:MM
+            onChange={(e) => setEndTime(e.target.value)}
           />
         </div>
-        <div>
-          <div className="mt-8 flex flex-row">
-            <BiDetail className="mr-4 mt-2 text-xl" />
-            <Textarea
-              placeholder="Description"
-              className="h-64"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-        </div>
       </div>
+      <div className="mt-8 flex flex-row items-center">
+        <FaArrowsRotate className="mr-4 text-xl" />
+        <Dropdown
+          options={repeatOptions}
+          value={repeatType}
+          onChanged={handleRepeatChanged}
+        />
+      </div>
+      <div className="mt-8 flex flex-row">
+        <BiDetail className="mr-4 mt-2 text-xl" />
+        <Textarea
+          placeholder="Description"
+          className="h-64 border-fg-alt bg-fg-alt"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <p className="ml-10 mt-8 text-red-default">{errorMessage}</p>
     </div>
   );
 

@@ -18,7 +18,7 @@ import {
 const authApi = createApi({
   reducerPath: "auth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
+    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
     credentials: "include"
   }),
   endpoints: (builder) => ({

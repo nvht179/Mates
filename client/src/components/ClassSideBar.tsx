@@ -9,16 +9,18 @@ import ClassSettingsDropDown from "./ClassSettingsDropDown";
 import ClassInfo from "./ClassInfo";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import DefaultClassImage from "../assets/default-class.svg";
 
 type buttonClicked = "lecture" | "assignment" | "discussion";
 
 function ClassSideBar() {
   const { state, pathname } = useLocation();
-  const { cla, image } = state as { cla: ClassState; image: string };
+  const { cla } = state as { cla: ClassState};
   const { className, code, classID } = cla;
   const [buttonClicked, setButtonClicked] = useState<buttonClicked>("lecture");
   const [infoHovered, setInfoHovered] = useState("");
   const role = useSelector((state: RootState) => state.user.role);
+  const defaultClassImg = DefaultClassImage;
 
   useEffect(() => {
     // Then handle specific routes
@@ -29,6 +31,9 @@ function ClassSideBar() {
       setButtonClicked("discussion");
     }
     if (pathname.includes("lecture")) {
+      setButtonClicked("lecture");
+    }
+    if (pathname.includes("lecture-details")) {
       setButtonClicked("lecture");
     }
     if (pathname.includes("grade-details")) {
@@ -85,7 +90,7 @@ function ClassSideBar() {
         <div className="flex flex-row items-center">
           <img
             className="h-16 w-16 rounded object-cover"
-            src={image}
+            src={cla?.avatar ? (cla.avatar === "" ? defaultClassImg: cla.avatar) : defaultClassImg}
             alt={className}
           />
           <div className="ml-1 flex flex-col justify-center">
@@ -131,7 +136,7 @@ function ClassSideBar() {
           <AddMemberDropDown memberType="student" classID={String(classID)} />
           <AddMemberDropDown memberType="teacher" classID={String(classID)} />
           <div className="mr-auto" />
-          <ClassSettingsDropDown cla={cla} image={image} />
+          <ClassSettingsDropDown cla={cla} />
         </div>
       )}
     </div>

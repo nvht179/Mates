@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthToken } from "../../utils/getAuthToken";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
   CreateCommentRequest,
   CreateCommentResponse,
@@ -11,23 +11,16 @@ import {
   ViewCommentsResponse,
 } from "../../interfaces/Comment";
 
+type Tag = { type: "Comment" | "Post"; id: string | number };
+
 const commentApi = createApi({
   reducerPath: "comment",
   tagTypes: ["Comment", "Post"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     viewComments: builder.query<ViewCommentsResponse, ViewCommentsRequest>({
       providesTags: (result, _error, arg) => {
-        const tags =
+        const tags: Tag[] =
           result?.data.map((comment) => ({
             type: "Comment" as const,
             id: comment.id,

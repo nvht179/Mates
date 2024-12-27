@@ -12,7 +12,6 @@ interface UserState {
   childEmail: string | null;
   isAuthenticated: boolean;
   token: string | null;
-  tokenSavedTime: number | null;
 }
 
 interface UserInfo {
@@ -34,7 +33,6 @@ const initialState: UserState = {
   childEmail: null,
   isAuthenticated: false,
   token: null,
-  tokenSavedTime: null,
 };
 
 const userSlice = createSlice({
@@ -52,9 +50,6 @@ const userSlice = createSlice({
     },
     setToken: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
-    },
-    setTokenSavedTime: (state, action: PayloadAction<number>) => {
-      state.tokenSavedTime = action.payload;
     },
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
@@ -87,7 +82,6 @@ const userSlice = createSlice({
       (state, { payload }) => {
         state.token = payload.token;
         state.isAuthenticated = true;
-        state.tokenSavedTime = Date.now();
 
         // update userId from localStorage if it's null in state
         if (state.id === null) {
@@ -100,12 +94,11 @@ const userSlice = createSlice({
     );
     builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state) => {
       state.token = null;
-      state.tokenSavedTime = null;
       state.isAuthenticated = false;
       localStorage.removeItem("userId");
     });
   },
 });
 
-export const { setUserInfo, setToken, setTokenSavedTime } = userSlice.actions;
+export const { setUserInfo, setToken } = userSlice.actions;
 export default userSlice.reducer;

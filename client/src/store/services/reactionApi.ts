@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthToken } from "../../utils/getAuthToken";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
+
 import {
   CreateReactionRequest,
   CreateReactionResponse,
@@ -11,16 +12,7 @@ import {
 
 const reactionApi = createApi({
   reducerPath: "reaction",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api",
-    prepareHeaders: async (headers) => {
-      const token = await getAuthToken();
-      if (token) {
-        headers.set("auth-token", token);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
     createReaction: builder.mutation<
       CreateReactionResponse,
