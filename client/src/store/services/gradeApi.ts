@@ -16,15 +16,12 @@ import {
   ViewSubmissionByStudentRequest,
   ViewSubmissionByStudentResponse,
 } from "../../interfaces/Grade";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const gradeApi = createApi({
   reducerPath: "grade",
   tagTypes: ["Grade", "GradePerson"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.BASE_URL}`,
+    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {

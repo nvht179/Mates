@@ -10,15 +10,12 @@ import {
   ViewAllEventRequest,
   ViewAllEventResponse,
 } from "../../interfaces/Event";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const eventApi = createApi({
   reducerPath: "event",
   tagTypes: ["Event", "UserEvent"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.BASE_URL}`,
+    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {

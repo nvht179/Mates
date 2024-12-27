@@ -10,9 +10,6 @@ import {
   EditAssignmentRequest,
   EditAssignmentResponse,
 } from "../../interfaces/Assignment";
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 type Tag = { type: "Assignment" | "AssignmentClass"; id: string };
 
@@ -20,7 +17,7 @@ const assignmentApi = createApi({
   reducerPath: "assignment",
   tagTypes: ["Assignment", "AssignmentClass"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.BASE_URL}`,
+    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {

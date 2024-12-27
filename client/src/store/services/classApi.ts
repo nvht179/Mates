@@ -21,15 +21,12 @@ import {
   RemoveClassResponse,
   RemoveClassRequest,
 } from "../../interfaces/Class";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const classApi = createApi({
   reducerPath: "class",
   tagTypes: ["ClassMember", "ClassMemberStudent", "ClassMemberTeacher"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.BASE_URL}`,
+    baseUrl: import.meta.env.VITE_SERVER_BASE_URL,
     prepareHeaders: async (headers) => {
       const token = await getAuthToken();
       if (token) {
