@@ -80,6 +80,10 @@ class LectureService {
           );
         }
       }
+
+      if (!attachments || attachments.length == 0) {
+        await AttachmentDB.removeAttachmentsByLectureId(lectureId);
+      }
       return updatedLecture;
     } catch (err) {
       throw new ErrorHandler(err.statusCode, err.message);

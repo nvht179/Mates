@@ -120,6 +120,8 @@ class AttachmentDB {
         lectureId: lectureId 
       }
     });
+    console.log("AttachmentDB - lectureId:", lectureId);
+    console.log("AttachmentDB:", deletedAttachments);
     return deletedAttachments;
   };
 
