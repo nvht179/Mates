@@ -133,7 +133,7 @@ function Calendar({ displayDate, events }: CalendarProps) {
                 className="relative"
                 style={{
                   height: `${HOURWIDTH * 24}rem`,
-                  // marginTop: `${HOURWIDTH}rem`,
+                  marginTop: `${HOURWIDTH * 0.5}rem`,
                 }}
               >
                 {events

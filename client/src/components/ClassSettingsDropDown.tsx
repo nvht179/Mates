@@ -8,7 +8,6 @@ import { ClassState } from "../interfaces/Class";
 
 interface ClassSettingsDropDownProps {
   cla: ClassState;
-  image: string
 }
 
 interface LocationState {
@@ -20,11 +19,9 @@ interface LocationState {
 
 const ClassSettingsDropDown = ({ 
   cla,
-  image,
 }: ClassSettingsDropDownProps) => {
   const state = {
     cla,
-    image,
     title: "Edit Class",
     display: null,
   } as LocationState;

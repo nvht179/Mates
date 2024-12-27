@@ -6,6 +6,7 @@ import Button from "./Button";
 import { RiEditBoxFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import DefaultClassImage from "../assets/default-class.svg";
 
 type AssignmentTopBarTab = "Classwork" | "Grade";
 type Module = "Assignment" | "Lecture" | "Discussion" | "Grade";
@@ -13,15 +14,15 @@ type Module = "Assignment" | "Lecture" | "Discussion" | "Grade";
 function ClassTopBar() {
   const role = useSelector((state: RootState) => state.user.role);
   const { state, pathname } = useLocation();
-  const { cla, image, module, title, display } = state as {
+  const { cla, module, title, display } = state as {
     cla: ClassState;
-    image: string;
     module: Module;
     title: string;
     display: string | null;
   };
   const { className, code } = cla;
   const navigate = useNavigate();
+  const defaultClassImg = DefaultClassImage;
 
   const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
   const [isEditingAssignment, setIsEditingAssignment] = useState(false);
@@ -411,7 +412,7 @@ function ClassTopBar() {
     <div className="flex h-[60px] flex-row items-center border-b border-fg-border bg-bg-soft">
       <div className="flex h-full flex-shrink-0 items-center">
         <img
-          src={image}
+          src={cla?.avatar ? (cla.avatar === "" ? defaultClassImg : cla.avatar) : defaultClassImg}
           alt={className}
           className="ml-4 h-8 w-8 flex-shrink-0 rounded object-cover"
         />

@@ -5,12 +5,13 @@ interface ClassState {
   className: string;
   code: string;
   description: string;
+  avatar: string | null;
 }
 
 interface ViewAllClassesResponse {
   message: string;
   allClassesInfo: [
-    { classID: number; className: string; code: string; description: string },
+    { classID: number; className: string; code: string; description: string; avatar: string },
   ];
 }
 
