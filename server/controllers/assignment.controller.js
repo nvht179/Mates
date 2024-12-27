@@ -11,9 +11,6 @@ class AssignmentController {
       if (!title) {
         throw new Error("Title is required");
       }
-      if (!description) {
-        throw new Error("Description is required");
-      }
 
       // Handle file uploads and create attachments
       const attachments = [];

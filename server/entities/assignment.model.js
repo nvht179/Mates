@@ -17,7 +17,7 @@ const Assignment = sequelize.define(
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     startTime: {
       type: DataTypes.DATE,

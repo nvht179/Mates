@@ -158,9 +158,7 @@ class GradeService {
           continue;
         }
 
-        for (const grade of grades){
-          console.log("grade service:",grade);
-
+        for (const grade of grades) {
           const id = grade.studentID;
           const user = await UserDB.getUserByIdDB(id);
 
@@ -175,10 +173,10 @@ class GradeService {
           const assignmentWeight = assignment.weight;
           const grade100 = grade.grade100;
 
-          console.log("grade service:",personID, avatar, name, assignmentTitle, status, submittedOn, comment, assignmentWeight, grade100, gradeId, assignmentID)
-
-          allSubmissionInClass.push({ personID, avatar, name, assignmentTitle, status, submittedOn, comment,
-             assignmentWeight, grade100, gradeId, assignmentID });
+          allSubmissionInClass.push({
+            personID, avatar, name, assignmentTitle, status, submittedOn, comment,
+            assignmentWeight, grade100, gradeId, assignmentID
+          });
         }
 
       }
