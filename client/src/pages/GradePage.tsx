@@ -5,7 +5,10 @@ import GradeTable from "../components/GradeTable";
 import DefaultAvatar from "../assets/default-avatar.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClassState } from "../interfaces/Class";
-import { useGetAllAssignmentsQuery, useLazyCheckUserByEmailQuery } from "../store";
+import {
+  useGetAllAssignmentsQuery,
+  useLazyCheckUserByEmailQuery,
+} from "../store";
 import {
   useLazyViewGradeAssignmentByTeacherQuery,
   useLazyViewAllGradeInClassQuery,
@@ -56,7 +59,8 @@ function GradePage() {
     viewAllSubmissionByStudent,
     { data: submissionByStudent, isLoading: isLoadingSubmissionByStudent },
   ] = useLazyViewSubmissionByStudentQuery();
-  const [checkUserByEmailQuery, { data: childData, error: childError }] = useLazyCheckUserByEmailQuery();
+  const [checkUserByEmailQuery, { data: childData, error: childError }] =
+    useLazyCheckUserByEmailQuery();
 
   const assignments = assignmentQuery?.data || [];
   const assignmentTitles = assignments.map((assignment) => assignment.title);
@@ -67,7 +71,7 @@ function GradePage() {
     const assignment = assignments.find(
       (assignment) => assignment.title === title,
     );
-    console.log(title,assignment);
+    console.log(title, assignment);
     return assignment ? assignment.id : -1;
   };
 
@@ -107,7 +111,19 @@ function GradePage() {
       grades = [...grades].sort((a, b) => a.gradeId - b.gradeId);
       setGrades(grades);
     }
-  }, [checkUserByEmailQuery, childData?.user.id, childError, cla.classID, gradesInClass?.allSubmissionInClass, isLoadingSubmissionByStudent, submissionByStudent, user.childEmail, user?.id, user.role, viewAllSubmissionByStudent]);
+  }, [
+    checkUserByEmailQuery,
+    childData?.user.id,
+    childError,
+    cla.classID,
+    gradesInClass?.allSubmissionInClass,
+    isLoadingSubmissionByStudent,
+    submissionByStudent,
+    user.childEmail,
+    user?.id,
+    user.role,
+    viewAllSubmissionByStudent,
+  ]);
 
   const handleNavigateGradeDetailsClick = (grade: Grade) => {
     if (user.role === "Student" || user.role === "Parent") {
@@ -133,7 +149,7 @@ function GradePage() {
     });
   };
 
-  const teacherConfig: ConfigItem[] = [
+  const config: ConfigItem[] = [
     {
       label: "Name",
       render: (grade) => (
@@ -143,19 +159,25 @@ function GradePage() {
             alt={grade.name}
             className="mr-4 h-8 w-8 rounded-full"
           />
-          {grade.name}
+          {grade.name.length < 20 ? grade.name : grade.name.slice(0, 20) + "..."}
         </div>
       ),
       sortValue: (grade) => grade.name,
     },
     {
       label: "Assignment Title",
-      render: (grade) => grade.assignmentTitle,
+      render: (grade) =>
+        grade.assignmentTitle.length < 20
+          ? grade.assignmentTitle
+          : grade.assignmentTitle.slice(0, 20) + "...",
       sortValue: (grade) => grade.assignmentTitle,
     },
     {
       label: "Status",
-      render: (grade) => grade.status,
+      render: (grade) =>
+        grade.status.length < 10
+          ? grade.status
+          : grade.status.slice(0, 10) + "...",
       sortValue: (grade) => grade.status,
     },
     {
@@ -165,7 +187,10 @@ function GradePage() {
     },
     {
       label: "Comment",
-      render: (grade) => grade.comment,
+      render: (grade) =>
+        (grade.comment?.length ?? 0) < 15
+          ? grade.comment
+          : grade.comment.slice(0, 15) + "...",
       sortValue: (grade) => grade.comment,
     },
     {
@@ -241,7 +266,11 @@ function GradePage() {
           <div className="w-44">
             <Dropdown
               options={["All", ...assignmentTitles]}
-              value={assignments.find((assignment) => assignment.id === selectedAssignmentID)?.title || "All"}
+              value={
+                assignments.find(
+                  (assignment) => assignment.id === selectedAssignmentID,
+                )?.title || "All"
+              }
               onChanged={(option) => handleOnChangeAssignment(option)}
             />
           </div>
@@ -258,7 +287,7 @@ function GradePage() {
       ) : (
         <GradeTable
           data={gradesToDisplay}
-          config={teacherConfig}
+          config={config}
           keyFn={(grade) => grade.gradeId}
           onRowClick={handleNavigateGradeDetailsClick}
         />
