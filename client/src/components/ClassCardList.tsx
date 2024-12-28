@@ -22,6 +22,7 @@ function ClassCardList({ classes }: ClassCardListProps) {
       navigate(`/class/${cla.code}/assignment`, {
         state: {
           ...state,
+          cla,
           module: "Assignment",
           title: "Assignment",
           display: null,
