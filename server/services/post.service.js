@@ -6,13 +6,12 @@ const ClassService = require("./class.service");
 class PostService {
   addNewPostWithAttachments = async ({ classID, title, content, attachments, personID }) => {
     try {
-      // Gọi DB để tạo post mới và các attachment, thêm personID vào
       const newPost = await PostDB.addNewPostWithAttachments({
         classID,
         title,
         content,
         attachments,
-        personID, // Thêm personID vào tham số
+        personID, 
       });
 
       const postID = newPost.id;

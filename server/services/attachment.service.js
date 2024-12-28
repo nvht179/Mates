@@ -44,7 +44,6 @@ class AttachmentService {
     try {
       const attachments = await AttachmentDB.findAttachmentsByPostId(postId);
 
-      // Nếu không tìm thấy, trả về mảng rỗng
       if (!attachments) {
         return [];
       }
@@ -58,10 +57,8 @@ class AttachmentService {
 
   async editAttachmentsByPostId({ postId, attachments }) {
     try {
-      // Xóa tất cả attachment cũ theo postId
       await AttachmentDB.removeAttachmentsByPostId(postId);
 
-      // Thêm từng attachment mới vào
       const newAttachments = [];
       for (const attachment of attachments) {
         const { link, linkTitle } = attachment;

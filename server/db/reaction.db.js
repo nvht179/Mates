@@ -2,7 +2,6 @@ const Reaction = require("../entities/reaction.model");
 const { ErrorHandler } = require("../helpers/error");
 
 class ReactionDB {
-  // Phương thức tạo mới một reaction
   async createReaction({ personId, postId, type }) {
     try {
       // Create a new reaction entry in the database
@@ -29,7 +28,6 @@ class ReactionDB {
     }
   }
 
-  // Phương thức xóa reaction theo ID
   async deleteReaction(id) {
     try {
       // Delete the reaction entry by ID
@@ -49,7 +47,6 @@ class ReactionDB {
     }
   }
 
-  // Phương thức cập nhật reaction (ví dụ thay đổi loại reaction)
   async updateReaction({id,newType}) {
     try {
 

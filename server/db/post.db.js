@@ -9,27 +9,24 @@ class PostDB {
     try {
       transaction = await sequelize.transaction();
 
-      // Tạo bài viết mới, thêm personID vào
       const newPost = await Post.create(
         {
           classID,
           title,
           content,
-          personID, // Thêm personID vào đây
+          personID, 
         },
         { transaction }
       );
 
-      // Nếu có attachment, thêm từng cái một với postId mới tạo
       if (attachments && attachments.length > 0) {
         for (let attachment of attachments) {
-          // Mỗi attachment sẽ được tạo với postId = newPost.id
           await AttachmentDB.addAttachment(
             {
               link: attachment.link,
               linkTitle: attachment.linkTitle,
               assignmentId: attachment.assignmentId,
-              postId: newPost.id, // Liên kết postId với post mới tạo
+              postId: newPost.id, 
             },
             { transaction }
           );
@@ -39,19 +36,16 @@ class PostDB {
 
       const addedAttachments = await Attachment.findAll({
         where: { postId: newPost.id },
-        attributes: ["id", "link", "linkTitle"], // Lấy các trường cần thiết
+        attributes: ["id", "link", "linkTitle"], 
       });
 
-      
-      // Commit transaction nếu không có lỗi
-      // Trả về post đã tạo
       return {
         ...newPost.toJSON(),
-        attachments: addedAttachments, // Đính kèm thông tin đầy đủ của attachments
+        attachments: addedAttachments, 
       };
 
     } catch (error) {
-      if (transaction) await transaction.rollback(); // Rollback nếu có lỗi
+      if (transaction) await transaction.rollback(); 
 
       throw new ErrorHandler("Error creating post with attachments", error);
     }

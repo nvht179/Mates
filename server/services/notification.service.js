@@ -13,7 +13,6 @@ class NotificationService {
     }
   };
 
-  // Lấy tất cả notifications của người dùng
   async getAllNotifications(userId) {
     try {
       const notifications = await NotificationDB.getNotificationsByUserId(userId);
@@ -23,7 +22,6 @@ class NotificationService {
     }
   }
 
-  // Xóa một notification theo notificationId
   async deleteNotification(notificationId) {
     try {
       const result = await NotificationDB.deleteNotification(notificationId);

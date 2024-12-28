@@ -160,8 +160,8 @@ class AssignmentDB {
         include: [
           {
             model: Attachment,
-            as: 'attachments', // Alias được định nghĩa trong quan hệ ở model
-            attributes: ['id', 'link', 'linkTitle'], // Chọn các cột cần thiết từ attachments
+            as: 'attachments', 
+            attributes: ['id', 'link', 'linkTitle'], 
           },
         ],
       });

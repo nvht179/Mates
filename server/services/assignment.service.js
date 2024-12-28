@@ -120,7 +120,6 @@ class AssignmentService {
 
   async viewAllAssignmentsInClass(classID) {
     try {
-      // Gọi DB để lấy tất cả assignment của lớp học với classID
       const assignments = await AssignmentDB.viewAllAssignmentsInClass(classID);
 
       return assignments;

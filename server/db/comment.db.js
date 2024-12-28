@@ -4,7 +4,6 @@ class CommentDB {
   // Add a new comment to a post
   async addCommentToPostId({ content, postId, personId }) {
     try {
-      // Tạo comment mới
       const newComment = await Comment.create({
         content,
         postId,
@@ -21,7 +20,6 @@ class CommentDB {
   // Delete a comment by commentId
   async deleteComment(commentId) {
     try {
-      // Xóa comment theo id
       const deletedCount = await Comment.destroy({
         where: { id: commentId },
       });
@@ -52,7 +50,6 @@ class CommentDB {
 
   async updateComment(commentId, content) {
     try {
-      // Tìm và cập nhật comment theo commentId
       const [updatedRowsCount] = await Comment.update(
         { content },
         {
@@ -64,7 +61,6 @@ class CommentDB {
         throw new Error(`Comment with ID ${commentId} does not exist.`);
       }
   
-      // Lấy lại comment sau khi cập nhật
       const updatedComment = await Comment.findByPk(commentId);
       return updatedComment;
     } catch (err) {

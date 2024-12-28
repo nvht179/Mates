@@ -1,7 +1,6 @@
 const NotificationService = require("../services/notification.service");
 
 class NotificationController {
-  // Lấy tất cả notifications của người dùng
   getAllNotifications = async (req, res) => {
     try {
       const { userId } = req.params;
@@ -15,7 +14,6 @@ class NotificationController {
     }
   };
 
-  // Xóa một notification
   deleteNotification = async (req, res) => {
     try {
       const { notificationId } = req.params;
@@ -28,7 +26,6 @@ class NotificationController {
     }
   };
 
-  // Đánh dấu notification là đã đọc
   markAsRead = async (req, res) => {
     try {
       const { notificationId } = req.params;

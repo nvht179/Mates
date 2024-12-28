@@ -173,9 +173,8 @@ class AssignmentController {
   
   viewAllAssignmentsInClass = async (req, res) => {
     try {
-      const { classID } = req.params; // Lấy classID từ params
+      const { classID } = req.params; 
 
-      // Gọi service để lấy tất cả assignment trong lớp học
       const assignments = await AssignmentService.viewAllAssignmentsInClass(classID);
 
       if (!assignments || assignments.length === 0) {

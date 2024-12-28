@@ -5,7 +5,6 @@ class PostController {
     try {
       const { classID, title, content, personID } = req.body;
   
-      // Kiểm tra Person ID và Class ID
       if (!personID) {
         throw new Error("Person ID is required");
       }
@@ -15,9 +14,7 @@ class PostController {
   
       const attachments = [];
   
-      // Kiểm tra xem có file đính kèm không
       if (req.files && req.files.length > 0) {
-        // Duyệt qua từng file nếu có
         for (const file of req.files) {
           const filePath = `${Date.now()}_${file.originalname}`;
           const { data, error } = await supabase.storage
@@ -34,7 +31,6 @@ class PostController {
   
           const publicURL = publicData.publicUrl;
   
-          // Thêm thông tin file vào mảng attachments
           attachments.push({
             link: publicURL,
             linkTitle: file.originalname,
@@ -42,7 +38,6 @@ class PostController {
         }
       }
   
-      // Tạo bài đăng mới với các tệp đính kèm (nếu có)
       const newPost = await PostService.addNewPostWithAttachments({
         classID,
         title,
@@ -60,7 +55,6 @@ class PostController {
     }
   };
 
-   // Edit a post
    editPost = async (req, res) => {
     try {
       const { title, content,postId } = req.body;
@@ -169,7 +163,6 @@ class PostController {
         return res.status(200).json({ message: "No posts found", data: [] });
       }
   
-      // Nếu có bài viết, trả về mảng bài viết cùng thông báo thành công
       return res.status(200).json({ message: "Success", data: posts });
     } catch (error) {
       console.error("Error fetching posts by class ID:", error);

@@ -32,14 +32,14 @@ const Post = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Person, // Tham chiếu đến Person model
-        key: "id", // Khóa chính của Person
+        model: Person, 
+        key: "id", 
       },
     },
     time: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW, // Tự động gán giá trị thời gian hiện tại
+      defaultValue: DataTypes.NOW, 
     },
   },
   {

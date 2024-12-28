@@ -83,17 +83,15 @@ class CommentController {
 
   async editComment(req, res) {
     try {
-      const { commentId } = req.params; // Lấy commentId từ params
-      const { content } = req.body; // Nội dung chỉnh sửa
+      const { commentId } = req.params; 
+      const { content } = req.body; 
   
-      // Kiểm tra đầu vào
       if (!commentId || !content) {
         return res.status(403).json({
           message: "Missing required fields: commentId or content.",
         });
       }
   
-      // Gọi service để chỉnh sửa comment
       const updatedComment = await CommentService.editComment(commentId, content);
   
       if (!updatedComment) {

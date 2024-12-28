@@ -62,7 +62,6 @@ class CommentService {
 
   async editComment(commentId, content) {
     try {
-      // Gọi DB để cập nhật comment
       const updatedComment = await CommentDB.updateComment(commentId, content);
       return updatedComment;
     } catch (err) {

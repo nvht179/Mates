@@ -13,11 +13,10 @@ class AttachmentController {
         return res.status(404).json({ message: "No file uploaded" });
       }
 
-      const file = req.file; // File từ frontend (được multer middleware xử lý trước)
-      
+      const file = req.file; 
+
       const linkTitle = file.originalname
 
-      // Upload file lên Supabase Storage
       const filePath = `${Date.now()}_${file.originalname}`;
       const { data, error } = await supabase.storage
         .from("Attachments")
@@ -27,14 +26,12 @@ class AttachmentController {
         throw new Error("File upload failed: " + error.message);
       }
 
-      // Tạo public URL cho file
       const { data: publicData } = supabase.storage
         .from("Attachments")
         .getPublicUrl(filePath);
 
       const publicURL = publicData.publicUrl;
 
-      // Gọi service để thêm dữ liệu attachment vào database
       const newAttachment = await AttachmentService.addAttachment({
         link: publicURL,
         linkTitle,
@@ -61,7 +58,6 @@ class AttachmentController {
     try {
       const { id } = req.params;
 
-      // Gọi service để tìm attachment theo ID
       const attachment = await AttachmentService.findAttachmentByID({ id });
 
       if (!attachment) {
@@ -86,7 +82,6 @@ class AttachmentController {
     try {
       const { postId } = req.params;
 
-      // Gọi service để xóa tất cả các attachment theo postId
       const deletedAttachments = await AttachmentService.removeAttachmentsByPostId(postId);
 
       if (!deletedAttachments) {
@@ -105,17 +100,14 @@ class AttachmentController {
     try {
       const { postId } = req.body;
 
-      // Kiểm tra nếu không có postId
       if (!postId) {
         return res.status(403).json({
           message: "postId is required.",
         });
       }
 
-      // Gọi service để lấy attachments
       const attachments = await AttachmentService.getAttachmentsByPostId(postId);
 
-      // Trả về dữ liệu
       return res.status(200).json({
         message: "Attachments fetched successfully.",
         data: attachments,
@@ -133,14 +125,12 @@ class AttachmentController {
     try {
       const { postId, attachments } = req.body;
 
-      // Kiểm tra đầu vào
       if (!postId || !Array.isArray(attachments)) {
         return res.status(400).json({
           message: "postId and attachments (array) are required.",
         });
       }
 
-      // Gọi service để chỉnh sửa
       const updatedAttachments = await AttachmentService.editAttachmentsByPostId({ postId, attachments });
 
       return res.status(200).json({

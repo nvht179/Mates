@@ -46,7 +46,6 @@ class ReactionController {
     }
   }
 
-  // Phương thức cập nhật reaction
   async updateReaction(req, res) {
     try {
       const { id, newType } = req.body;

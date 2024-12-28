@@ -1,11 +1,10 @@
 const { Notification } = require("../entities");
 
 class NotificationDB {
-  // Lấy tất cả thông báo của người dùng theo userId
   getNotificationsByUserId = async (userId) => {
     try {
       const notifications = await Notification.findAll({
-        where: { targetId: userId }, // Lọc thông báo theo targetId (userId)
+        where: { targetId: userId }, 
       });
       return notifications;
     } catch (err) {
