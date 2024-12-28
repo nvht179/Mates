@@ -91,7 +91,7 @@ export default function SignupParent() {
     };
 
     const checkValidInput = () => {
-        var pass = true;
+        let pass = true;
         if (fullName === "") {
             setErrorMessageFN("Please enter your full name.");
             pass = false;

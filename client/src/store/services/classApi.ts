@@ -1,28 +1,33 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQueryWithReAuth from "../../utils/baseQueryWithReAuth";
 import {
+  AddStudentsToClassRequest,
+  AddStudentsToClassResponse,
+  AddTeachersToClassRequest,
+  AddTeachersToClassResponse,
   CreateClassRequest,
   CreateClassResponse,
   EditClassRequest,
   EditClassResponse,
+  RemoveClassRequest,
+  RemoveClassResponse,
+  RemoveStudentsInClassRequest,
+  RemoveStudentsInClassResponse,
+  RemoveTeachersInClassRequest,
+  RemoveTeachersInClassResponse,
+  setAvatarClassRequest,
+  setAvatarClassResponse,
   ViewAllClassesRequest,
   ViewAllClassesResponse,
   ViewAllStudentInClassResponse,
   ViewAllTeachersInClassResponse,
-  AddStudentsToClassResponse,
-  AddStudentsToClassRequest,
-  AddTeachersToClassResponse,
-  AddTeachersToClassRequest,
-  RemoveStudentsInClassResponse,
-  RemoveStudentsInClassRequest,
-  RemoveTeachersInClassResponse,
-  RemoveTeachersInClassRequest,
   ViewClassInfoResponse,
-  RemoveClassResponse,
-  RemoveClassRequest,
-  setAvatarClassResponse,
-  setAvatarClassRequest,
 } from "../../interfaces/Class";
+
+type Tag = {
+  type: "UserClass" | "ClassMember" | "ClassMemberStudent" | "ClassMemberTeacher";
+  id: string | number;
+};
 
 const classApi = createApi({
   reducerPath: "class",
@@ -39,13 +44,13 @@ const classApi = createApi({
       ViewAllClassesRequest
     >({
       providesTags: (result, _error, arg) => {
-        const tags = result
+        const tags: Tag[] = result
           ? result.allClassesInfo.map((c) => ({
-              type: "ClassMember" as const,
+              type: "ClassMember",
               id: c.classID,
             }))
           : [];
-        tags.push({ type: "UserClass" as const, id: arg.id });
+        tags.push({ type: "UserClass", id: arg.id });
         return tags;
       },
       query: (user) => {

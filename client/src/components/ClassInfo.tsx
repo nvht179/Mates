@@ -45,7 +45,7 @@ function ClassInfo({ cla, hoveredIcon, ...rest }: ClassInfoProps) {
       <div {...rest} className="cursor-pointer text-2xl">
         {hoveredIcon === `${cla.classID}_info` ? (
           <MdInfo
-            className="select-none hover:text-primary-default"
+            className="select-none text-primary-default"
             onClick={() => setIsOpen((prev) => !prev)}
           />
         ) : (

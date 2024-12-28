@@ -11,7 +11,7 @@ interface EmailState {
 }
 
 export default function EmailInput() {
-    var [email, setEmail] = useState("");
+    let [email, setEmail] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
     const [resendVerificationEmail, { isLoading, data, isError, error, isSuccess }] = useResendVerificationEmailMutation();
     const navigate = useNavigate();

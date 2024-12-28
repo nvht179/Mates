@@ -131,7 +131,7 @@ function ClassSideBar() {
         <ClassMemberList type="teachers" id={String(cla.classID)} />
       </div>
       {role === "Teacher" && (
-        <div className="mx-4 flex flex-row items-center border-t border-fg-border px-1 py-1">
+        <div className="mx-4 flex flex-row items-center border-t border-fg-border px-1 py-1 select-none">
           <AddMemberDropDown memberType="student" classID={String(classID)} />
           <AddMemberDropDown memberType="teacher" classID={String(classID)} />
           <div className="mr-auto" />
